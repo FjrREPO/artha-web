@@ -82,8 +82,8 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
                                 <CardContent className='p-5 space-y-5'>
                                     <Tabs defaultValue='openBorrow' className='w-full'>
                                         <TabsList className='w-full'>
-                                            <TabsTrigger value="openBorrow" className='w-full'>Deposit</TabsTrigger>
-                                            <TabsTrigger value="closeBorrow" className='w-full'>Withdraw</TabsTrigger>
+                                            <TabsTrigger value="openBorrow" className='w-full'>Open Borrow</TabsTrigger>
+                                            <TabsTrigger value="closeBorrow" className='w-full'>Close Borrow</TabsTrigger>
                                             <TabsTrigger value="lend" className='w-full'>Withdraw</TabsTrigger>
                                         </TabsList>
                                         <TabsContent value="openBorrow">
