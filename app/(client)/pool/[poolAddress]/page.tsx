@@ -1,16 +1,12 @@
 import React from 'react';
 import PoolAddressPage from './_components/PoolAddressPage';
+import { use } from 'react';
 
-interface IParams {
-    poolAddress: string;
-}
+type Params = Promise<{ poolAddress: string }>
 
-interface PageProps {
-    params: IParams;
-}
-
-const Page: React.FC<PageProps> = ({ params }) => {
-    const { poolAddress } = params;
+const Page = (props: { params: Params }) => {
+    const params = use(props.params);
+    const poolAddress = params.poolAddress;
 
     return (
         <div className='pt-[100px]'>
