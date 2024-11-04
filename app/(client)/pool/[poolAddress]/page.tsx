@@ -9,7 +9,7 @@ interface PageProps {
     params: IParams;
 }
 
-export const Page: React.FC<PageProps> = ({ params }) => {
+const Page: React.FC<PageProps> = ({ params }) => {
     const { poolAddress } = params;
 
     return (
@@ -18,3 +18,5 @@ export const Page: React.FC<PageProps> = ({ params }) => {
         </div>
     );
 };
+
+export default Page;
