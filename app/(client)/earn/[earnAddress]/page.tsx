@@ -1,13 +1,15 @@
-import React from 'react'
-import EarnAddressPage from './_components/EarnAddressPage'
+import React from 'react';
+import EarnAddressPage from './_components/EarnAddressPage';
 
 interface IParams {
-    params: {
-        earnAddress: string;
-    };
+    earnAddress: string;
 }
 
-const Page: React.FC<IParams> = ({ params }) => {
+interface PageProps {
+    params: IParams;
+}
+
+export const Page: React.FC<PageProps> = ({ params }) => {
     const { earnAddress } = params;
 
     return (
@@ -16,5 +18,3 @@ const Page: React.FC<IParams> = ({ params }) => {
         </div>
     );
 };
-
-export default Page;

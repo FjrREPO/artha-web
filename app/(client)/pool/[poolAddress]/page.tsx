@@ -1,13 +1,15 @@
-import React from 'react'
-import PoolAddressPage from './_components/PoolAddressPage'
+import React from 'react';
+import PoolAddressPage from './_components/PoolAddressPage';
 
 interface IParams {
-    params: {
-        poolAddress: string;
-    };
+    poolAddress: string;
 }
 
-const Page: React.FC<IParams> = ({ params }) => {
+interface PageProps {
+    params: IParams;
+}
+
+export const Page: React.FC<PageProps> = ({ params }) => {
     const { poolAddress } = params;
 
     return (
@@ -16,5 +18,3 @@ const Page: React.FC<IParams> = ({ params }) => {
         </div>
     );
 };
-
-export default Page;
