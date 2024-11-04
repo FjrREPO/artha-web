@@ -1,18 +1,20 @@
 import React from 'react'
-import EarnAddressPage from './_components/PoolAddressPage'
+import PoolAddressPage from './_components/PoolAddressPage'
 
 interface IParams {
     params: {
-        poolAddress: string
-    }
+        poolAddress: string;
+    };
 }
 
-export default function page({ params }: IParams) {
-    const { poolAddress } = params
+const Page: React.FC<IParams> = ({ params }) => {
+    const { poolAddress } = params;
 
     return (
         <div className='pt-[100px]'>
-            <EarnAddressPage poolAddress={poolAddress} />
+            <PoolAddressPage poolAddress={poolAddress} />
         </div>
-    )
-}
+    );
+};
+
+export default Page;

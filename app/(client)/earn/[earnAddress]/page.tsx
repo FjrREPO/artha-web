@@ -3,16 +3,18 @@ import EarnAddressPage from './_components/EarnAddressPage'
 
 interface IParams {
     params: {
-        earnAddress: string
-    }
+        earnAddress: string;
+    };
 }
 
-export default function page({ params }: IParams) {
-    const { earnAddress } = params
+const Page: React.FC<IParams> = ({ params }) => {
+    const { earnAddress } = params;
 
     return (
         <div className='pt-[100px]'>
             <EarnAddressPage earnAddress={earnAddress} />
         </div>
-    )
-}
+    );
+};
+
+export default Page;
