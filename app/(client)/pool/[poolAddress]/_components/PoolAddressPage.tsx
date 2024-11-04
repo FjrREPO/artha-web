@@ -22,7 +22,7 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
     const { data: poolData, isLoading } = useQuery<PoolData[]>({
         queryKey: ['pool', poolAddress],
         queryFn: async () => {
-            const response = await fetch(`https://ydaemon.yearn.fi/vaults?hideAlways=true&orderBy=featuringScore&orderDirection=desc&strategiesDetails=withDetails&strategiesRisk=withRisk&strategiesCondition=inQueue&chainIDs=1&limit=2500`);
+            const response = await fetch(`https://run.mocky.io/v3/311b645a-7378-481c-ba1c-5eaa3c3688fe`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

@@ -12,7 +12,7 @@ export default function TablePool() {
         setHasMounted(true);
     }, []);
 
-    const url = 'https://ydaemon.yearn.fi/vaults?hideAlways=true&orderBy=featuringScore&orderDirection=desc&strategiesDetails=withDetails&strategiesRisk=withRisk&strategiesCondition=inQueue&chainIDs=1&limit=2500';
+    const url = 'https://run.mocky.io/v3/311b645a-7378-481c-ba1c-5eaa3c3688fe';
 
     const { data, isLoading, refetch, isRefetching } = useQuery<Vault[]>({
         queryKey: ['pool'],
