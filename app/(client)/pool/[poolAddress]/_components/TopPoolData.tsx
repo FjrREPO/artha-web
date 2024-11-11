@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatAddress, formatPercent } from '@/lib/utils';
+import { formatAddress } from '@/lib/utils';
 import { BadgeCheck, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,13 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
+import { PoolSchema } from '@/lib/validation/types';
+import { CoinSymbol } from '@/components/coin/CoinSymbol';
 
-export default function TopPoolData({ filteredData, isLoading }: { filteredData: PoolData, isLoading: boolean }) {
-    const totalAssets = filteredData?.tvl?.totalAssets;
-    const tvl = filteredData?.tvl?.tvl;
+export default function TopPoolData({ filteredData, isLoading }: { filteredData: PoolSchema, isLoading: boolean }) {
+    const totalAssets = filteredData?.ltv.toString();
+    const ltv = filteredData?.ltv;
 
-    const utilization = tvl && totalAssets && !isNaN(parseFloat(totalAssets)) && !isNaN(parseFloat(tvl.toString()))
-        ? (parseFloat(totalAssets) / parseFloat(tvl.toString())) * 100
+    const utilization = ltv && totalAssets && !isNaN(parseFloat(totalAssets as string)) && !isNaN(parseFloat(ltv.toString()))
+        ? (parseFloat(totalAssets) / parseFloat(ltv.toString())) * 100
         : null
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
@@ -22,11 +24,11 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData:
                 <Card className='p-5 w-full'>
                     <CardContent className='flex flex-col gap-8'>
                         <div className='flex flex-col md:flex-row gap-2 items-center'>
-                            <Label className='text-2xl font-bold'>{filteredData?.token?.name}</Label>
+                            <CoinSymbol address={filteredData?.collateralToken} className='text-2xl font-bold'/>
                             <div className='flex flex-row flex-wrap gap-2'>
-                                <Link href={`https://etherscan.io/address/${filteredData?.address}`} target='_blank' className="cursor-pointer px-1">
+                                <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken}`} target='_blank' className="cursor-pointer px-1">
                                     <Button variant={'outline'} className="cursor-pointer px-1">
-                                        <Label className='text-[11px] cursor-pointer'>{formatAddress(filteredData && filteredData.address ? filteredData.address : '')}</Label>
+                                        <Label className='text-[11px] cursor-pointer'>{formatAddress(filteredData && filteredData.collateralToken ? filteredData.collateralToken : '')}</Label>
                                         <ExternalLink className='w-2 h-2' />
                                     </Button>
                                 </Link>
@@ -56,20 +58,20 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData:
                                     {utilization === null ? (
                                         <Label className='text-lg font-medium'>N/A</Label>
                                     ) : (
-                                        <Label className='text-lg font-medium'>{formatPercent(utilization)}</Label>
+                                        <Label className='text-lg font-medium'>10%</Label>
                                     )}
                                 </div>
                                 <div className='flex flex-col gap-1'>
                                     <Label className='text-textSecondary'>Lend APR</Label>
-                                    <Label className='text-lg font-medium'>{filteredData?.apr?.netAPR}</Label>
+                                    <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
                                 </div>
                                 <div className='flex flex-col gap-1'>
                                     <Label className='text-textSecondary'>Collateral APY</Label>
-                                    <Label className='text-lg font-medium'>{filteredData?.apr?.forwardAPR?.composite?.v3OracleStratRatioAPR !== undefined ? formatPercent(filteredData?.apr.forwardAPR.composite.v3OracleStratRatioAPR) : 'N/A'}</Label>
+                                    <Label className='text-lg font-medium'>{filteredData?.lth !== undefined ? "10%" : 'N/A'}</Label>
                                 </div>
                                 <div className='flex flex-col gap-1'>
                                     <Label className='text-textSecondary'>Borrow APR</Label>
-                                    <Label className='text-lg font-medium'>{filteredData?.apr.fees.performance}</Label>
+                                    <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
                                 </div>
                             </div>
                         </div>
@@ -86,15 +88,15 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData:
                         <div className='px-6 flex flex-col gap-4'>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Collateral</Label>
-                                <Label>0 {filteredData?.token.symbol} $0.00</Label>
+                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
                             </div>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Borrow</Label>
-                                <Label>0 {filteredData?.token.symbol} $0.00</Label>
+                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
                             </div>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Lend</Label>
-                                <Label>0 {filteredData?.token.symbol} $0.00</Label>
+                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
                             </div>
                         </div>
                     </CardContent>

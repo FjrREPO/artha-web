@@ -14,7 +14,7 @@ export function formatAddress(inputString: string): string {
 }
 
 export const formatPercent = (value: number | null) => {
-  return value !== null ? `${value.toFixed(2)}%` : 'N/A';
+  return value ? `${value.toFixed(2)}%` : 'N/A';
 };
 
 export const formatCurrency = (value: number | null) => {

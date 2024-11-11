@@ -1,5 +1,5 @@
 import { http, createConfig } from 'wagmi'
-import { base, baseSepolia } from 'wagmi/chains'
+import { baseSepolia } from 'wagmi/chains'
 import { bitgetWallet, coinbaseWallet, metaMaskWallet, okxWallet, rabbyWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 
@@ -29,11 +29,9 @@ const connectors = connectorsForWallets(
 );
 
 export const config = createConfig({
-    chains: [base, baseSepolia],
+    chains: [baseSepolia],
     connectors: connectors,
-    ssr: true,
     transports: {
-        [base.id]: http('https://base-mainnet.g.alchemy.com/v2/vwDTCZX0XZnU6flxj8YzYZuMaOKI3EX9'),
         [baseSepolia.id]: http('https://base-sepolia.g.alchemy.com/v2/vwDTCZX0XZnU6flxj8YzYZuMaOKI3EX9')
     }
 })

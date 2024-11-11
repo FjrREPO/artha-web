@@ -14,24 +14,28 @@ import PoolDetails from './PoolDetails';
 import OpenBorrow from './OpenBorrow';
 import CloseBorrow from './CloseBorrow';
 import Lend from './Lend';
+import { PoolSchema } from '@/lib/validation/types';
+import { API_SUBGRAPH } from '@/constants/config';
+import { queryPool } from '@/graphql/query';
+import request from 'graphql-request';
+
+type QueryData = {
+    pools: PoolSchema[];
+};
 
 export default function PoolAddressPage({ poolAddress }: { poolAddress: string }) {
     const [depositAmount, setDepositAmount] = useState<number>(0);
     const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
 
-    const { data: poolData, isLoading } = useQuery<PoolData[]>({
-        queryKey: ['pool', poolAddress],
+    const { data, isLoading } = useQuery<QueryData>({
+        queryKey: ['pool'],
         queryFn: async () => {
-            const response = await fetch(`https://run.mocky.io/v3/8e9fbb6f-ad14-4e20-8be7-ae048ef23259`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+            return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 60000
-    })
+        refetchInterval: 10000,
+    });
 
-    const filteredData = poolData?.find((item: PoolData) => item.address === poolAddress);
+    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === poolAddress);
 
     const handleMaxDeposit = () => {
         setDepositAmount(0);

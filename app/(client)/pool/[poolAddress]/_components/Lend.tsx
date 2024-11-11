@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React, { useState } from 'react';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
+import { PoolSchema } from '@/lib/validation/types';
 
 interface LendProps {
-    filteredData: PoolData;
+    filteredData: PoolSchema;
     handleDepositChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleMaxDeposit: () => void;
     depositAmount: number;

@@ -4,6 +4,14 @@ import { columns } from "@/components/tables/pool/columns";
 import { DataTable } from "@/components/tables/pool/DataTable";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { PoolSchema } from "@/lib/validation/types";
+import { API_SUBGRAPH } from "@/constants/config";
+import { queryPool } from "@/graphql/query";
+import request from "graphql-request";
+
+type QueryData = {
+    pools: PoolSchema[];
+};
 
 export default function TablePool() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -12,18 +20,12 @@ export default function TablePool() {
         setHasMounted(true);
     }, []);
 
-    const url = 'https://run.mocky.io/v3/8e9fbb6f-ad14-4e20-8be7-ae048ef23259';
-
-    const { data, isLoading, refetch, isRefetching } = useQuery<Vault[]>({
+    const { data, isLoading, refetch, isRefetching } = useQuery<QueryData>({
         queryKey: ['pool'],
         queryFn: async () => {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+            return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 60000,
+        refetchInterval: 10000,
     });
 
     const handleRefresh = () => {
@@ -34,12 +36,10 @@ export default function TablePool() {
         return null;
     }
 
-    const tableData = Array.isArray(data) ? data : [];
-
     return (
         <div className="w-full space-y-4 h-auto z-10">
             <DataTable
-                data={tableData}
+                data={data?.pools || []}
                 columns={columns()}
                 handleRefresh={handleRefresh}
                 isLoading={isLoading || isRefetching}

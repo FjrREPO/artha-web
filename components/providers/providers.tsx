@@ -6,7 +6,7 @@ import { ThemeProvider } from "./theme-provider";
 import { WagmiProvider } from 'wagmi'
 import { config } from '@/lib/wagmi'
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { base } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import '@rainbow-me/rainbowkit/styles.css';
 import { CustomAvatar } from "../web3/button-connect-wallet";
 
@@ -28,7 +28,7 @@ export const Providers = (props: Props) => {
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={client}>
-                <RainbowKitProvider modalSize="wide" initialChain={base} showRecentTransactions={true} avatar={CustomAvatar}>
+                <RainbowKitProvider modalSize="wide" initialChain={baseSepolia} showRecentTransactions={true} avatar={CustomAvatar}>
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="dark"

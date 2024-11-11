@@ -145,24 +145,78 @@ interface EarnData {
     rewards?: string[];
 }
 
-interface PoolData {
-    address: string;
-    type: string;
-    kind: string;
-    symbol: string;
+// Response Api CoinMarketCap
+
+interface CoinMarketCap {
+    status: Status;
+    data: Record<string, CurrencyData>;
+}
+
+interface Status {
+    timestamp: string;
+    error_code: number;
+    error_message: null | string;
+    elapsed: number;
+    credit_count: number;
+    notice: null | string;
+}
+
+interface CurrencyData {
+    id: number;
     name: string;
+    symbol: string;
     category: string;
-    version: string;
     description: string;
-    decimals: number;
-    chainID: number;
-    token: Token;
-    tvl: TVL;
-    apr: APR;
-    strategies: Strategy[];
-    staking: Staking;
-    migration: Migration;
-    featuringScore: number;
-    pricePerShare: string;
-    info: Info;
+    slug: string;
+    logo: string;
+    subreddit: string;
+    notice: string;
+    tags: string[];
+    "tag-names": string[];
+    "tag-groups": string[];
+    urls: Urls;
+    platform: Platform | null;
+    date_added: string;
+    twitter_username: string;
+    is_hidden: number;
+    date_launched: string | null;
+    contract_address: ContractAddress[];
+    self_reported_circulating_supply: number | null;
+    self_reported_tags: null | string[];
+    self_reported_market_cap: number | null;
+    infinite_supply: boolean;
+}
+
+interface ContractAddress {
+    contract_address: string;
+    platform: Platform;
+}
+
+interface Platform {
+    id?: string;
+    name: string;
+    slug?: string;
+    symbol?: string;
+    token_address?: string;
+    coin?: CoinInfo;
+}
+
+interface Urls {
+    website: string[];
+    twitter: string[];
+    message_board: string[];
+    chat: string[];
+    facebook: string[];
+    explorer: string[];
+    reddit: string[];
+    technical_doc: string[];
+    source_code: string[];
+    announcement: string[];
+}
+
+interface CoinInfo {
+    id: string;
+    name: string;
+    symbol: string;
+    slug: string;
 }

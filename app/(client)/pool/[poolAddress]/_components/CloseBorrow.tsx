@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { PoolSchema } from '@/lib/validation/types'
 import { Wallet } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
 
 interface OpenWithdrawProps {
-    filteredData: PoolData;
+    filteredData: PoolSchema;
 }
 
 export default function CloseWithdraw({ filteredData }: OpenWithdrawProps) {
@@ -100,7 +101,7 @@ export default function CloseWithdraw({ filteredData }: OpenWithdrawProps) {
                             min={0}
                         />
                         <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                            <CoinImage symbol={filteredData?.token?.symbol || ""} />
+                            <CoinImage address={filteredData?.collateralToken || ""} />
                         </div>
                     </div>
                 </CardContent>
@@ -131,7 +132,7 @@ export default function CloseWithdraw({ filteredData }: OpenWithdrawProps) {
                             min={0}
                         />
                         <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                            <CoinImage symbol={filteredData?.token?.symbol || ""} />
+                            <CoinImage address={filteredData?.collateralToken || ""} />
                         </div>
                     </div>
                 </CardContent>
@@ -147,11 +148,11 @@ export default function CloseWithdraw({ filteredData }: OpenWithdrawProps) {
                         </div>
                         <div className='flex flex-row justify-between'>
                             <Label className='text-textSecondary'>Liquidation Price</Label>
-                            <Label>${liquidationPrice.toFixed(2)}</Label>
+                            <Label>${liquidationPrice.toFixed(2) || '-'}</Label>
                         </div>
                         <div className='flex flex-row justify-between'>
                             <Label className='text-textSecondary'>Gas Fee</Label>
-                            <Label>{gasFee}</Label>
+                            <Label>{gasFee || '-'}</Label>
                         </div>
                     </div>
                 </CardContent>

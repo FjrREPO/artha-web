@@ -1,21 +1,36 @@
-import { useCoinDetails } from "@/hooks/useCoinDetails";
-import SkeletonWrapper from "../loader/SkeletonWrapper";
 import Image from "next/image";
+import { CryptoToken } from "@/constants/cryptoToken";
 
-export const CoinImage = ({ symbol }: { symbol: string }) => {
-    const coinDetails = useCoinDetails(symbol);
+export const CoinImage = ({ symbol, address }: { symbol?: string, address?: string }) => {
+    const fallbackImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVYS7KEXYFAwqdRCW81e4DSR_nSLYSFStx1Q&s';
+
+    const coinLogoBySymbol = CryptoToken.find(
+        (coin) => coin.symbol === symbol
+    )?.logo;
+
+    const coinLogoByAddress = CryptoToken.find(
+        (coin) => coin.contract_address[0].contract_address.toLowerCase() === address?.toLowerCase()
+    )?.logo;
 
     return (
-        <SkeletonWrapper isLoading={coinDetails.isLoading}>
-            <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+            {symbol ?
                 <Image
-                    src={coinDetails.data?.data[symbol]?.logo ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVYS7KEXYFAwqdRCW81e4DSR_nSLYSFStx1Q&s'}
-                    alt={coinDetails.data?.data[symbol]?.name ?? 'Default alt text'}
+                    src={coinLogoBySymbol ?? fallbackImage}
+                    alt={coinLogoBySymbol ?? 'Default alt text'}
                     className="rounded-full"
                     width={24}
                     height={24}
                 />
-            </div>
-        </SkeletonWrapper>
+                :
+                <Image
+                    src={coinLogoByAddress ?? fallbackImage}
+                    alt={coinLogoByAddress ?? 'Default alt text'}
+                    className="rounded-full"
+                    width={24}
+                    height={24}
+                />
+            }
+        </div>
     );
 };

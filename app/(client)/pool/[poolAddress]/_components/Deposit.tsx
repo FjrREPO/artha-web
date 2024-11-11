@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { PoolSchema } from '@/lib/validation/types'
 import { Wallet } from 'lucide-react'
 import React from 'react'
 
 interface DepositProps {
-    filteredData: PoolData;
+    filteredData: PoolSchema;
     handleDepositChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleMaxDeposit: () => void;
     depositAmount: number;
@@ -41,7 +42,7 @@ export default function Deposit({ filteredData, handleDepositChange, handleMaxDe
                             min={0}
                         />
                         <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                            <CoinImage symbol={filteredData?.token?.symbol || ""} />
+                            <CoinImage address={filteredData?.collateralToken || ""} />
                         </div>
                     </div>
                 </CardContent>
