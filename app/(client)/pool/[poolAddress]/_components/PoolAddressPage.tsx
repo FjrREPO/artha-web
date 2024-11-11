@@ -22,7 +22,7 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
     const { data: poolData, isLoading } = useQuery<PoolData[]>({
         queryKey: ['pool', poolAddress],
         queryFn: async () => {
-            const response = await fetch(`https://run.mocky.io/v3/311b645a-7378-481c-ba1c-5eaa3c3688fe`);
+            const response = await fetch(`https://run.mocky.io/v3/8e9fbb6f-ad14-4e20-8be7-ae048ef23259`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
