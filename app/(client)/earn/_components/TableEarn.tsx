@@ -12,7 +12,7 @@ export default function TableEarn() {
         setHasMounted(true);
     }, []);
 
-    const url = 'https://run.mocky.io/v3/5e37fc7a-46a6-4c57-a706-6b90b40df77e';
+    const url = 'https://run.mocky.io/v3/7ba42fb7-cd9a-429c-b4a4-3a5f271281f1';
 
     const { data, isLoading, refetch, isRefetching } = useQuery<EarnData[]>({
         queryKey: ['earn'],

@@ -21,7 +21,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
     const { data: earnData, isLoading } = useQuery<EarnData[]>({
         queryKey: ['earn', earnAddress],
         queryFn: async () => {
-            const response = await fetch(`https://run.mocky.io/v3/5e37fc7a-46a6-4c57-a706-6b90b40df77e`);
+            const response = await fetch(`https://run.mocky.io/v3/7ba42fb7-cd9a-429c-b4a4-3a5f271281f1`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
