@@ -25,7 +25,7 @@ export default function TablePool() {
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 10000,
+        refetchInterval: 60000,
     });
 
     const handleRefresh = () => {

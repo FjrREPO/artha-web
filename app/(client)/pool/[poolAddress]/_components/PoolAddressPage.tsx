@@ -32,7 +32,7 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 10000,
+        refetchInterval: 60000,
     });
 
     const filteredData = data?.pools?.find((item: PoolSchema) => item.id === poolAddress);
