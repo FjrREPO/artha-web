@@ -23,7 +23,7 @@ type QueryData = {
     pools: PoolSchema[];
 };
 
-export default function PoolIdPage({ poolId }: { poolId: string }) {
+export default function PoolIdPage({ PoolId }: { PoolId: string }) {
     const [depositAmount, setDepositAmount] = useState<number>(0);
     const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
 
@@ -35,7 +35,7 @@ export default function PoolIdPage({ poolId }: { poolId: string }) {
         refetchInterval: 360000,
     });
 
-    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === poolId);
+    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
 
     const handleMaxDeposit = () => {
         setDepositAmount(0);
