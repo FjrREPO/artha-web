@@ -12,7 +12,7 @@ export default function TableEarn() {
         setHasMounted(true);
     }, []);
 
-    const url = 'https://run.mocky.io/v3/5e37fc7a-46a6-4c57-a706-6b90b40df77e';
+    const url = 'https://gist.githubusercontent.com/azizrosyid/3f8d9c2da91d6b5a893067762b26de73/raw/9bc70f649d38d78b3b4d819904fe5811a05da317/earn.json';
 
     const { data, isLoading, refetch, isRefetching } = useQuery<EarnData[]>({
         queryKey: ['earn'],

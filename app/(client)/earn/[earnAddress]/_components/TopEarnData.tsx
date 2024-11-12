@@ -14,7 +14,7 @@ export default function TopEarnData({ filteredData, isLoading }: { filteredData:
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
             <SkeletonWrapper isLoading={isLoading}>
-                <Card className='p-5 w-full'>
+                <Card className='p-5 w-4/6'>
                     <CardContent className='flex flex-col gap-8'>
                         <div className='flex flex-col md:flex-row gap-2 items-center'>
                             <Label className='text-2xl font-bold'>{filteredData?.aggregatorName}</Label>
@@ -55,7 +55,7 @@ export default function TopEarnData({ filteredData, isLoading }: { filteredData:
                                 </div>
                                 <div className='flex flex-col gap-1'>
                                     <Label className='text-textSecondary'>Utitlization Rate</Label>
-                                    <Label className='text-lg font-medium'>{filteredData?.whitelistedPools}</Label>
+                                    <Label className='text-lg font-medium break-all'>{filteredData?.whitelistedPools}</Label>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ export default function TopEarnData({ filteredData, isLoading }: { filteredData:
                 </Card>
             </SkeletonWrapper>
             <SkeletonWrapper isLoading={isLoading}>
-                <Card className='w-full lg:w-[50%] py-5'>
+                <Card className='w-full lg:w-2/6 py-5'>
                     <CardContent className='flex flex-col space-y-5 p-0'>
                         <div className='px-6'>
                             <Label className='text-md'>Your Position</Label>

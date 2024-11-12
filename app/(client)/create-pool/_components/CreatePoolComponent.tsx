@@ -32,25 +32,17 @@ import { Button } from "@/components/ui/button";
 import { useCreatePool } from '@/hooks/useCreatePool';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
+import { poolSchema } from '@/lib/validation/schemas';
 
-const formSchema = z.object({
-    collateral: z.string().min(1, "Please select a collateral"),
-    loanToken: z.string().min(1, "Please select a loan token"),
-    irm: z.string().min(1, "Please select an interest rate model"),
-    oracle: z.string().min(1, "Please select an oracle"),
-    ltv: z.string().transform((val) => (val === '' ? '0' : val)),
-    lth: z.string().transform((val) => (val === '' ? '0' : val)),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof poolSchema>;
 
 const CreatePoolComponent = () => {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const form = useForm<FormData>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(poolSchema),
         defaultValues: {
-            collateral: "",
+            collateralToken: "",
             loanToken: "",
             irm: "",
             oracle: "",
@@ -73,7 +65,7 @@ const CreatePoolComponent = () => {
     } = useCreatePool();
 
     const onSubmit = (data: FormData) => {
-        const replacedCollateral = data.collateral = "0x910524678C0B1B23FFB9285a81f99C29C11CBaEd";
+        const replacedCollateral = data.collateralToken = "0x910524678C0B1B23FFB9285a81f99C29C11CBaEd";
         if (data.loanToken === "USDC") {
             data.loanToken = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
         } else if (data.loanToken === "USDT") {
@@ -93,11 +85,11 @@ const CreatePoolComponent = () => {
     };
 
     useEffect(() => {
-        if (isCreatePoolConfirming && !isCreatePoolConfirmed) {
+        if (createPoolHash && isCreatePoolConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
         }
-    }, [isCreatePoolConfirming, isCreatePoolConfirmed, form]);
+    }, [createPoolHash, isCreatePoolConfirmed, form]);
 
     return (
         <>
@@ -122,7 +114,7 @@ const CreatePoolComponent = () => {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
                                 control={form.control}
-                                name="collateral"
+                                name="collateralToken"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Collateral</FormLabel>

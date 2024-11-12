@@ -35,7 +35,7 @@ export const SuccessDialog = ({
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                            <Check className="h-5 w-5 text-green-600" />
+                            <Check className="h-5 w-5 text-green-500" />
                         </div>
                         <span>Transaction Successful!</span>
                     </DialogTitle>
@@ -59,7 +59,7 @@ export const SuccessDialog = ({
                                 onClick={handleCopy}
                                 className="shrink-0"
                             >
-                                <Copy className={`h-4 w-4 ${copied ? 'text-green-600' : 'text-gray-500'}`} />
+                                <Copy className={`h-4 w-4 ${copied ? 'text-green-500' : 'text-gray-500'}`} />
                             </Button>
                             <Button
                                 variant="ghost"

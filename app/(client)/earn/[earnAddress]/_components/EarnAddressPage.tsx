@@ -21,7 +21,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
     const { data: earnData, isLoading } = useQuery<EarnData[]>({
         queryKey: ['earn', earnAddress],
         queryFn: async () => {
-            const response = await fetch(`https://run.mocky.io/v3/5e37fc7a-46a6-4c57-a706-6b90b40df77e`);
+            const response = await fetch(`https://gist.githubusercontent.com/azizrosyid/3f8d9c2da91d6b5a893067762b26de73/raw/9bc70f649d38d78b3b4d819904fe5811a05da317/earn.json`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -55,7 +55,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
             <div className='flex flex-col gap-5'>
                 <TopEarnData filteredData={filteredData!} isLoading={isLoading} />
                 <div className='flex flex-col lg:flex-row w-full gap-5'>
-                    <div className='flex flex-col w-full gap-5'>
+                    <div className='flex flex-col w-full gap-5 lg:w-4/6'>
                         <SkeletonWrapper isLoading={isLoading}>
                             <Card className='w-full'>
                                 <CardContent className='p-5 space-y-5'>
@@ -67,7 +67,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
                         </SkeletonWrapper>
                         <SkeletonWrapper isLoading={isLoading}>
                             <Card className='w-full'>
-                                <CardContent className='p-5 space-y-5'>
+                                <CardContent className='p-5 space-y-5 max-w-full'>
                                     <Label>Whitelisted Pools</Label>
                                     <Separator className='w-full' />
                                     <TablePool />
@@ -75,7 +75,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
                             </Card>
                         </SkeletonWrapper>
                     </div>
-                    <div className='w-full lg:w-[50%]'>
+                    <div className='w-full lg:w-2/6'>
                         <SkeletonWrapper isLoading={isLoading}>
                             <Card className='w-full'>
                                 <CardContent className='p-5 space-y-5'>
