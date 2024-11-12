@@ -8,11 +8,9 @@ type Props = {
 }
 
 const Page = ({ params }: Props) => {
-    const { poolId } = params;
-
     return (
         <div className='pt-[100px]'>
-            <PoolIdPage PoolId={poolId} />
+            <PoolIdPage PoolId={params.poolId} />
         </div>
     );
 };
