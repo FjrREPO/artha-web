@@ -88,15 +88,15 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData:
                         <div className='px-6 flex flex-col gap-4'>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Collateral</Label>
-                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
+                                <Label>$0.00</Label>
                             </div>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Borrow</Label>
-                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
+                                <Label>$0.00</Label>
                             </div>
                             <div className='flex flex-row justify-between items-center'>
                                 <Label className='text-textSecondary'>Lend</Label>
-                                <Label>0 {filteredData?.collateralToken} $0.00</Label>
+                                <Label>$0.00</Label>
                             </div>
                         </div>
                     </CardContent>

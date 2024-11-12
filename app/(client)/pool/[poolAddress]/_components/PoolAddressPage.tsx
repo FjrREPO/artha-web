@@ -23,7 +23,7 @@ type QueryData = {
     pools: PoolSchema[];
 };
 
-export default function PoolAddressPage({ poolAddress }: { poolAddress: string }) {
+export default function PoolAddressPage({ PoolAddress }: { PoolAddress: string }) {
     const [depositAmount, setDepositAmount] = useState<number>(0);
     const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
 
@@ -32,10 +32,10 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 60000,
+        refetchInterval: 360000,
     });
 
-    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === poolAddress);
+    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === PoolAddress);
 
     const handleMaxDeposit = () => {
         setDepositAmount(0);
@@ -80,8 +80,8 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
                             </Card>
                         </SkeletonWrapper>
                     </div>
-                    <div className='w-full lg:w-[50%]'>
-                        <SkeletonWrapper isLoading={isLoading}>
+                    <SkeletonWrapper isLoading={isLoading}>
+                        <div className='w-full lg:w-[50%]'>
                             <Card className='w-full'>
                                 <CardContent className='p-5 space-y-5'>
                                     <Tabs defaultValue='openBorrow' className='w-full'>
@@ -110,8 +110,8 @@ export default function PoolAddressPage({ poolAddress }: { poolAddress: string }
                                     </Tabs>
                                 </CardContent>
                             </Card>
-                        </SkeletonWrapper>
-                    </div>
+                        </div>
+                    </SkeletonWrapper>
                 </div>
             </div>
         </div >

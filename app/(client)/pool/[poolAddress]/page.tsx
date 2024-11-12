@@ -2,15 +2,15 @@ import React from 'react';
 import PoolAddressPage from './_components/PoolAddressPage';
 import { use } from 'react';
 
-type Params = Promise<{ poolAddress: string }>
+type Params = Promise<{ PoolAddress: string }>
 
 const Page = (props: { params: Params }) => {
     const params = use(props.params);
-    const poolAddress = params.poolAddress;
+    const PoolAddress = params.PoolAddress;
 
     return (
         <div className='pt-[100px]'>
-            <PoolAddressPage poolAddress={poolAddress} />
+            <PoolAddressPage PoolAddress={PoolAddress} />
         </div>
     );
 };
