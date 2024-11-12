@@ -20,6 +20,7 @@ const NAVIGATION_ITEMS = [
   { label: "Pool", link: "/pool", icon: <BellDot /> },
   { label: "Dashboard", link: "/dashboard", icon: <FolderDot /> },
   { label: "Create Pool", link: "/create-pool", icon: <FolderDot /> },
+  { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
 ] as const;
 
 // Separate NavbarItem into a memoized component

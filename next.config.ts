@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "mainnet-cdn.benddao.xyz",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "static.alchemyapi.io",
         port: "",
         pathname: "/**",
