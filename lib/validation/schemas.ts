@@ -67,7 +67,7 @@ export const CoinMarketCapSchema = z.object({
     logo: z.string(),
     subreddit: z.string(),
     notice: z.string(),
-    tags: z.array(z.string()),
+    tags: z.union([z.array(z.string()), z.null()]),
     "tag-names": z.array(z.string()),
     "tag-groups": z.array(z.string()),
     urls: TokenUrls,
