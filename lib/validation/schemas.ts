@@ -57,7 +57,7 @@ const TokenUrls = z.object({
     announcement: z.array(z.string()),
 });
 
-export const CoinMarketCapSchema = z.object({
+export const coinMarketCapSchema = z.object({
     id: z.number(),
     name: z.string(),
     symbol: z.string(),

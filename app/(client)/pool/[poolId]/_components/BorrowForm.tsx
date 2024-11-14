@@ -17,6 +17,7 @@ import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
 import { useERC721Balance } from '@/hooks/useERC721Balance';
 import { useBorrow } from '@/hooks/useBorrow';
+import { coinMarketCapSchema } from '@/lib/validation/schemas';
 
 interface BorrowFormProps {
     filteredData?: PoolSchema;
@@ -135,7 +136,14 @@ export default function BorrowForm({
                                                     placeholder="Enter borrow amount"
                                                 />
                                                 <DialogSelectToken
-                                                    tokenUsed={CryptoToken}
+                                                    tokenUsed={CryptoToken.map((token) => {
+                                                        const validatedToken = coinMarketCapSchema.parse(token);
+                                                        return {
+                                                            ...validatedToken,
+                                                            "tag-names": validatedToken["tag-names"] || [],
+                                                            "tag-groups": validatedToken["tag-groups"] || [],
+                                                        };
+                                                    })}
                                                     isDialogOpen={isBorrowDialogOpen}
                                                     setDialogOpen={setIsBorrowDialogOpen}
                                                     handleSelect={handleSelectBorrowToken}
