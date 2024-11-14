@@ -21,7 +21,7 @@ export default function TopEarnData({ filteredData, isLoading }: { filteredData:
                             <div className='flex flex-row flex-wrap gap-2'>
                                 <Link href={`https://etherscan.io/address/${filteredData?.address}`} target='_blank' className="cursor-pointer px-1">
                                     <Button variant={'outline'} className="cursor-pointer px-1">
-                                        <Label className='text-[11px] cursor-pointer'>{formatAddress(filteredData && filteredData.address ? filteredData.address : '')}</Label>
+                                        <Label className='text-[11px] cursor-pointer'>{formatAddress(filteredData && filteredData.address ? filteredData.address : '', 4)}</Label>
                                         <ExternalLink className='w-2 h-2' />
                                     </Button>
                                 </Link>
