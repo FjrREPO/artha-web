@@ -14,6 +14,7 @@ import { useAccount } from 'wagmi';
 import { useERC721Balance } from '@/hooks/useERC721Balance';
 import { CryptoToken } from '@/constants/cryptoToken';
 import { DialogSelectToken } from '@/components/dialog/DialogSelectToken';
+import { coinMarketCapSchema } from '@/lib/validation/schemas';
 
 interface DepositCollateralProps {
     filteredData?: PoolSchema;
@@ -104,7 +105,14 @@ export default function DepositCollateral({ filteredData, onDeposit }: DepositCo
                                                 placeholder="Enter deposit amount"
                                             />
                                             <DialogSelectToken
-                                                tokenUsed={CryptoToken}
+                                                tokenUsed={CryptoToken.map((token) => {
+                                                    const validatedToken = coinMarketCapSchema.parse(token);
+                                                    return {
+                                                        ...validatedToken,
+                                                        "tag-names": validatedToken["tag-names"] || [],
+                                                        "tag-groups": validatedToken["tag-groups"] || [],
+                                                    };
+                                                })}
                                                 isDialogOpen={isDepositDialogOpen}
                                                 setDialogOpen={setIsDepositDialogOpen}
                                                 handleSelect={handleSelectDepositToken}
