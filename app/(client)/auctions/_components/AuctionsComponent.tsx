@@ -22,6 +22,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import Image from 'next/image';
 import { AuctionsDataSchema } from '@/lib/validation/types';
+import Link from 'next/link';
 
 type CollectionOption = string;
 type OrderDirection = 'asc' | 'desc';
@@ -181,7 +182,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
                             <span className="text-sm">1.1213</span>
                         </div>
                     </div>
-                    <Button className="w-full mt-4">Place a bid</Button>
+                    <Link href={`/auctions/${nft.id}`}><Button className="w-full mt-4">Place a bid</Button></Link>
                 </CardContent>
             </Card>
         </SkeletonWrapper>

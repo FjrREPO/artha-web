@@ -5,11 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatAddress(inputString: string): string {
+export const formatAddress = (inputString: string, lengthSlice: number): string => {
   if (inputString.length <= 8) return inputString;
 
-  const firstPart = inputString.slice(0, 4); 
-  const lastPart = inputString.slice(-4); 
+  const firstPart = inputString.slice(0, lengthSlice); 
+  const lastPart = inputString.slice(-lengthSlice); 
   return `${firstPart}…${lastPart}`;
 }
 

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const poolSchema = z.object({
-    id: z.string(),
+    id: z.string().optional(),
     collateralToken: z.string().min(1, "Please select a collateral"),
     loanToken: z.string().min(1, "Please select a loan token"),
     irm: z.string().min(1, "Please select an interest rate model"),
@@ -9,6 +9,14 @@ export const poolSchema = z.object({
     ltv: z.string().transform((val) => (val === '' ? '0' : val)),
     lth: z.string().transform((val) => (val === '' ? '0' : val)),
 });
+
+export const curatorSchema = z.object({
+    _name: z.string(),
+    _symbol: z.string(),
+    _asset: z.string(),
+    pools: z.array(z.string()),
+    allocations: z.array(z.number()),
+})
 
 // CoinMarketCap schema
 const PlatformCoin = z.object({

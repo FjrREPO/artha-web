@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { CryptoToken } from "@/constants/cryptoToken";
+import { cn } from "@/lib/utils";
 
-export const CoinImage = ({ symbol, address }: { symbol?: string, address?: string }) => {
+export const CoinImage = ({ symbol, address, className }: { symbol?: string, address?: string, className?: string }) => {
     const fallbackImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVYS7KEXYFAwqdRCW81e4DSR_nSLYSFStx1Q&s';
 
     const coinLogoBySymbol = CryptoToken.find(
@@ -18,7 +19,7 @@ export const CoinImage = ({ symbol, address }: { symbol?: string, address?: stri
                 <Image
                     src={coinLogoBySymbol ?? fallbackImage}
                     alt={coinLogoBySymbol ?? 'Default alt text'}
-                    className="rounded-full"
+                    className={cn("rounded-full", className)}
                     width={24}
                     height={24}
                 />
@@ -26,7 +27,7 @@ export const CoinImage = ({ symbol, address }: { symbol?: string, address?: stri
                 <Image
                     src={coinLogoByAddress ?? fallbackImage}
                     alt={coinLogoByAddress ?? 'Default alt text'}
-                    className="rounded-full"
+                    className={cn("rounded-full", className)}
                     width={24}
                     height={24}
                 />

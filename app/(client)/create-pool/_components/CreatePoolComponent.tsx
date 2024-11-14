@@ -33,6 +33,9 @@ import { useCreatePool } from '@/hooks/useCreatePool';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { poolSchema } from '@/lib/validation/schemas';
+import { CoinImage } from '@/components/coin/CoinImage';
+import { Label } from '@/components/ui/label';
+import { CryptoToken } from '@/constants/cryptoToken';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -51,7 +54,7 @@ const CreatePoolComponent = () => {
         },
     });
 
-    const collateralOptions = ["AZUKI"];
+    const collateralOptions = ["AZUKI", "BAYC"];
     const loanTokenOptions = ["USDC", "USDT"];
     const irmOptions = ["Linear Rate", "Non-Linear Rate", "Dynamic Rate"];
     const oracleOptions = ["Chainlink", "Band Protocol", "API3"];
@@ -65,18 +68,12 @@ const CreatePoolComponent = () => {
     } = useCreatePool();
 
     const onSubmit = (data: FormData) => {
-        const replacedCollateral = data.collateralToken = "0x910524678C0B1B23FFB9285a81f99C29C11CBaEd";
-        if (data.loanToken === "USDC") {
-            data.loanToken = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
-        } else if (data.loanToken === "USDT") {
-            data.loanToken = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
-        } else {
-            data.loanToken = "";
-        }
+        const findCollateralBySymbol = CryptoToken.find((token) => token.symbol === data.collateralToken);
+        const findLoanTokenBySymbol = CryptoToken.find((token) => token.symbol === data.loanToken);
 
         handleCreatePool(
-            replacedCollateral,
-            data.loanToken,
+            findCollateralBySymbol?.contract_address[0].contract_address || "",
+            findLoanTokenBySymbol?.contract_address[0].contract_address || "",
             data.oracle,
             data.irm,
             data.ltv,
@@ -129,7 +126,12 @@ const CreatePoolComponent = () => {
                                             </FormControl>
                                             <SelectContent>
                                                 {collateralOptions.map((option) => (
-                                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                                    <SelectItem key={option} value={option}>
+                                                        <div className='flex flex-row gap-2 items-center'>
+                                                            <CoinImage symbol={option} />
+                                                            <Label>{option}</Label>
+                                                        </div>
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -158,7 +160,12 @@ const CreatePoolComponent = () => {
                                             </FormControl>
                                             <SelectContent>
                                                 {loanTokenOptions.map((option) => (
-                                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                                    <SelectItem key={option} value={option}>
+                                                        <div className='flex flex-row gap-2 items-center'>
+                                                            <CoinImage symbol={option} />
+                                                            <Label>{option}</Label>
+                                                        </div>
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
