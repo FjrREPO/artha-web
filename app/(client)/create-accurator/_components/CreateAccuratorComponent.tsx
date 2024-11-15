@@ -81,6 +81,7 @@ const CreateCuratorComponent = () => {
     });
 
     const {
+        dataCurator,
         createCuratorHash,
         isCreateCuratorPending,
         handleCreateCurator,
@@ -173,8 +174,10 @@ const CreateCuratorComponent = () => {
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={createCuratorHash || ""}
-                processName="Create Pool"
+                txHash={createCuratorHash as HexAddress || ""}
+                processName="Create Curator"
+                enabledLogs={true}
+                logs={dataCurator?.logs?.[0]}
             />
             <Card className="w-full max-w-lg mx-auto">
                 <CardHeader>

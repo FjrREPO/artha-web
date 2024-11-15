@@ -99,7 +99,7 @@ export default function BorrowForm({
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={borrowHash || ""}
+                txHash={borrowHash as HexAddress || ""}
                 processName="Create Pool"
             />
             <Form {...form}>

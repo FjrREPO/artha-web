@@ -98,7 +98,7 @@ const CreatePoolComponent = () => {
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={createPoolHash || ""}
+                txHash={createPoolHash as HexAddress || ""}
                 processName="Create Pool"
             />
             <Card className="w-full max-w-lg mx-auto">

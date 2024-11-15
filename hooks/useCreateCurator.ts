@@ -13,9 +13,10 @@ export const useCreateCurator = () => {
 
     const {
         isLoading: isCreateCuratorConfirming,
-        isSuccess: isCreateCuratorConfirmed
+        isSuccess: isCreateCuratorConfirmed,
+        data: dataCurator
     } = useWaitForTransactionReceipt({
-        hash: createCuratorHash,
+        hash: createCuratorHash
     });
 
     const handleCreateCurator = async (
@@ -54,6 +55,7 @@ export const useCreateCurator = () => {
     };
 
     return {
+        dataCurator,
         createCuratorHash,
         isCreateCuratorPending,
         isCreateCuratorConfirming,

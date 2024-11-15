@@ -27,7 +27,7 @@ export const auctionHistorySchema = z.object({
 });
 
 export const auctionActivitySchema = z.object({
-    activityType: z.string().min(1), 
+    activityType: z.string().min(1),
     price: z.union([z.string().min(1), z.literal('--')]),
     from: z.string().min(1),
     to: z.string().min(1),
@@ -35,42 +35,17 @@ export const auctionActivitySchema = z.object({
 });
 
 // CoinMarketCap schema
-const PlatformCoin = z.object({
-    id: z.string(),
-    name: z.string(),
-    symbol: z.string(),
-    slug: z.string(),
-});
-
-const Platform = z.object({
-    name: z.string(),
-    coin: PlatformCoin,
-});
-
-const ContractAddress = z.object({
+const ContractAddressMarketCap = z.object({
     contract_address: z.string(),
-    platform: Platform,
-});
-
-const TokenPlatform = z.object({
-    id: z.string(),
-    name: z.string(),
-    slug: z.string(),
-    symbol: z.string(),
-    token_address: z.string(),
-});
-
-const TokenUrls = z.object({
-    website: z.array(z.string()),
-    twitter: z.array(z.string()),
-    message_board: z.array(z.string()),
-    chat: z.array(z.string()),
-    facebook: z.array(z.string()),
-    explorer: z.array(z.string()),
-    reddit: z.array(z.string()),
-    technical_doc: z.array(z.string()),
-    source_code: z.array(z.string()),
-    announcement: z.array(z.string()),
+    platform: z.object({
+        name: z.string(),
+        coin: z.object({
+            id: z.string(),
+            name: z.string(),
+            symbol: z.string(),
+            slug: z.string(),
+        }),
+    }),
 });
 
 export const coinMarketCapSchema = z.object({
@@ -80,24 +55,41 @@ export const coinMarketCapSchema = z.object({
     category: z.string(),
     description: z.string(),
     slug: z.string(),
-    logo: z.string(),
-    subreddit: z.string(),
-    notice: z.string(),
-    tags: z.union([z.array(z.string()), z.null()]),
-    "tag-names": z.union([z.array(z.string()), z.null()]),
-    "tag-groups": z.union([z.array(z.string()), z.null()]),
-    urls: TokenUrls,
-    platform: TokenPlatform,
-    date_added: z.string(),
-    twitter_username: z.string(),
+    logo: z.string().url(),
+    subreddit: z.string().optional(),
+    notice: z.string().optional(),
+    tags: z.array(z.string()).nullable(),
+    "tag-names": z.array(z.string()).nullable(),
+    "tag-groups": z.array(z.string()).nullable(),
+    urls: z.object({
+        website: z.array(z.string().url()).optional(),
+        twitter: z.array(z.string().url()).optional(),
+        "message_board": z.array(z.string().url()).optional(),
+        chat: z.array(z.string().url()).optional(),
+        facebook: z.array(z.string().url()).optional(),
+        explorer: z.array(z.string().url()).optional(),
+        reddit: z.array(z.string().url()).optional(),
+        "technical_doc": z.array(z.string().url()).optional(),
+        "source_code": z.array(z.string().url()).optional(),
+        announcement: z.array(z.string().url()).optional(),
+    }),
+    platform: z.object({
+        id: z.string(),
+        name: z.string(),
+        slug: z.string(),
+        symbol: z.string(),
+        token_address: z.string(),
+    }),
+    date_added: z.string().transform(v => new Date(v)),
+    twitter_username: z.string().optional(),
     is_hidden: z.number(),
-    date_launched: z.null(),
-    contract_address: z.array(ContractAddress),
-    self_reported_circulating_supply: z.null(),
-    self_reported_tags: z.null(),
-    self_reported_market_cap: z.null(),
+    date_launched: z.string().nullable().transform(v => v ? new Date(v) : null),
+    contract_address: z.array(ContractAddressMarketCap),
+    self_reported_circulating_supply: z.number().nullable(),
+    self_reported_tags: z.array(z.string()).nullable(),
+    self_reported_market_cap: z.number().nullable(),
     infinite_supply: z.boolean(),
-})
+});
 
 // BENDDAO
 const ReserveAssetSchema = z.object({
