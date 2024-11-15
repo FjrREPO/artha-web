@@ -40,7 +40,7 @@ export default function DepositCollateral({ filteredData, onDeposit }: DepositCo
 
     const findTokenIdByAddress = filteredData?.collateralToken
         ? CryptoToken.find((token) =>
-            token.contract_address[0].contract_address.toLowerCase() === filteredData.collateralToken.toLowerCase()
+            token.contract_address[0].contract_address.toLowerCase() === filteredData.collateralToken!.toLowerCase()
         )?.id
         : undefined;
 

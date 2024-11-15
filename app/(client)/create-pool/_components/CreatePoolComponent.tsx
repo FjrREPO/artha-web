@@ -74,10 +74,10 @@ const CreatePoolComponent = () => {
         handleCreatePool(
             findCollateralBySymbol?.contract_address[0].contract_address || "",
             findLoanTokenBySymbol?.contract_address[0].contract_address || "",
-            data.oracle,
-            data.irm,
-            data.ltv,
-            data.lth
+            data.oracle || "",
+            data.irm || "",
+            data.ltv || "",
+            data.lth || ""
         );
     };
 
@@ -117,7 +117,7 @@ const CreatePoolComponent = () => {
                                         <FormLabel>Collateral</FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            defaultValue={field.value || ""}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -151,7 +151,7 @@ const CreatePoolComponent = () => {
                                         <FormLabel>Loan Token</FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            defaultValue={field.value || ""}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -185,7 +185,7 @@ const CreatePoolComponent = () => {
                                         <FormLabel>Interest Rate Model</FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            defaultValue={field.value || ""}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -214,7 +214,7 @@ const CreatePoolComponent = () => {
                                         <FormLabel>Oracle</FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            defaultValue={field.value || ""}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>

@@ -14,7 +14,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <CoinImage symbol={row.original.lendAsset} />
+          <CoinImage symbol={row.original.lendAsset || ""} />
           <span>{row.original.lendAsset || "Unknown Asset"}</span>
         </div>
       ),

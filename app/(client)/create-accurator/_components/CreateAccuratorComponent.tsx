@@ -256,8 +256,8 @@ const CreateCuratorComponent = () => {
                                                         disabled={selectedPools.some(p => p.poolId === pool.id)}
                                                     >
                                                         <div className="flex flex-row gap-2 items-center">
-                                                            <CoinImage address={pool.collateralToken} />
-                                                            <CoinSymbol address={pool.collateralToken} />
+                                                            <CoinImage address={pool.collateralToken || ""} />
+                                                            <CoinSymbol address={pool.collateralToken || ""} />
                                                         </div>
                                                     </SelectItem>
                                                 ))}

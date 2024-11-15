@@ -11,7 +11,7 @@ import { PoolSchema } from '@/lib/validation/types';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
 
 export default function TopPoolData({ filteredData, isLoading }: { filteredData?: PoolSchema, isLoading: boolean }) {
-    const totalAssets = filteredData?.ltv.toString();
+    const totalAssets = filteredData?.ltv?.toString();
     const ltv = filteredData?.ltv;
 
     const utilization = ltv && totalAssets && !isNaN(parseFloat(totalAssets as string)) && !isNaN(parseFloat(ltv.toString()))

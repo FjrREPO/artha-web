@@ -42,7 +42,7 @@ export default function TopEarnData({ filteredData, isLoading }: { filteredData:
                                     <Label className='text-textSecondary'>Lend Asset</Label>
                                     <div className='flex flex-row gap-2'>
                                         <CoinImage symbol={filteredData?.lendAsset || ""} />
-                                        <Label className='text-lg font-medium'>{filteredData?.lendAsset}</Label>
+                                        <Label className='text-lg font-medium'>{filteredData?.lendAsset || ""}</Label>
                                     </div>
                                 </div>
                                 <div className='flex flex-col gap-1'>

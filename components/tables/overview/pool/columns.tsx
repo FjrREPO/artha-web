@@ -13,8 +13,8 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <CoinImage address={row.original.collateralToken} />
-          <CoinSymbol address={row.original.collateralToken} />
+          <CoinImage address={row.original.collateralToken || ""} />
+          <CoinSymbol address={row.original.collateralToken || ""} />
         </div>
       ),
     },
@@ -27,8 +27,8 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <div className="flex items-center gap-2">
           {row.original.loanToken ? (
             <>
-              <CoinImage address={row.original.loanToken} />
-              <CoinSymbol address={row.original.loanToken} />
+              <CoinImage address={row.original.loanToken || ""} />
+              <CoinSymbol address={row.original.loanToken || ""} />
             </>
           ) : (
             <span>No Token</span>
