@@ -187,64 +187,58 @@ const CreateCuratorComponent = () => {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <SkeletonWrapper isLoading={isPoolsLoading}>
-                                <FormField
-                                    control={form.control}
-                                    name="_name"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Name</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Name" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Enter the curator name
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </SkeletonWrapper>
-                            <SkeletonWrapper isLoading={isPoolsLoading}>
-                                <FormField
-                                    control={form.control}
-                                    name="_symbol"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Symbol</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Symbol" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Enter the curator symbol
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </SkeletonWrapper>
-                            <SkeletonWrapper isLoading={isPoolsLoading}>
-                                <FormField
-                                    control={form.control}
-                                    name="_asset"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Asset</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Asset address" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Enter the asset address
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </SkeletonWrapper>
-                            <div className="space-y-4">
-                                <SkeletonWrapper isLoading={isPoolsLoading}>
+                            <FormField
+                                control={form.control}
+                                name="_name"
+                                render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Pool Selection</FormLabel>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Name" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Enter the curator name
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="_symbol"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Symbol</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Symbol" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Enter the curator symbol
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="_asset"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Asset</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Asset address" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Enter the asset address
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="space-y-4">
+                                <FormItem>
+                                    <FormLabel>Pool Selection</FormLabel>
+                                    <SkeletonWrapper isLoading={isPoolsLoading}>
                                         <Select onValueChange={handlePoolSelection}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -266,8 +260,8 @@ const CreateCuratorComponent = () => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </FormItem>
-                                </SkeletonWrapper>
+                                    </SkeletonWrapper>
+                                </FormItem>
 
                                 {selectedPools.length > 0 && (
                                     <Alert>
@@ -329,20 +323,18 @@ const CreateCuratorComponent = () => {
                                     })}
                                 </SkeletonWrapper>
                             </div>
-                            <SkeletonWrapper isLoading={isPoolsLoading}>
-                                <Button
-                                    type="submit"
-                                    className="w-full"
-                                    disabled={isCreateCuratorPending || isCreateCuratorConfirming}
-                                >
-                                    {isCreateCuratorPending
-                                        ? 'Creating Curator...'
-                                        : isCreateCuratorConfirming
-                                            ? 'Confirming Transaction...'
-                                            : 'Create Curator'
-                                    }
-                                </Button>
-                            </SkeletonWrapper>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isCreateCuratorPending || isCreateCuratorConfirming}
+                            >
+                                {isCreateCuratorPending
+                                    ? 'Creating Curator...'
+                                    : isCreateCuratorConfirming
+                                        ? 'Confirming Transaction...'
+                                        : 'Create Curator'
+                                }
+                            </Button>
                         </form>
                     </Form>
                 </CardContent>
