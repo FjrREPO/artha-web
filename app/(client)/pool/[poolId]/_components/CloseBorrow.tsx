@@ -1,3 +1,5 @@
+"use client"
+
 import { CoinImage } from '@/components/coin/CoinImage'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,7 +10,7 @@ import { Wallet } from 'lucide-react'
 import React, { useState, useEffect } from 'react'
 
 interface OpenWithdrawProps {
-    filteredData: PoolSchema;
+    filteredData?: PoolSchema;
 }
 
 export default function CloseWithdraw({ filteredData }: OpenWithdrawProps) {

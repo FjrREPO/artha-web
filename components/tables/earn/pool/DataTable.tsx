@@ -120,9 +120,17 @@ export function DataTable<TData extends PoolSchema, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, headerIndex) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={`${headerIndex === 0
+                          ? 'flex justify-start'
+                          : headerIndex === headerGroup.headers.length - 1
+                            ? 'flex justify-end'
+                            : 'justify-center'
+                        }`}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -144,8 +152,16 @@ export function DataTable<TData extends PoolSchema, TValue>({
                   onClick={() => window.location.href = `/pool/${row.original.id}`}
                   className="cursor-pointer"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                  {row.getVisibleCells().map((cell, cellIndex) => (
+                    <TableCell
+                      key={cell.id}
+                      className={`${cellIndex === 0
+                        ? 'flex justify-start'
+                        : cellIndex === row.getVisibleCells().length - 1
+                          ? 'flex justify-end'
+                          : 'justify-center'
+                        }`}
+                    >
                       <SkeletonWrapper isLoading={isLoading}>
                         {flexRender(
                           cell.column.columnDef.cell,

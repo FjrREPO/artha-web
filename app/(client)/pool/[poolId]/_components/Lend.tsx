@@ -7,7 +7,7 @@ import Withdraw from './Withdraw';
 import { PoolSchema } from '@/lib/validation/types';
 
 interface LendProps {
-    filteredData: PoolSchema;
+    filteredData?: PoolSchema;
     handleDepositChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleMaxDeposit: () => void;
     depositAmount: number;

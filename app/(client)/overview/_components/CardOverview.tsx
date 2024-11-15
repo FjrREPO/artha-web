@@ -15,7 +15,7 @@ export default function CardOverview() {
                     </div>
                     <Button className='w-fit'>View docs</Button>
                 </div>
-                <div className='flex flex-row gap-5 justify-center items-center flex-wrap'>
+                <div className='flex flex-row gap-5 justify-start sm:justify-center items-center flex-wrap'>
                     <div className='flex flex-col gap-1'>
                         <Label className='text-textSecondary'>Aggregator Highest APY</Label>
                         <Label className='text-2xl'>24.53%</Label>

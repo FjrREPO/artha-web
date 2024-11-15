@@ -34,8 +34,8 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
         },
         refetchInterval: 360000,
     });
-
-    const filteredData = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
+    
+    const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
 
     const handleMaxDeposit = () => {
         setDepositAmount(0);
@@ -58,7 +58,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
     return (
         <div>
             <div className='flex flex-col gap-5'>
-                <TopPoolData filteredData={filteredData!} isLoading={isLoading} />
+                <TopPoolData filteredData={filteredData} isLoading={isLoading} />
                 <div className='flex flex-col lg:flex-row w-full gap-5'>
                     <div className='flex flex-col w-full gap-5'>
                         <SkeletonWrapper isLoading={isLoading}>
@@ -91,14 +91,14 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
                                             <TabsTrigger value="lend" className='w-full'>Withdraw</TabsTrigger>
                                         </TabsList>
                                         <TabsContent value="openBorrow">
-                                            <OpenBorrow filteredData={filteredData!} />
+                                            <OpenBorrow filteredData={filteredData} />
                                         </TabsContent>
                                         <TabsContent value="closeBorrow">
-                                            <CloseBorrow filteredData={filteredData!} />
+                                            <CloseBorrow filteredData={filteredData} />
                                         </TabsContent>
                                         <TabsContent value="lend">
                                             <Lend
-                                                filteredData={filteredData!}
+                                                filteredData={filteredData}
                                                 handleDepositChange={handleDepositChange}
                                                 handleMaxDeposit={handleMaxDeposit}
                                                 depositAmount={depositAmount}

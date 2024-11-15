@@ -1,4 +1,3 @@
-import React from 'react'
 import { formatAddress } from '@/lib/utils';
 import { BadgeCheck, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
@@ -11,7 +10,7 @@ import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { PoolSchema } from '@/lib/validation/types';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
 
-export default function TopPoolData({ filteredData, isLoading }: { filteredData: PoolSchema, isLoading: boolean }) {
+export default function TopPoolData({ filteredData, isLoading }: { filteredData?: PoolSchema, isLoading: boolean }) {
     const totalAssets = filteredData?.ltv.toString();
     const ltv = filteredData?.ltv;
 
@@ -24,7 +23,7 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData:
                 <Card className='p-5 w-full'>
                     <CardContent className='flex flex-col gap-8'>
                         <div className='flex flex-col md:flex-row gap-2 items-center'>
-                            <CoinSymbol address={filteredData?.collateralToken} className='text-2xl font-bold'/>
+                            <CoinSymbol address={filteredData?.collateralToken || ""} className='text-2xl font-bold'/>
                             <div className='flex flex-row flex-wrap gap-2'>
                                 <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken}`} target='_blank' className="cursor-pointer px-1">
                                     <Button variant={'outline'} className="cursor-pointer px-1">

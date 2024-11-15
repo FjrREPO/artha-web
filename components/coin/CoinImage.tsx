@@ -14,12 +14,12 @@ export const CoinImage = ({ symbol, address, className }: { symbol?: string, add
     )?.logo;
 
     return (
-        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+        <div className={cn("w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center", className)}>
             {symbol ?
                 <Image
                     src={coinLogoBySymbol ?? fallbackImage}
                     alt={coinLogoBySymbol ?? 'Default alt text'}
-                    className={cn("rounded-full", className)}
+                    className={"rounded-full"}
                     width={24}
                     height={24}
                 />
@@ -27,7 +27,7 @@ export const CoinImage = ({ symbol, address, className }: { symbol?: string, add
                 <Image
                     src={coinLogoByAddress ?? fallbackImage}
                     alt={coinLogoByAddress ?? 'Default alt text'}
-                    className={cn("rounded-full", className)}
+                    className={"rounded-full"}
                     width={24}
                     height={24}
                 />

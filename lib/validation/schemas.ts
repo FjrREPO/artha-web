@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
 export const poolSchema = z.object({
-    id: z.string().optional(),
-    collateralToken: z.string().min(1, "Please select a collateral"),
-    loanToken: z.string().min(1, "Please select a loan token"),
-    irm: z.string().min(1, "Please select an interest rate model"),
-    oracle: z.string().min(1, "Please select an oracle"),
-    ltv: z.string().transform((val) => (val === '' ? '0' : val)),
-    lth: z.string().transform((val) => (val === '' ? '0' : val)),
+    id: z.string().optional().nullable(),
+    collateralToken: z.string().min(1, "Please select a collateral").nullable(),
+    loanToken: z.string().min(1, "Please select a loan token").nullable(),
+    irm: z.string().min(1, "Please select an interest rate model").nullable(),
+    oracle: z.string().min(1, "Please select an oracle").nullable(),
+    ltv: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
+    lth: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
 });
 
 export const curatorSchema = z.object({
@@ -17,6 +17,22 @@ export const curatorSchema = z.object({
     pools: z.array(z.string()),
     allocations: z.array(z.number()),
 })
+
+export const auctionHistorySchema = z.object({
+    event: z.string().min(1),
+    amount: z.number().min(0),
+    address: z.string().min(1),
+    loanId: z.string().min(1),
+    date: z.string()
+});
+
+export const auctionActivitySchema = z.object({
+    activityType: z.string().min(1), 
+    price: z.union([z.string().min(1), z.literal('--')]),
+    from: z.string().min(1),
+    to: z.string().min(1),
+    date: z.string()
+});
 
 // CoinMarketCap schema
 const PlatformCoin = z.object({
@@ -68,8 +84,8 @@ export const coinMarketCapSchema = z.object({
     subreddit: z.string(),
     notice: z.string(),
     tags: z.union([z.array(z.string()), z.null()]),
-    "tag-names": z.array(z.string()),
-    "tag-groups": z.array(z.string()),
+    "tag-names": z.union([z.array(z.string()), z.null()]),
+    "tag-groups": z.union([z.array(z.string()), z.null()]),
     urls: TokenUrls,
     platform: TokenPlatform,
     date_added: z.string(),

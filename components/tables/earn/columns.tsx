@@ -5,7 +5,7 @@ import { CoinImage } from "@/components/coin/CoinImage";
 export function columns(): ColumnDef<EarnData>[] {
   return [
     {
-      id: "asset",
+      accessorKey: "asset",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -20,7 +20,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
     },
     {
-      id: "accurator",
+      accessorKey: "accurator",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -34,7 +34,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
     },
     {
-      id: "aggregator",
+      accessorKey: "aggregator",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -46,7 +46,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
     },
     {
-      id: "pool",
+      accessorKey: "pool",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -71,7 +71,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
     },
     {
-      id: "apy",
+      accessorKey: "apy",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -92,7 +92,7 @@ export function columns(): ColumnDef<EarnData>[] {
       ),
     },
     {
-      id: "tvl",
+      accessorKey: "tvl",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}

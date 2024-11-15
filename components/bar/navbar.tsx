@@ -13,18 +13,16 @@ import { ButtonConnectWallet } from "../web3/button-connect-wallet";
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { memo } from 'react';
 
-// Move items outside component to prevent recreation on renders
 const NAVIGATION_ITEMS = [
   { label: "Overview", link: "/overview", icon: <Info /> },
   { label: "Earn", link: "/earn", icon: <Bookmark /> },
   { label: "Pool", link: "/pool", icon: <BellDot /> },
-  { label: "Dashboard", link: "/dashboard", icon: <FolderDot /> },
   { label: "Create Pool", link: "/create-pool", icon: <FolderDot /> },
   { label: "Create Accurator", link: "/create-accurator", icon: <FolderDot /> },
   { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
+  { label: "Dashboard", link: "/dashboard", icon: <FolderDot /> },
 ] as const;
 
-// Separate NavbarItem into a memoized component
 const NavbarItem = memo(function NavbarItem({
   link,
   label,

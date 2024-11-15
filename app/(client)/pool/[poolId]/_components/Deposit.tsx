@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PoolSchema } from '@/lib/validation/types'
 import { Wallet } from 'lucide-react'
-import React from 'react'
 
 interface DepositProps {
     filteredData: PoolSchema;

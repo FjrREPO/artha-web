@@ -20,14 +20,14 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DataTableViewOptions } from "./ColumnToggle";
-import { Button } from "../../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
-import { PoolSchema } from "@/lib/validation/types";
+import { AuctionActivitySchema } from "@/lib/validation/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,7 +36,7 @@ interface DataTableProps<TData, TValue> {
   isLoading: boolean;
 }
 
-export function DataTable<TData extends PoolSchema, TValue>({
+export function DataTable<TData extends AuctionActivitySchema, TValue>({
   columns,
   data,
   handleRefresh,
@@ -117,7 +117,7 @@ export function DataTable<TData extends PoolSchema, TValue>({
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+        <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, headerIndex) => {
@@ -149,7 +149,6 @@ export function DataTable<TData extends PoolSchema, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => window.location.href = `/pool/${row.original.id}`}
                   className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell, cellIndex) => (
