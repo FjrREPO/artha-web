@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { ADDRESS_CURATOR } from "@/constants/config";
 import { curatorABI } from "@/lib/abi/curatorABI";
-import { keccak256, toHex } from "viem";
 
 export const useCreateCurator = () => {
     const {
@@ -27,7 +26,6 @@ export const useCreateCurator = () => {
         allocations: number[]
     ) => {
         try {
-            const poolsInBytes32 = pools.map(pool => keccak256(toHex(pool)));
             const allocationsInUint256 = allocations.map(allocation => BigInt(allocation));
 
             await writeCreateCurator({
@@ -38,7 +36,7 @@ export const useCreateCurator = () => {
                     _name as string,
                     _symbol as string,
                     _asset as HexAddress,
-                    poolsInBytes32,
+                    pools,
                     allocationsInUint256
                 ],
             });

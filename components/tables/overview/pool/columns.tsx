@@ -45,7 +45,16 @@ export function columns(): ColumnDef<PoolSchema>[] {
     {
       accessorKey: "ltv",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="LTV" />
+        <DataTableColumnHeader
+          column={column}
+          title="LTV"
+          className="justify-end"
+        />
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-end">
+          <span>{row.original.ltv}</span>
+        </div>
       ),
     },
   ];

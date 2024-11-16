@@ -1,70 +1,106 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./ColumnHeader";
+import { EarnSchema, PoolSchema } from "@/lib/validation/types";
 import { CoinImage } from "@/components/coin/CoinImage";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import { formatAddress } from "@/lib/utils";
 
-export function columns(): ColumnDef<EarnData>[] {
+export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], isLoadingPool: boolean }): ColumnDef<EarnSchema>[] {
   return [
     {
-      accessorKey: "asset",
+      accessorKey: "#",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="Asset"
+          title="#"
         />
       ),
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <CoinImage symbol={row.original.lendAsset || ""} />
-          <span>{row.original.lendAsset || "Unknown Asset"}</span>
-        </div>
+        <span>{row.index + 1}</span>
       ),
     },
     {
-      accessorKey: "aggregator",
+      accessorKey: "curator",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="Aggregator"
+          title="Curator"
         />
       ),
-      cell: ({ row }) => (
-        <div>{row.original.aggregatorName || "Unknown Aggregator"}</div>
-      ),
-    },
-    {
-      accessorKey: "apy",
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title="APY"
-        />
-      ),
-      cell: ({ row }) => (
-        <div className="">
-          <div className={row.original.lendAPY === "0%" ? "text-gray-500" : "text-green-500"}>
-            {row.original.lendAPY || "APY unavailable"}
+      cell: ({ row }) => {
+        const openExplorer = () => {
+          window.open("https://sepolia.basescan.org/address/" + row.original.curator, '_blank', 'noopener noreferrer');
+        };
+        return (
+          <div>
+            <Label>{formatAddress(row.original.curator, 4)}</Label>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={openExplorer}
+              className="shrink-0"
+              aria-label="View in explorer"
+            >
+              <ExternalLink className="h-4 w-4 text-gray-500" />
+            </Button>
           </div>
-          {row.original.rewards && row.original.rewards.length > 0 && (
-            <div className="text-xs text-gray-500">
-              + {row.original.rewards.join(", ")}
-            </div>
-          )}
-        </div>
-      ),
+        )
+      },
     },
     {
-      accessorKey: "tvl",
+      accessorKey: "pools",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="TVL"
+          title="Pools"
+        />
+      ),
+      cell: ({ row }) => {
+        return (
+          <SkeletonWrapper isLoading={isLoadingPool}>
+            <div className="flex flex-wrap gap-1">
+              {row.original.pools && row.original.pools.map((pool) => {
+                const findPoolById = dataPool && dataPool.find((datPool) => datPool.MockArthaEvent_id === pool);
+                return (
+                  <div
+                    key={pool}
+                    className="px-2 py-0.5 text-sm flex flex-row gap-1 items-center"
+                  >
+                    <CoinImage address={findPoolById?.collateralToken || ""} />
+                    <CoinSymbol address={findPoolById?.collateralToken || ""} />
+                  </div>
+                )
+              })}
+            </div>
+          </SkeletonWrapper>
+        )
+      },
+    },
+    {
+      accessorKey: "allocations",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Allocations"
+          className="justify-end"
         />
       ),
       cell: ({ row }) => (
-        <div className="text-right">
-          {row.original.tvl.toString() || <span className="text-gray-400">TVL unavailable</span>}
+        <div className="flex flex-wrap gap-1 justify-end">
+          {row.original.allocations.map((allocation, index) => (
+            <span
+              key={index}
+              className="px-2 py-0.5 text-sm"
+            >
+              {allocation}%
+            </span>
+          ))}
         </div>
       ),
-    }
+    },
   ];
 }

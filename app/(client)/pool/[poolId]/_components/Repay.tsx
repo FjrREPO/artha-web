@@ -1,70 +1,78 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import { Wallet } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { CoinImage } from '@/components/coin/CoinImage';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { PoolSchema } from '@/lib/validation/types';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { useAccount } from 'wagmi';
-import { useERC721Balance } from '@/hooks/useERC721Balance';
-import { useWithdraw } from '@/hooks/useWithdraw';
+import { DialogSelectNft } from '@/components/dialog/DialogSelectNft'
+import SuccessDialog from '@/components/dialog/SuccessDialog'
+import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
+import { NftImage } from '@/components/nft/NftImage'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useOwnerNft } from '@/hooks/useOwnerNft'
+import { useRepay } from '@/hooks/useRepay'
+import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types'
+import React, { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useAccount } from 'wagmi'
 
-interface WithdrawProps {
+interface RepayProps {
     filteredData?: PoolSchema;
 }
 
-interface WithdrawValues {
-    withdrawAmount: string;
+interface RepayFormValues {
+    repayAmount: string;
 }
 
-export default function Withdraw({
-    filteredData
-}: WithdrawProps) {
+export default function Repay({ filteredData }: RepayProps) {
     const { address } = useAccount();
+    const { nftData, nftLoading } = useOwnerNft();
+
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const { balance } = useERC721Balance(address as HexAddress, filteredData?.collateralToken as HexAddress);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedNft, setSelectedNft] = useState<AlchemyNftSchema | null>(null);
 
     const {
-        withdrawHash,
-        handleWithdraw,
-        isWithdrawConfirmed,
-        isWithdrawConfirming,
-        isWithdrawPending
-    } = useWithdraw();
+        repayHash,
+        handleRepay,
+        isRepayConfirmed,
+        isRepayConfirming,
+        isRepayPending
+    } = useRepay();
 
-    const form = useForm<WithdrawValues>({
+    const form = useForm<RepayFormValues>({
         defaultValues: {
-            withdrawAmount: ''
+            repayAmount: ''
         }
     });
 
-    const handleSubmit = async (data: WithdrawValues) => {
-        await handleWithdraw(filteredData?.MockArthaEvent_id ?? "", data.withdrawAmount, address ?? "");
-    };
+    useEffect(() => {
+        if (nftData && nftData.length > 0 && !selectedNft) {
+            setSelectedNft(nftData[0]);
+        }
+    }, [nftData, selectedNft, form]);
 
-    const handleMaxWithdraw = () => {
-        form.setValue('withdrawAmount', balance?.toString() ?? "0");
+    const handleSubmit = async (data: RepayFormValues) => {
+        await handleRepay(filteredData?.MockArthaEvent_id ?? "", data.repayAmount, selectedNft?.tokenId ?? "", address ?? "");
     };
 
     useEffect(() => {
-        if (withdrawHash && isWithdrawConfirmed) {
+        if (repayHash && isRepayConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
         }
-    }, [withdrawHash, isWithdrawConfirmed, form]);
+    }, [repayHash, isRepayConfirmed, form]);
+
+    const handleSelectNft = (nft: AlchemyNftSchema) => {
+        setSelectedNft(nft);
+        setIsDialogOpen(false);
+    };
 
     if (!filteredData) {
         return (
             <Card className="w-full p-5">
                 <CardContent className="flex justify-center items-center p-4">
-                    <Label>No pool data available</Label>
+                    <Label>No data available</Label>
                 </CardContent>
             </Card>
         );
@@ -72,39 +80,27 @@ export default function Withdraw({
 
     return (
         <>
-            {(isWithdrawConfirming || isWithdrawPending) && (
+            {(isRepayConfirming || isRepayPending) && (
                 <LoadingTransaction
-                    message={isWithdrawConfirming ? "Withdrawing..." : "Confirming withdraw..."}
+                    message={isRepayConfirming ? "Repaying..." : "Confirming repay..."}
                 />
             )}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={withdrawHash as HexAddress || ""}
-                processName="Withdraw"
+                txHash={repayHash as HexAddress || ""}
+                processName="Repay"
             />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-5">
                     <Card className="w-full p-5">
                         <CardContent className="flex flex-col gap-5 p-0">
                             <div className="flex flex-row justify-between items-center">
-                                <Label>Withdraw</Label>
-                                <div className="flex flex-row gap-2 items-center">
-                                    <Wallet />
-                                    <Label>0</Label>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        className="cursor-pointer px-3"
-                                        onClick={handleMaxWithdraw}
-                                    >
-                                        <Label className="text-[11px] cursor-pointer">Max</Label>
-                                    </Button>
-                                </div>
+                                <Label>Repay</Label>
                             </div>
                             <FormField
                                 control={form.control}
-                                name="withdrawAmount"
+                                name="repayAmount"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
@@ -114,11 +110,20 @@ export default function Withdraw({
                                                     className="w-full pr-10 py-7 rounded-xl"
                                                     type="number"
                                                     min={0}
-                                                    placeholder="Enter withdraw amount"
+                                                    placeholder="Enter repay amount"
                                                 />
-                                                <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                                                    <CoinImage address={filteredData?.loanToken || ""} />
-                                                </div>
+                                                <DialogSelectNft
+                                                    nftData={nftData}
+                                                    isDialogOpen={isDialogOpen}
+                                                    setDialogOpen={setIsDialogOpen}
+                                                    handleSelect={handleSelectNft}
+                                                    nftLoading={nftLoading}
+                                                    trigger={
+                                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
+                                                            <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
+                                                        </div>
+                                                    }
+                                                />
                                             </div>
                                         </FormControl>
                                         <FormMessage />
@@ -129,9 +134,9 @@ export default function Withdraw({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isWithdrawConfirming || isWithdrawPending}
+                                disabled={isRepayConfirming || isRepayPending}
                             >
-                                {isWithdrawConfirming ? 'Confirming...' : isWithdrawPending ? 'Pending...' : 'Withdraw'}
+                                {isRepayConfirming ? 'Confirming...' : isRepayPending ? 'Pending...' : 'Repay'}
                             </Button>
                         </CardContent>
                     </Card>
@@ -158,5 +163,5 @@ export default function Withdraw({
                 </form>
             </Form>
         </>
-    );
+    )
 }

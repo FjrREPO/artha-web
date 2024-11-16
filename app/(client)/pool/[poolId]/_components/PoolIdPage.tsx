@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from 'react';
 import InterestRateCurve from '@/components/chart/InterestRateCurve';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,22 +10,20 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TopPoolData from './TopPoolData';
 import PoolDetails from './PoolDetails';
-import OpenBorrow from './OpenBorrow';
-import CloseBorrow from './CloseBorrow';
+import Borrow from './Borrow';
 import Lend from './Lend';
 import { PoolSchema } from '@/lib/validation/types';
 import { API_SUBGRAPH } from '@/constants/config';
 import { queryPool } from '@/graphql/query';
 import request from 'graphql-request';
+import Repay from './Repay';
+import SupplyCollateral from './SupplyCollateral';
 
 type QueryData = {
     pools: PoolSchema[];
 };
 
 export default function PoolIdPage({ PoolId }: { PoolId: string }) {
-    const [depositAmount, setDepositAmount] = useState<number>(0);
-    const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-
     const { data, isLoading } = useQuery<QueryData>({
         queryKey: ['pool'],
         queryFn: async () => {
@@ -35,25 +32,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
         refetchInterval: 360000,
     });
     
-    const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
-
-    const handleMaxDeposit = () => {
-        setDepositAmount(0);
-    };
-
-    const handleMaxWithdraw = () => {
-        setWithdrawAmount(0);
-    };
-
-    const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value) || 0;
-        setDepositAmount(value);
-    };
-
-    const handleWithdrawChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value) || 0;
-        setWithdrawAmount(value);
-    };
+    const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.MockArthaEvent_id === PoolId);
 
     return (
         <div>
@@ -84,27 +63,25 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
                         <div className='w-full lg:w-[50%]'>
                             <Card className='w-full'>
                                 <CardContent className='p-5 space-y-5'>
-                                    <Tabs defaultValue='openBorrow' className='w-full'>
+                                    <Tabs defaultValue='supplyCollateral' className='w-full'>
                                         <TabsList className='w-full'>
-                                            <TabsTrigger value="openBorrow" className='w-full'>Open Borrow</TabsTrigger>
-                                            <TabsTrigger value="closeBorrow" className='w-full'>Close Borrow</TabsTrigger>
-                                            <TabsTrigger value="lend" className='w-full'>Withdraw</TabsTrigger>
+                                            <TabsTrigger value="supplyCollateral" className='w-full'>Supply collateral</TabsTrigger>
+                                            <TabsTrigger value="borrow" className='w-full'>Borrow</TabsTrigger>
+                                            <TabsTrigger value="repay" className='w-full'>Repay</TabsTrigger>
+                                            <TabsTrigger value="lend" className='w-full'>Lend</TabsTrigger>
                                         </TabsList>
-                                        <TabsContent value="openBorrow">
-                                            <OpenBorrow filteredData={filteredData} />
+                                        <TabsContent value="supplyCollateral">
+                                            <SupplyCollateral filteredData={filteredData} />
                                         </TabsContent>
-                                        <TabsContent value="closeBorrow">
-                                            <CloseBorrow filteredData={filteredData} />
+                                        <TabsContent value="borrow">
+                                            <Borrow filteredData={filteredData} />
+                                        </TabsContent>
+                                        <TabsContent value="repay">
+                                            <Repay filteredData={filteredData} />
                                         </TabsContent>
                                         <TabsContent value="lend">
                                             <Lend
                                                 filteredData={filteredData}
-                                                handleDepositChange={handleDepositChange}
-                                                handleMaxDeposit={handleMaxDeposit}
-                                                depositAmount={depositAmount}
-                                                handleWithdrawChange={handleWithdrawChange}
-                                                handleMaxWithdraw={handleMaxWithdraw}
-                                                withdrawAmount={withdrawAmount}
                                             />
                                         </TabsContent>
                                     </Tabs>

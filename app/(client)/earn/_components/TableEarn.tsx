@@ -1,27 +1,41 @@
-"use client"
+"use client";
 
 import { columns } from "@/components/tables/earn/columns";
 import { DataTable } from "@/components/tables/earn/DataTable";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { EarnSchema, PoolSchema } from "@/lib/validation/types";
+import { API_SUBGRAPH } from "@/constants/config";
+import { queryCurator, queryPool } from "@/graphql/query";
+import request from "graphql-request";
 
-export default function TableEarn() {
+type QueryData = {
+    curatorDeployeds: EarnSchema[];
+};
+
+type QueryDataPool = {
+    pools: PoolSchema[];
+};
+
+export default function TablePool() {
     const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
         setHasMounted(true);
     }, []);
 
-    const url = 'https://gist.githubusercontent.com/azizrosyid/3f8d9c2da91d6b5a893067762b26de73/raw/9bc70f649d38d78b3b4d819904fe5811a05da317/earn.json';
-
-    const { data, isLoading, refetch, isRefetching } = useQuery<EarnData[]>({
+    const { data, isLoading, refetch, isRefetching } = useQuery<QueryData>({
         queryKey: ['earn'],
         queryFn: async () => {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+            return await request(API_SUBGRAPH, queryCurator);
+        },
+        refetchInterval: 60000,
+    });
+
+    const { data: dataPool, isLoading: isLoadingPool } = useQuery<QueryDataPool>({
+        queryKey: ['pool'],
+        queryFn: async () => {
+            return await request(API_SUBGRAPH, queryPool);
         },
         refetchInterval: 60000,
     });
@@ -37,8 +51,8 @@ export default function TableEarn() {
     return (
         <div className="w-full space-y-4 h-auto z-10">
             <DataTable
-                data={data || []}
-                columns={columns()}
+                data={data?.curatorDeployeds || []}
+                columns={columns({dataPool: dataPool?.pools as PoolSchema[], isLoadingPool: isLoadingPool})}
                 handleRefresh={handleRefresh}
                 isLoading={isLoading || isRefetching}
             />

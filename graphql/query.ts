@@ -9,5 +9,18 @@ export const queryPool = gql`{
         lth
         ltv
         oracle
+        MockArthaEvent_id
+    }
+}`
+
+export const queryCurator = gql`{
+    curatorDeployeds(orderBy: blockTimestamp, orderDirection: desc) {
+        id
+        curator
+        pools
+        transactionHash
+        blockTimestamp
+        blockNumber
+        allocations
     }
 }`

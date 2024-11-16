@@ -109,7 +109,6 @@ const CreateCuratorComponent = () => {
             const newPool = { poolId: selectedPoolId, allocation: 0 };
             setSelectedPools([...selectedPools, newPool]);
 
-            // Update form values
             const currentPools = form.getValues('pools');
             const currentAllocations = form.getValues('allocations');
             form.setValue('pools', [...currentPools, selectedPoolId]);
@@ -248,9 +247,9 @@ const CreateCuratorComponent = () => {
                                             <SelectContent>
                                                 {poolData?.pools.map((pool) => (
                                                     <SelectItem
-                                                        key={pool.id}
-                                                        value={pool.id!}
-                                                        disabled={selectedPools.some(p => p.poolId === pool.id)}
+                                                        key={pool.MockArthaEvent_id}
+                                                        value={pool.MockArthaEvent_id!}
+                                                        disabled={selectedPools.some(p => p.poolId === pool.MockArthaEvent_id)}
                                                     >
                                                         <div className="flex flex-row gap-2 items-center">
                                                             <CoinImage address={pool.collateralToken || ""} />
@@ -278,7 +277,7 @@ const CreateCuratorComponent = () => {
                                 )}
                                 <SkeletonWrapper isLoading={isPoolsLoading}>
                                     {selectedPools.map((selectedPool, index) => {
-                                        const pool = poolData?.pools.find(p => p.id === selectedPool.poolId);
+                                        const pool = poolData?.pools.find(p => p.MockArthaEvent_id === selectedPool.poolId);
                                         return (
                                             <div key={selectedPool.poolId} className="relative p-4 border rounded-lg">
                                                 <Button

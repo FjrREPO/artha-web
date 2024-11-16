@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { EarnSchema } from "@/lib/validation/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,7 +36,7 @@ interface DataTableProps<TData, TValue> {
   isLoading: boolean;
 }
 
-export function DataTable<TData extends EarnData, TValue>({
+export function DataTable<TData extends EarnSchema, TValue>({
   columns,
   data,
   handleRefresh,
@@ -119,26 +120,16 @@ export function DataTable<TData extends EarnData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, headerIndex) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className={`${headerIndex === 0
-                          ? 'flex justify-start'
-                          : headerIndex === headerGroup.headers.length - 1
-                            ? 'flex justify-end'
-                            : 'justify-center'
-                        }`}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -148,19 +139,11 @@ export function DataTable<TData extends EarnData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => window.location.href = `/earn/${row.original.address}`}
+                  onClick={() => window.location.href = `/earn/${row.original.id}`}
                   className="cursor-pointer"
                 >
-                  {row.getVisibleCells().map((cell, cellIndex) => (
-                    <TableCell
-                      key={cell.id}
-                      className={`${cellIndex === 0
-                        ? 'flex justify-start'
-                        : cellIndex === row.getVisibleCells().length - 1
-                          ? 'flex justify-end'
-                          : 'justify-center'
-                        }`}
-                    >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                       <SkeletonWrapper isLoading={isLoading}>
                         {flexRender(
                           cell.column.columnDef.cell,

@@ -14,51 +14,51 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
 import { useERC721Balance } from '@/hooks/useERC721Balance';
-import { useWithdraw } from '@/hooks/useWithdraw';
+import { useSupply } from '@/hooks/useSupply';
 
-interface WithdrawProps {
+interface SupplyProps {
     filteredData?: PoolSchema;
 }
 
-interface WithdrawValues {
-    withdrawAmount: string;
+interface SupplyValues {
+    supplyAmount: string;
 }
 
-export default function Withdraw({
+export default function Supply({
     filteredData
-}: WithdrawProps) {
+}: SupplyProps) {
     const { address } = useAccount();
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const { balance } = useERC721Balance(address as HexAddress, filteredData?.collateralToken as HexAddress);
 
     const {
-        withdrawHash,
-        handleWithdraw,
-        isWithdrawConfirmed,
-        isWithdrawConfirming,
-        isWithdrawPending
-    } = useWithdraw();
+        supplyHash,
+        handleSupply,
+        isSupplyConfirmed,
+        isSupplyConfirming,
+        isSupplyPending
+    } = useSupply();
 
-    const form = useForm<WithdrawValues>({
+    const form = useForm<SupplyValues>({
         defaultValues: {
-            withdrawAmount: ''
+            supplyAmount: ''
         }
     });
 
-    const handleSubmit = async (data: WithdrawValues) => {
-        await handleWithdraw(filteredData?.MockArthaEvent_id ?? "", data.withdrawAmount, address ?? "");
+    const handleSubmit = async (data: SupplyValues) => {
+        await handleSupply(filteredData?.MockArthaEvent_id ?? "", data.supplyAmount, address ?? "");
     };
 
-    const handleMaxWithdraw = () => {
-        form.setValue('withdrawAmount', balance?.toString() ?? "0");
+    const handleMaxSupply = () => {
+        form.setValue('supplyAmount', balance?.toString() ?? "0");
     };
 
     useEffect(() => {
-        if (withdrawHash && isWithdrawConfirmed) {
+        if (supplyHash && isSupplyConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
         }
-    }, [withdrawHash, isWithdrawConfirmed, form]);
+    }, [supplyHash, isSupplyConfirmed, form]);
 
     if (!filteredData) {
         return (
@@ -72,23 +72,23 @@ export default function Withdraw({
 
     return (
         <>
-            {(isWithdrawConfirming || isWithdrawPending) && (
+            {(isSupplyConfirming || isSupplyPending) && (
                 <LoadingTransaction
-                    message={isWithdrawConfirming ? "Withdrawing..." : "Confirming withdraw..."}
+                    message={isSupplyConfirming ? "Supplying..." : "Confirming supply..."}
                 />
             )}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={withdrawHash as HexAddress || ""}
-                processName="Withdraw"
+                txHash={supplyHash as HexAddress || ""}
+                processName="Supply"
             />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-5">
                     <Card className="w-full p-5">
                         <CardContent className="flex flex-col gap-5 p-0">
                             <div className="flex flex-row justify-between items-center">
-                                <Label>Withdraw</Label>
+                                <Label>Supply</Label>
                                 <div className="flex flex-row gap-2 items-center">
                                     <Wallet />
                                     <Label>0</Label>
@@ -96,7 +96,7 @@ export default function Withdraw({
                                         type="button"
                                         variant="outline"
                                         className="cursor-pointer px-3"
-                                        onClick={handleMaxWithdraw}
+                                        onClick={handleMaxSupply}
                                     >
                                         <Label className="text-[11px] cursor-pointer">Max</Label>
                                     </Button>
@@ -104,7 +104,7 @@ export default function Withdraw({
                             </div>
                             <FormField
                                 control={form.control}
-                                name="withdrawAmount"
+                                name="supplyAmount"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
@@ -114,7 +114,7 @@ export default function Withdraw({
                                                     className="w-full pr-10 py-7 rounded-xl"
                                                     type="number"
                                                     min={0}
-                                                    placeholder="Enter withdraw amount"
+                                                    placeholder="Enter supply amount"
                                                 />
                                                 <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
                                                     <CoinImage address={filteredData?.loanToken || ""} />
@@ -129,9 +129,9 @@ export default function Withdraw({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isWithdrawConfirming || isWithdrawPending}
+                                disabled={isSupplyConfirming || isSupplyPending}
                             >
-                                {isWithdrawConfirming ? 'Confirming...' : isWithdrawPending ? 'Pending...' : 'Withdraw'}
+                                {isSupplyConfirming ? 'Confirming...' : isSupplyPending ? 'Pending...' : 'Supply'}
                             </Button>
                         </CardContent>
                     </Card>

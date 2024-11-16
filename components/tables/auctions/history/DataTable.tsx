@@ -120,26 +120,16 @@ export function DataTable<TData extends AuctionHistorySchema, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, headerIndex) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className={`${headerIndex === 0
-                          ? 'flex justify-start'
-                          : headerIndex === headerGroup.headers.length - 1
-                            ? 'flex justify-end'
-                            : 'justify-center'
-                        }`}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -151,16 +141,8 @@ export function DataTable<TData extends AuctionHistorySchema, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
                 >
-                  {row.getVisibleCells().map((cell, cellIndex) => (
-                    <TableCell
-                      key={cell.id}
-                      className={`${cellIndex === 0
-                        ? 'flex justify-start'
-                        : cellIndex === row.getVisibleCells().length - 1
-                          ? 'flex justify-end'
-                          : 'justify-center'
-                        }`}
-                    >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                       <SkeletonWrapper isLoading={isLoading}>
                         {flexRender(
                           cell.column.columnDef.cell,

@@ -66,6 +66,7 @@ export function columns(): ColumnDef<AuctionHistorySchema>[] {
         <DataTableColumnHeader
           column={column}
           title="Date"
+          className="justify-end"
         />
       ),
       cell: ({ row }) => (
