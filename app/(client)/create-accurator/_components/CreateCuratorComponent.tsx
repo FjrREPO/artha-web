@@ -8,68 +8,86 @@ import { FieldValues, SubmitHandler, useForm, UseFormReturn } from "react-hook-f
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { poolSchema } from '@/lib/validation/schemas';
-import { useCreatePool } from '@/hooks/useCreatePool';
-import { CryptoToken } from '@/constants/cryptoToken';
-import { OracleData } from '@/constants/oracleData';
+import { curatorSchema } from '@/lib/validation/schemas';
+import { useCreateCurator } from '@/hooks/useCreateCurator';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import SuccessDialog from '@/components/dialog/SuccessDialog';
+import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
-import { CreatePoolSteps } from './CreatePoolSteps';
+import { CreateCuratorSteps } from './CreateCuratorSteps';
+import { useQuery } from '@tanstack/react-query';
+import { API_SUBGRAPH } from '@/constants/config';
+import { queryPool } from '@/graphql/query';
+import { PoolSchema } from '@/lib/validation/types';
+import request from 'graphql-request';
 
-export type FormData = z.infer<typeof poolSchema>;
+type FormData = z.infer<typeof curatorSchema>;
 
-const CreatePoolComponent = () => {
+interface QueryData {
+    pools: PoolSchema[];
+}
+
+interface PoolAllocation {
+    poolId: string;
+    allocation: number;
+}
+
+const CreateCuratorComponent = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
+    const [selectedPools, setSelectedPools] = useState<PoolAllocation[]>([]);
+    const [totalAllocation, setTotalAllocation] = useState(0);
 
     const steps = [
-        { title: 'Token Selection', field: 'collateralToken' },
-        { title: 'Rate Configuration', field: 'loanToken' },
-        { title: 'Risk Parameters', field: 'irm' },
-        { title: 'Oracle Configuration', field: 'oracle' },
-        { title: 'Loan to Value (LTV)', field: 'ltv' },
-        { title: 'Liquidation Threshold (LTH)', field: 'lth' }
+        { title: 'Basic Information', fields: ['_name', '_symbol'] },
+        { title: 'Asset Configuration', fields: ['_asset'] },
+        { title: 'Pool Selection & Allocation', fields: ['allocations'] },
     ];
 
-    const form: UseFormReturn<FieldValues> = useForm<FieldValues>({
-        resolver: zodResolver(poolSchema),
-        defaultValues: {
-            collateralToken: "",
-            loanToken: "",
-            irm: "",
-            oracle: "",
-            ltv: "",
-            lth: "",
+    const { data: poolData, isLoading: isPoolsLoading } = useQuery<QueryData>({
+        queryKey: ['pool'],
+        queryFn: async () => {
+            return await request(API_SUBGRAPH, queryPool);
         },
-        mode: "onSubmit"
+        refetchInterval: 60000,
+    });
+
+    const form: UseFormReturn<FieldValues> = useForm<FieldValues>({
+        resolver: zodResolver(curatorSchema),
+        defaultValues: {
+            _name: "",
+            _symbol: "",
+            _asset: "",
+            pools: [],
+            allocations: []
+        },
     });
 
     const {
-        createPoolHash,
-        isCreatePoolPending,
-        isCreatePoolConfirming,
-        isCreatePoolConfirmed,
-        handleCreatePool,
-    } = useCreatePool();
+        dataCurator,
+        createCuratorHash,
+        isCreateCuratorPending,
+        handleCreateCurator,
+        isCreateCuratorConfirmed,
+        isCreateCuratorConfirming
+    } = useCreateCurator();
 
     const validateCurrentStep = async () => {
-        const currentField = steps[activeStep].field as keyof FormData;
-        const fieldValue = form.getValues(currentField);
-
+        const currentFields = steps[activeStep].fields;
         setValidationError(null);
 
-        if (!fieldValue) {
-            setValidationError("This field is required");
-            return false;
+        for (const field of currentFields) {
+            const fieldValue = form.getValues(field as keyof FormData);
+            if (!fieldValue || (Array.isArray(fieldValue) && fieldValue.length === 0)) {
+                setValidationError(`${field} is required`);
+                return false;
+            }
         }
 
-        if (currentField === 'ltv' || currentField === 'lth') {
-            const numValue = Number(fieldValue);
-            if (isNaN(numValue) || numValue < 0 || numValue > 100 || !Number.isInteger(numValue)) {
-                setValidationError("Value must be a whole number between 0 and 100");
+        if (activeStep === 3) {
+            if (totalAllocation !== 100) {
+                setValidationError("Total allocation must equal 100%");
                 return false;
             }
         }
@@ -102,46 +120,46 @@ const CreatePoolComponent = () => {
         const isValid = await validateCurrentStep();
         if (!isValid) return;
 
-        const findCollateralBySymbol = CryptoToken.find((token) => token.symbol === data.collateralToken);
-        const findLoanTokenBySymbol = CryptoToken.find((token) => token.symbol === data.loanToken);
-        const findOracleBySymbol = OracleData.find((token) => token.symbol === data.oracle);
+        console.log("data = ", data);
 
-        handleCreatePool(
-            findCollateralBySymbol?.contract_address[0].contract_address || "",
-            findLoanTokenBySymbol?.contract_address[0].contract_address || "",
-            findOracleBySymbol?.contract_address[0].contract_address || "",
-            data.irm || "",
-            data.ltv || "",
-            data.lth || ""
+        handleCreateCurator(
+            data._name,
+            data._symbol,
+            data._asset,
+            data.pools,
+            data.allocations
         );
     };
 
     useEffect(() => {
-        if (createPoolHash && isCreatePoolConfirmed) {
+        if (createCuratorHash && isCreateCuratorConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
+            setSelectedPools([]);
             setActiveStep(0);
-            setValidationError(null);
+            setTotalAllocation(0);
         }
-    }, [createPoolHash, isCreatePoolConfirmed, form]);
+    }, [createCuratorHash, isCreateCuratorConfirmed, form]);
 
     return (
         <>
-            {(isCreatePoolConfirming || isCreatePoolPending) && (
+            {(isCreateCuratorConfirming || isCreateCuratorPending) && (
                 <LoadingTransaction
-                    message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
+                    message={isCreateCuratorConfirming ? "Creating..." : "Confirming create..."}
                 />
             )}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={createPoolHash as HexAddress || ""}
-                processName="Create Pool"
+                txHash={createCuratorHash as HexAddress || ""}
+                processName="Create Curator"
+                enabledLogs={true}
+                logs={dataCurator?.logs?.[0]}
             />
             <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
-                <CardHeader className='flex flex-col gap-3'>
-                    <div className='flex flex-col gap-1'>
-                        <CardTitle>Create Pool</CardTitle>
+                <CardHeader className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
+                        <CardTitle>Create Curator</CardTitle>
                         <CardDescription>
                             Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
                         </CardDescription>
@@ -152,11 +170,17 @@ const CreatePoolComponent = () => {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <CreatePoolSteps
+                            <CreateCuratorSteps
                                 form={form}
                                 validationError={validationError}
                                 activeStep={activeStep}
                                 isAnimating={isAnimating}
+                                selectedPools={selectedPools}
+                                setSelectedPools={setSelectedPools}
+                                totalAllocation={totalAllocation}
+                                setTotalAllocation={setTotalAllocation}
+                                poolData={poolData}
+                                isPoolsLoading={isPoolsLoading}
                             />
 
                             <div className="flex justify-between mt-8">
@@ -169,8 +193,11 @@ const CreatePoolComponent = () => {
                                     <ChevronLeft className="h-4 w-4" /> Back
                                 </Button>
                                 {activeStep === steps.length - 1 ? (
-                                    <Button type="submit">
-                                        Create Pool
+                                    <Button 
+                                        type="submit"
+                                        disabled={isCreateCuratorPending || isCreateCuratorConfirming}
+                                    >
+                                        Create Curator
                                     </Button>
                                 ) : (
                                     <Button
@@ -189,4 +216,4 @@ const CreatePoolComponent = () => {
     );
 };
 
-export default CreatePoolComponent;
+export default CreateCuratorComponent;
