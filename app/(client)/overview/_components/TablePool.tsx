@@ -20,17 +20,13 @@ export default function TablePool() {
         setHasMounted(true);
     }, []);
 
-    const { data, isLoading, refetch, isRefetching } = useQuery<QueryData>({
+    const { data, isLoading, isRefetching } = useQuery<QueryData>({
         queryKey: ['pool'],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
         refetchInterval: 60000,
     });
-
-    const handleRefresh = () => {
-        refetch();
-    };
 
     if (!hasMounted) {
         return null;
@@ -41,7 +37,6 @@ export default function TablePool() {
             <DataTable
                 data={data?.pools.slice(0, 3) || []}
                 columns={columns()}
-                handleRefresh={handleRefresh}
                 isLoading={isLoading || isRefetching}
             />
         </div>

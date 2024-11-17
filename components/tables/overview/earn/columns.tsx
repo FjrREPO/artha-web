@@ -1,15 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./ColumnHeader";
-import { EarnSchema, PoolSchema } from "@/lib/validation/types";
-import { CoinImage } from "@/components/coin/CoinImage";
-import { CoinSymbol } from "@/components/coin/CoinSymbol";
-import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { EarnSchema } from "@/lib/validation/types";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import { formatAddress } from "@/lib/utils";
 
-export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], isLoadingPool: boolean }): ColumnDef<EarnSchema>[] {
+export function columns(): ColumnDef<EarnSchema>[] {
   return [
     {
       accessorKey: "#",
@@ -52,55 +49,17 @@ export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], i
       },
     },
     {
-      accessorKey: "pools",
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title="Pools"
-        />
-      ),
-      cell: ({ row }) => {
-        return (
-          <SkeletonWrapper isLoading={isLoadingPool}>
-            <div className="flex flex-wrap gap-1">
-              {row.original.pools && row.original.pools.map((pool) => {
-                const findPoolById = dataPool && dataPool.find((datPool) => datPool.MockArthaEvent_id === pool);
-                return (
-                  <div
-                    key={pool}
-                    className="px-2 py-0.5 text-sm flex flex-row gap-1 items-center"
-                  >
-                    <CoinImage address={findPoolById?.collateralToken || ""} />
-                    <CoinSymbol address={findPoolById?.collateralToken || ""} />
-                  </div>
-                )
-              })}
-            </div>
-          </SkeletonWrapper>
-        )
-      },
+      accessorKey: "APY",
     },
     {
-      accessorKey: "allocations",
+      accessorKey: "TVL",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="Allocations"
+          title="TVL"
           className="justify-end"
         />
       ),
-      cell: ({ row }) => (
-        <div className="flex flex-wrap gap-1 justify-end">
-          {row.original.allocations.map((allocation, index) => (
-            <span
-              key={index}
-              className="px-2 py-0.5 text-sm"
-            >
-              {allocation}%
-            </span>
-          ))}
-        </div>
-      ),
-    },
+    }
   ];
 }

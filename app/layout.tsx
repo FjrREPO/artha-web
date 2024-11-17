@@ -11,9 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Artha Finance",
   description: "Lending and borrowing.",
-  // icons: {
-  //   icon: '/favicon.ico',
-  // }
+  icons: {
+    icon: '/logo_white.ico',
+  }
 };
 
 export default function RootLayout({

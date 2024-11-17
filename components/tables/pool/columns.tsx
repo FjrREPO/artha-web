@@ -37,37 +37,23 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
     },
     {
-      accessorKey: "oracle",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Oracle" />
-      ),
+      accessorKey: "Total Supplied",
     },
     {
-      accessorKey: "irm",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="IRM" />
-      ),
+      accessorKey: "Lend APR",
     },
     {
-      accessorKey: "lth",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="LTH" />
-      ),
+      accessorKey: "Borrow APR",
     },
     {
-      accessorKey: "ltv",
+      accessorKey: "Utilization Rate",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="LTV"
+          title="Utilization Rate"
           className="justify-end"
         />
       ),
-      cell: ({ row }) => (
-        <div className="flex items-center justify-end">
-          <span>{row.original.ltv}</span>
-        </div>
-      ),
-    },
+    }
   ];
 }

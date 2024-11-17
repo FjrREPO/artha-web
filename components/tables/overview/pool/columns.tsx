@@ -37,25 +37,17 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
     },
     {
-      accessorKey: "lth",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="LTH" />
-      ),
+      accessorKey: "APY",
     },
     {
-      accessorKey: "ltv",
+      accessorKey: "TVL",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="LTV"
+          title="TVL"
           className="justify-end"
         />
       ),
-      cell: ({ row }) => (
-        <div className="flex items-center justify-end">
-          <span>{row.original.ltv}</span>
-        </div>
-      ),
-    },
+    }
   ];
 }

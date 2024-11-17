@@ -79,7 +79,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         name="collateralToken"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Collateral Token</FormLabel>
+                                <FormLabel>Collateral Token</FormLabel>
                                 <FormControl>
                                     <SelectCoinImage
                                         data={findCollateralOptions}
@@ -100,7 +100,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         name="loanToken"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Loan Token</FormLabel>
+                                <FormLabel>Loan Token</FormLabel>
                                 <FormControl>
                                     <SelectCoinImage
                                         data={findLoanTokenOptions}
@@ -154,7 +154,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         name="oracle"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Oracle</FormLabel>
+                                <FormLabel>Oracle</FormLabel>
                                 <FormControl>
                                     <SelectOracleImage
                                         data={oracleData}
@@ -181,7 +181,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         name="ltv"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Loan to Value (LTV)</FormLabel>
+                                <FormLabel>Loan to Value (LTV)</FormLabel>
                                 <FormControl>
                                     <div className="relative">
                                         <Input
@@ -214,7 +214,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         name="lth"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-white">Liquidation Threshold (LTH)</FormLabel>
+                                <FormLabel>Liquidation Threshold (LTH)</FormLabel>
                                 <FormControl>
                                     <div className="relative">
                                         <Input

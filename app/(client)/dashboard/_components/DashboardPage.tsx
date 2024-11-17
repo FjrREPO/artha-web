@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/button'
 
 const data = [
     {
-        name: "Aggregators",
+        name: "Earn",
         icon: <UserRound className='w-8 h-8' />,
-        text: "Aggregators",
+        text: "Earn",
         link: "earn"
     },
     {

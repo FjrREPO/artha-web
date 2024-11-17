@@ -16,17 +16,10 @@ export const Footer = () => {
         <footer className='relative flex justify-between items-center px-10 sm:px-20 py-5 w-full h-auto z-40 border-t-2 mt-10 gap-5'>
             <div className='flex flex-row gap-10'>
                 <div className='flex flex-row space-x-2 items-center'>
-                    <Image src={'https://v2.sturdy.finance/_next/static/media/audits-logo.4770ebdd.svg'} width={50} height={50} alt='audits' />
+                    <Image src={'https://res.cloudinary.com/dutlw7bko/image/upload/v1731828498/artha/story-protocol-logo_bknevb.jpg'} width={50} height={50} alt='audits' className='rounded-full' />
                     <div className='flex flex-col'>
-                        <Label className='font-bold text-sm sm:text-md'>Audited By</Label>
-                        <Label className='text-xs sm:text-sm'>3 audits</Label>
-                    </div>
-                </div>
-                <div className='flex flex-row space-x-2 items-center'>
-                    <Image src={'https://v2.sturdy.finance/_next/static/media/immunify-logo.7750121d.svg'} width={50} height={50} alt='immunity' />
-                    <div className='flex flex-col'>
-                        <Label className='font-bold text-sm sm:text-md'>Immunefi</Label>
-                        <Label className='text-xs sm:text-sm'>Bug Bounty</Label>
+                        <Label className='font-bold text-sm sm:text-md'>Build On</Label>
+                        <Label className='text-xs sm:text-sm'>Story Protocol</Label>
                     </div>
                 </div>
             </div>
@@ -59,10 +52,10 @@ export const Footer = () => {
                             <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://discord.com'}>
                                 <FaDiscord />
                             </Link>
-                            <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://github.com'}>
+                            <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://github.com/Artha-Finance-Protocol'}>
                                 <FaGithub />
                             </Link>
-                            <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://gitbook.com'}>
+                            <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://kbaji.gitbook.io/artha-finance'}>
                                 <FaBook />
                             </Link>
                         </motion.div>
@@ -76,10 +69,10 @@ export const Footer = () => {
                     <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://discord.com'}>
                         <FaDiscord />
                     </Link>
-                    <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://github.com'}>
+                    <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://github.com/Artha-Finance-Protocol'}>
                         <FaGithub />
                     </Link>
-                    <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://gitbook.com'}>
+                    <Link className="hover:text-primary/70 duration-200" target="_blank" href={'https://kbaji.gitbook.io/artha-finance'}>
                         <FaBook />
                     </Link>
                 </div>

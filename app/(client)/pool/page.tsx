@@ -6,8 +6,8 @@ export default function page() {
     return (
         <div className='pt-[100px] flex flex-col gap-10'>
             <div className='flex flex-col gap-1 max-w-lg'>
-                <Label className='text-2xl'>Pool Markets</Label>
-                <Label className='text-md text-gray-400'>Lend or borrow. If you’ve never deposited before, please read through this quick introduction.</Label>
+                <Label className='text-2xl'>Artha Pool</Label>
+                <Label className='text-md text-gray-400'>Lend and borrow here. Choose based on your risk tolerance. Remember to DYOR (Do Your Own Research).</Label>
             </div>
             <TablePool />
         </div>

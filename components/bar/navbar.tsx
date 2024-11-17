@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { BellDot, Bookmark, FolderDot, Menu, Info } from "lucide-react";
+import { BellDot, Bookmark, FolderDot, Menu, Info, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
@@ -12,13 +12,13 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "../ui/sheet";
 import { ButtonConnectWallet } from "../web3/button-connect-wallet";
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { memo } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Label } from "../ui/label";
 
 const NAVIGATION_ITEMS = [
   { label: "Overview", link: "/overview", icon: <Info /> },
   { label: "Earn", link: "/earn", icon: <Bookmark /> },
   { label: "Pool", link: "/pool", icon: <BellDot /> },
-  { label: "Create Pool", link: "/create-pool", icon: <FolderDot /> },
-  { label: "Create Accurator", link: "/create-accurator", icon: <FolderDot /> },
   { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
   { label: "Dashboard", link: "/dashboard", icon: <FolderDot /> },
 ] as const;
@@ -51,8 +51,8 @@ const NavbarItem = memo(function NavbarItem({
 function MobileNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  
-  const navItems = useMemo(() => 
+
+  const navItems = useMemo(() =>
     NAVIGATION_ITEMS.map((item) => ({
       ...item,
       isActive: pathname.startsWith(item.link)
@@ -109,8 +109,8 @@ function MobileNavbar() {
 
 function DesktopNavbar() {
   const pathname = usePathname();
-  
-  const navItems = useMemo(() => 
+
+  const navItems = useMemo(() =>
     NAVIGATION_ITEMS.map((item) => ({
       ...item,
       isActive: pathname.startsWith(item.link)
@@ -133,6 +133,18 @@ function DesktopNavbar() {
                   isActive={item.isActive}
                 />
               ))}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="p-1 focus-visible:outline-none">
+                  <div className="flex flex-row gap-1">
+                    <Label>Create</Label>
+                    <ChevronDown className="w-4 h-4"/>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel><Link href={"/create-pool"}>Create Pool</Link></DropdownMenuLabel>
+                  <DropdownMenuItem><Link href={"/create-curator"}>Create Curator</Link></DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <div className="flex items-center gap-2">
