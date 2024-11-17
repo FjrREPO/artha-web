@@ -4,37 +4,37 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form } from "@/components/ui/form";
-import { FieldValues, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { poolSchema } from '@/lib/validation/schemas';
 import { useCreatePool } from '@/hooks/useCreatePool';
-import { CryptoToken } from '@/constants/cryptoToken';
-import { OracleData } from '@/constants/oracleData';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
 import { CreatePoolSteps } from './CreatePoolSteps';
+import { z } from 'zod';
+import { useOracle } from '@/hooks/useOracle';
+import { useCryptoToken } from '@/hooks/useCryptoToken';
 
-export type FormData = z.infer<typeof poolSchema>;
+type FormData = z.infer<typeof poolSchema>;
 
 const CreatePoolComponent = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const steps = [
-        { title: 'Token Selection', field: 'collateralToken' },
-        { title: 'Rate Configuration', field: 'loanToken' },
-        { title: 'Risk Parameters', field: 'irm' },
-        { title: 'Oracle Configuration', field: 'oracle' },
-        { title: 'Loan to Value (LTV)', field: 'ltv' },
-        { title: 'Liquidation Threshold (LTH)', field: 'lth' }
+        { title: 'Token Selection', fields: ['collateralToken', 'loanToken'] },
+        { title: 'Risk Parameters & Oracle', fields: ['irm', 'oracle'] },
+        { title: 'Loan to Value (LTV) & Liquidation Threshold (LTH)', fields: ['ltv', 'lth'] }
     ];
 
-    const form: UseFormReturn<FieldValues> = useForm<FieldValues>({
+    const { oracleData, oracleLoading } = useOracle()
+    const { cryptoTokenData, cryptoTokenLoading } = useCryptoToken()
+
+    const form = useForm<FormData>({
         resolver: zodResolver(poolSchema),
         defaultValues: {
             collateralToken: "",
@@ -43,8 +43,7 @@ const CreatePoolComponent = () => {
             oracle: "",
             ltv: "",
             lth: "",
-        },
-        mode: "onSubmit"
+        }
     });
 
     const {
@@ -56,20 +55,15 @@ const CreatePoolComponent = () => {
     } = useCreatePool();
 
     const validateCurrentStep = async () => {
-        const currentField = steps[activeStep].field as keyof FormData;
-        const fieldValue = form.getValues(currentField);
-
+        const currentFields = steps[activeStep].fields as Array<keyof FormData>;
         setValidationError(null);
 
-        if (!fieldValue) {
-            setValidationError("This field is required");
-            return false;
-        }
-
-        if (currentField === 'ltv' || currentField === 'lth') {
-            const numValue = Number(fieldValue);
-            if (isNaN(numValue) || numValue < 0 || numValue > 100 || !Number.isInteger(numValue)) {
-                setValidationError("Value must be a whole number between 0 and 100");
+        const result = await form.trigger(currentFields);
+        if (!result) {
+            const errors = form.formState.errors;
+            const firstError = currentFields.find(field => errors[field]);
+            if (firstError) {
+                setValidationError(errors[firstError]?.message as string || `${firstError} is required`);
                 return false;
             }
         }
@@ -98,22 +92,40 @@ const CreatePoolComponent = () => {
         }, 300);
     };
 
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const isValid = await validateCurrentStep();
-        if (!isValid) return;
+    const onSubmit = async (data: FormData) => {
+        try {
+            const isValid = await validateCurrentStep();
+            if (!isValid) return;
 
-        const findCollateralBySymbol = CryptoToken.find((token) => token.symbol === data.collateralToken);
-        const findLoanTokenBySymbol = CryptoToken.find((token) => token.symbol === data.loanToken);
-        const findOracleBySymbol = OracleData.find((token) => token.symbol === data.oracle);
+            setValidationError(null);
 
-        handleCreatePool(
-            findCollateralBySymbol?.contract_address[0].contract_address || "",
-            findLoanTokenBySymbol?.contract_address[0].contract_address || "",
-            findOracleBySymbol?.contract_address[0].contract_address || "",
-            data.irm || "",
-            data.ltv || "",
-            data.lth || ""
-        );
+            const findCollateralToken = await cryptoTokenData?.find(
+                (token) => token.platform?.token_address === data.collateralToken
+            );
+            const findLoanToken = await cryptoTokenData?.find(
+                (token) => token.platform?.token_address === data.loanToken
+            );
+            const findOracle = await oracleData?.find(
+                (token) => token.platform?.token_address === data.oracle
+            );
+
+            if (!findCollateralToken || !findLoanToken || !findOracle) {
+                console.error('Missing token data');
+                return;
+            }
+
+            handleCreatePool(
+                findCollateralToken.platform?.token_address,
+                findLoanToken.platform?.token_address,
+                findOracle.platform?.token_address,
+                data.irm || "",
+                data.ltv || "",
+                data.lth || ""
+            );
+        } catch (error) {
+            setValidationError("An error occurred while submitting the form.");
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -121,7 +133,6 @@ const CreatePoolComponent = () => {
             setShowSuccessDialog(true);
             form.reset();
             setActiveStep(0);
-            setValidationError(null);
         }
     }, [createPoolHash, isCreatePoolConfirmed, form]);
 
@@ -157,6 +168,10 @@ const CreatePoolComponent = () => {
                                 validationError={validationError}
                                 activeStep={activeStep}
                                 isAnimating={isAnimating}
+                                oracleData={oracleData}
+                                isOracleLoading={oracleLoading}
+                                cryptoTokenData={cryptoTokenData}
+                                cryptoTokenLoading={cryptoTokenLoading}
                             />
 
                             <div className="flex justify-between mt-8">
@@ -169,7 +184,11 @@ const CreatePoolComponent = () => {
                                     <ChevronLeft className="h-4 w-4" /> Back
                                 </Button>
                                 {activeStep === steps.length - 1 ? (
-                                    <Button type="submit">
+                                    <Button
+                                        type="submit"
+                                        disabled={isCreatePoolPending || isCreatePoolConfirming}
+                                        onClick={() => onSubmit(form.getValues())}
+                                    >
                                         Create Pool
                                     </Button>
                                 ) : (

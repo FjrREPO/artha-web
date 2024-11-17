@@ -120,8 +120,6 @@ const CreateCuratorComponent = () => {
         const isValid = await validateCurrentStep();
         if (!isValid) return;
 
-        console.log("data = ", data);
-
         handleCreateCurator(
             data._name,
             data._symbol,

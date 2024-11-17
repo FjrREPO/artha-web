@@ -52,7 +52,6 @@ export default function SupplyCollateral({ filteredData }: SupplyCollateralProps
     } = useSupplyCollateral();
 
     const handleSubmit = async (data: FormData) => {
-        console.log("poolid = ", filteredData?.MockArthaEvent_id, "tokenId = ", data.tokenId, "address = ", address)
         await handleSupplyCollateral(filteredData?.MockArthaEvent_id ?? "", data.tokenId, address ?? "");
     };
 
