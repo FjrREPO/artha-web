@@ -34,8 +34,8 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     cryptoTokenData,
     cryptoTokenLoading
 }) => {
-    const collateralOptions = useMemo(() => ["AZUKI", "BAYC"], []);
-    const loanTokenOptions = useMemo(() => ["USDC", "USDT"], []);
+    const collateralOptions = useMemo(() => ["AZUKI", "BAYC", "DAI"], []);
+    const loanTokenOptions = useMemo(() => ["USDC", "USDT", "BNB"], []);
     const irmOptions = ["Linear Rate", "Non-Linear Rate", "Dynamic Rate"];
 
     const findCollateralOptions = React.useMemo(() =>

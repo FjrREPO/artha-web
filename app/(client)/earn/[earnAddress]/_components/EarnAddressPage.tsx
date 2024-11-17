@@ -27,7 +27,7 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
             }
             return response.json();
         },
-        refetchInterval: 60000
+        refetchInterval: 600000000
     })
 
     const filteredData = earnData?.find((item: EarnData) => item.address === earnAddress);

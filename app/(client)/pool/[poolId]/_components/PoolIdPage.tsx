@@ -29,7 +29,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 360000,
+        refetchInterval: 3600000000,
     });
     
     const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.MockArthaEvent_id === PoolId);

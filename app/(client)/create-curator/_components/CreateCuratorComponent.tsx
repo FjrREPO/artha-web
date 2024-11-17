@@ -50,7 +50,7 @@ const CreateCuratorComponent = () => {
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 60000,
+        refetchInterval: 600000000,
     });
 
     const form: UseFormReturn<FieldValues> = useForm<FieldValues>({

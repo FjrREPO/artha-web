@@ -17,7 +17,7 @@ export const TableAuctionActivity = () => {
             const response = await fetch("https://gist.githubusercontent.com/FjrREPO/bacbdeca6af55dcc3ad2805b2f532e10/raw/19bb6b904ffb69baff15374a9032d08732c32dbc/auctionactivity.json");
             return response.json();
         },
-        refetchInterval: 60000,
+        refetchInterval: 600000000,
     });
 
     const handleRefresh = () => {

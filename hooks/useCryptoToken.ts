@@ -6,11 +6,11 @@ export const useCryptoToken = () => {
         queryKey: ["cryptoToken"],
         queryFn: async () => {
             const response = await fetch(
-                `https://gist.githubusercontent.com/FjrREPO/096387afddcd21d4a730e6398e4650a4/raw/3e7f5c92dfe6f1f76ad479ad55b0214c9dba361b/crypto-token.json`
+                `https://gist.githubusercontent.com/FjrREPO/096387afddcd21d4a730e6398e4650a4/raw/7046307d56a8ef2f759a8211e92d1a19345961b2/crypto-token.json`
             )
             return response.json()
         },
-        refetchInterval: 120000
+        refetchInterval: 600000000
     })
 
     return { cryptoTokenData, cryptoTokenLoading }

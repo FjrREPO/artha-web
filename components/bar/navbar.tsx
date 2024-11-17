@@ -12,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "../ui/sheet";
 import { ButtonConnectWallet } from "../web3/button-connect-wallet";
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { memo } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Label } from "../ui/label";
 
 const NAVIGATION_ITEMS = [
@@ -20,7 +20,6 @@ const NAVIGATION_ITEMS = [
   { label: "Earn", link: "/earn", icon: <Bookmark /> },
   { label: "Pool", link: "/pool", icon: <BellDot /> },
   { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
-  { label: "Dashboard", link: "/dashboard", icon: <FolderDot /> },
 ] as const;
 
 const NavbarItem = memo(function NavbarItem({
@@ -37,8 +36,8 @@ const NavbarItem = memo(function NavbarItem({
       <Link
         href={link}
         className={cn(
-          "w-full gap-2 justify-start font-medium transition-colors duration-200 hover:text-blue-500 text-[14px]",
-          isActive && "text-blue-600 text-[14px]"
+          "w-full gap-3 justify-start font-medium transition-colors duration-200 hover:text-blue-500 text-[14px] py-2",
+          isActive && "text-blue-600 text-[14px] border-r-2 border-blue-500 sm:border-none font-bold"
         )}
         aria-current={isActive ? "page" : undefined}
       >
@@ -78,7 +77,7 @@ function MobileNavbar() {
               </Button>
             </SheetTrigger>
             <SheetContent
-              className="w-[250px] sm:w-[540px]"
+              className="w-3/4 sm:w-[500px]"
               side="left"
             >
               <SheetTitle>
@@ -94,8 +93,27 @@ function MobileNavbar() {
                     isActive={item.isActive}
                   />
                 ))}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={`pt-[2px] focus-visible:outline-none cursor-pointer hover:text-blue-500 ${pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator") ? "text-blue-600 font-bold border-r-2 border-blue-500" : ""}`}>
+                    <div className="flex flex-row gap-1 py-2">
+                      <Label className="cursor-pointer">Create</Label>
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <Link href={"/create-pool"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Pool</DropdownMenuItem></Link>
+                    <Link href={"/create-curator"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Curator</DropdownMenuItem></Link>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <NavbarItem
+                  link="/dashboard"
+                  label="Dashboard"
+                  isActive={pathname.startsWith('/dashboard')}
+                />
               </nav>
-              <ButtonConnectWallet />
+              <div className="pt-5">
+                <ButtonConnectWallet />
+              </div>
             </SheetContent>
           </Sheet>
           <div className="flex items-center gap-2">
@@ -134,17 +152,23 @@ function DesktopNavbar() {
                 />
               ))}
               <DropdownMenu>
-                <DropdownMenuTrigger className="p-1 focus-visible:outline-none">
+                <DropdownMenuTrigger className={`pt-[2px] focus-visible:outline-none cursor-pointer hover:text-blue-500 ${pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator") ? "text-blue-600 font-bold" : ""}`}>
                   <div className="flex flex-row gap-1">
-                    <Label>Create</Label>
-                    <ChevronDown className="w-4 h-4"/>
+                    <Label className="cursor-pointer">Create</Label>
+                    <ChevronDown className="w-4 h-4" />
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuLabel><Link href={"/create-pool"}>Create Pool</Link></DropdownMenuLabel>
-                  <DropdownMenuItem><Link href={"/create-curator"}>Create Curator</Link></DropdownMenuItem>
+                  <Link href={"/create-pool"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Pool</DropdownMenuItem></Link>
+                  <Link href={"/create-curator"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Curator</DropdownMenuItem></Link>
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              <NavbarItem
+                link="/dashboard"
+                label="Dashboard"
+                isActive={pathname.startsWith('/dashboard')}
+              />
             </div>
           </div>
           <div className="flex items-center gap-2">

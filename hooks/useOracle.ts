@@ -10,7 +10,7 @@ export const useOracle = () => {
             )
             return response.json()
         },
-        refetchInterval: 120000
+        refetchInterval: 600000000
     })
 
     return { oracleData, oracleLoading }

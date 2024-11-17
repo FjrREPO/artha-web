@@ -16,7 +16,7 @@ export const useOwnerNft = () => {
             )
             return response.json()
         },
-        refetchInterval: 120000
+        refetchInterval: 600000000
     })
 
     const nftData: AlchemyNftSchema[] = ownedNfts?.ownedNfts || []

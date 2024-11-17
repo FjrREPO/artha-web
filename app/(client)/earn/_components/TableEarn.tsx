@@ -24,12 +24,12 @@ export default function TablePool() {
         setHasMounted(true);
     }, []);
 
-    const { data, isLoading, refetch, isRefetching } = useQuery<QueryData>({
+    const { data, isLoading, isRefetching } = useQuery<QueryData>({
         queryKey: ['earn'],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryCurator);
         },
-        refetchInterval: 60000,
+        refetchInterval: 600000000,
     });
 
     const { data: dataPool, isLoading: isLoadingPool } = useQuery<QueryDataPool>({
@@ -37,12 +37,8 @@ export default function TablePool() {
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
         },
-        refetchInterval: 60000,
+        refetchInterval: 600000000,
     });
-
-    const handleRefresh = () => {
-        refetch();
-    };
 
     if (!hasMounted) {
         return null;
@@ -53,7 +49,6 @@ export default function TablePool() {
             <DataTable
                 data={data?.curatorDeployeds || []}
                 columns={columns({dataPool: dataPool?.pools as PoolSchema[], isLoadingPool: isLoadingPool})}
-                handleRefresh={handleRefresh}
                 isLoading={isLoading || isRefetching}
             />
         </div>

@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { DataTableViewOptions } from "./ColumnToggle";
 import { Button } from "../../ui/button";
 import {
   ChevronLeftIcon,
@@ -32,14 +31,12 @@ import { EarnSchema } from "@/lib/validation/types";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  handleRefresh: () => void;
   isLoading: boolean;
 }
 
 export function DataTable<TData extends EarnSchema, TValue>({
   columns,
   data,
-  handleRefresh,
   isLoading,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -109,12 +106,6 @@ export function DataTable<TData extends EarnSchema, TValue>({
 
   return (
     <div className="z-10">
-      <div className="flex flex-wrap items-end justify-between gap-2 mb-4 z-10">
-        <div className="flex flex-wrap justify-between w-full items-center gap-2">
-          <Button onClick={handleRefresh} variant={"outline"}>Refresh Table</Button>
-          <DataTableViewOptions table={table} />
-        </div>
-      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

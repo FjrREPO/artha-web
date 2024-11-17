@@ -360,5 +360,213 @@ export const CryptoToken = [
         "self_reported_tags": null,
         "self_reported_market_cap": 0,
         "infinite_supply": false
+    },
+    {
+        "id": 4943,
+        "name": "Dai",
+        "symbol": "DAI",
+        "category": "token",
+        "description": "Dai (DAI) is a cryptocurrency and operates on the Ethereum platform. Dai has a current supply of 5,365,382,702.664872. The last known price of Dai is 0.99984793 USD and is up 0.00 over the last 24 hours. It is currently trading on 3404 active market(s) with $82,855,234.14 traded over the last 24 hours. More information can be found at https://makerdao.com/.",
+        "slug": "multi-collateral-dai",
+        "logo": "https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png",
+        "subreddit": "",
+        "notice": "[Dai (DAI)](https://coinmarketcap.com/currencies/multi-collateral-dai/) has been rebranded to [Usds (USDS)](https://coinmarketcap.com/currencies/usds/). For more information, please refer to this [article](https://forum.makerdao.com/t/sky-has-arrived/24959) and [post](https://x.com/SkyEcosystem/status/1828405625828843710).",
+        "tags": [
+            "defi",
+            "stablecoin",
+            "asset-backed-stablecoin",
+            "ethereum-ecosystem",
+            "avalanche-ecosystem",
+            "polygon-ecosystem",
+            "fantom-ecosystem",
+            "arbitrum-ecosytem",
+            "harmony-ecosystem",
+            "moonriver-ecosystem",
+            "bnb-chain",
+            "usd-stablecoin",
+            "optimism-ecosystem"
+        ],
+        "tag-names": [
+            "DeFi",
+            "Stablecoin",
+            "Asset-Backed Stablecoin",
+            "Ethereum Ecosystem",
+            "Avalanche Ecosystem",
+            "Polygon Ecosystem",
+            "Fantom Ecosystem",
+            "Arbitrum Ecosystem",
+            "Harmony Ecosystem",
+            "Moonriver Ecosystem",
+            "BNB Chain",
+            "USD Stablecoin",
+            "Optimism Ecosystem"
+        ],
+        "tag-groups": [
+            "CATEGORY",
+            "CATEGORY",
+            "CATEGORY",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "CATEGORY",
+            "PLATFORM"
+        ],
+        "urls": {
+            "website": [
+                "https://makerdao.com/"
+            ],
+            "twitter": [
+                "https://twitter.com/MakerDAO"
+            ],
+            "message_board": [],
+            "chat": [],
+            "facebook": [],
+            "explorer": [
+                "https://solscan.io/token/EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o",
+                "https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f",
+                "https://polygonscan.com/token/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+                "https://bscscan.com/token/0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
+                "https://blockscout.com/xdai/mainnet/tokens/0x44fA8E6f47987339850636F88629646662444217/token-transfers"
+            ],
+            "reddit": [],
+            "technical_doc": [],
+            "source_code": [],
+            "announcement": []
+        },
+        "platform": {
+            "id": "1027",
+            "name": "Ethereum",
+            "slug": "ethereum",
+            "symbol": "ETH",
+            "token_address": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        "date_added": "2019-11-22T00:00:00.000Z",
+        "twitter_username": "MakerDAO",
+        "is_hidden": 0,
+        "date_launched": null,
+        "contract_address": [
+            {
+                "contract_address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+                "platform": {
+                    "name": "Ethereum",
+                    "coin": {
+                        "id": "1027",
+                        "name": "Ethereum",
+                        "symbol": "ETH",
+                        "slug": "ethereum"
+                    }
+                }
+            }
+        ],
+        "self_reported_circulating_supply": null,
+        "self_reported_tags": null,
+        "self_reported_market_cap": null,
+        "infinite_supply": true
+    },
+    {
+        "id": 1839,
+        "name": "BNB",
+        "symbol": "BNB",
+        "category": "coin",
+        "description": "BNB (BNB) is a cryptocurrency . BNB has a current supply of 144,098,775.95432031. The last known price of BNB is 634.71321112 USD and is up 1.86 over the last 24 hours. It is currently trading on 2282 active market(s) with $2,575,892,404.19 traded over the last 24 hours. More information can be found at https://bnbchain.org/en.",
+        "slug": "bnb",
+        "logo": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
+        "subreddit": "bnbchainofficial",
+        "notice": "",
+        "tags": [
+            "marketplace",
+            "centralized-exchange",
+            "payments",
+            "smart-contracts",
+            "alameda-research-portfolio",
+            "multicoin-capital-portfolio",
+            "bnb-chain",
+            "layer-1",
+            "sec-security-token",
+            "alleged-sec-securities",
+            "celsius-bankruptcy-estate"
+        ],
+        "tag-names": [
+            "Marketplace",
+            "Centralized Exchange (CEX) Token",
+            "Payments",
+            "Smart Contracts",
+            "Alameda Research Portfolio",
+            "Multicoin Capital Portfolio",
+            "BNB Chain",
+            "Layer 1",
+            "SEC Security Token",
+            "Alleged SEC Securities",
+            "Celsius Bankruptcy Estate"
+        ],
+        "tag-groups": [
+            "INDUSTRY",
+            "CATEGORY",
+            "INDUSTRY",
+            "CATEGORY",
+            "CATEGORY",
+            "CATEGORY",
+            "PLATFORM",
+            "CATEGORY",
+            "CATEGORY",
+            "CATEGORY",
+            "CATEGORY"
+        ],
+        "urls": {
+            "website": [
+                "https://bnbchain.org/en"
+            ],
+            "twitter": [
+                "https://twitter.com/bnbchain"
+            ],
+            "message_board": [],
+            "chat": [
+                "https://t.me/BNBchaincommunity",
+                "https://t.me/bnbchain"
+            ],
+            "facebook": [],
+            "explorer": [
+                "https://explorer.bnbchain.org/",
+                "https://bsctrace.com/",
+                "https://bscscan.com/token/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "https://www.okx.com/web3/explorer/bsc"
+            ],
+            "reddit": [
+                "https://reddit.com/r/bnbchainofficial"
+            ],
+            "technical_doc": [],
+            "source_code": [
+                "https://github.com/bnb-chain"
+            ],
+            "announcement": []
+        },
+        "platform": null,
+        "date_added": "2017-07-25T00:00:00.000Z",
+        "twitter_username": "bnbchain",
+        "is_hidden": 0,
+        "date_launched": null,
+        "contract_address": [
+            {
+                "contract_address": "0xb8c77482e45f1f44de1745f52c74426c631bdd52",
+                "platform": {
+                    "name": "Ethereum",
+                    "coin": {
+                        "id": "1027",
+                        "name": "Ethereum",
+                        "symbol": "ETH",
+                        "slug": "ethereum"
+                    }
+                }
+            }
+        ],
+        "self_reported_circulating_supply": null,
+        "self_reported_tags": null,
+        "self_reported_market_cap": null,
+        "infinite_supply": false
     }
 ]

@@ -208,7 +208,7 @@ const AuctionsComponent: React.FC = () => {
             const response = await fetch('https://gist.githubusercontent.com/FjrREPO/2aa775ebc0f289f660457d5c0607218d/raw/b5b83d948c291e9650ac4953109991730c88b532/auctions.json');
             return response.json();
         },
-        refetchInterval: 60000,
+        refetchInterval: 600000000,
     });
 
     const filteredData = data?.data.filter((nft) => {
