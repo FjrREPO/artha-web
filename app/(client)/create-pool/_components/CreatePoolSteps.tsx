@@ -6,10 +6,11 @@ import { Percent } from 'lucide-react';
 import SelectCoinImage from '@/components/select/SelectCoinImage';
 import SelectOracleImage from '@/components/select/SelectOracleImage';
 import { UseFormReturn } from 'react-hook-form';
-import { CoinMarketCapSchema } from '@/lib/validation/types';
-import { Card, CardContent } from '@/components/ui/card';
+import { CoinMarketCapSchema, LTVSchema } from '@/lib/validation/types';
 import { poolSchema } from '@/lib/validation/schemas';
 import { z } from 'zod';
+import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
+import ValidationError from '@/components/error/validation-error';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -22,6 +23,8 @@ interface StepProps {
     isOracleLoading: boolean;
     cryptoTokenData?: CoinMarketCapSchema[];
     cryptoTokenLoading: boolean;
+    ltvData?: LTVSchema[];
+    ltvLoading: boolean;
 }
 
 export const CreatePoolSteps: React.FC<StepProps> = ({
@@ -32,11 +35,13 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     oracleData,
     isOracleLoading,
     cryptoTokenData,
-    cryptoTokenLoading
+    cryptoTokenLoading,
+    ltvData,
+    ltvLoading
 }) => {
     const collateralOptions = useMemo(() => ["AZUKI", "BAYC", "DAI"], []);
-    const loanTokenOptions = useMemo(() => ["USDC", "USDT", "BNB"], []);
-    const irmOptions = ["Linear Rate", "Non-Linear Rate", "Dynamic Rate"];
+    const loanTokenOptions = useMemo(() => ["USDC", "USDT", "TUSD"], []);
+    const irmOptions = ["0xBB50aDd1e25539B08E95F4d23609D1262ac48432"];
 
     const findCollateralOptions = React.useMemo(() =>
         cryptoTokenData?.filter((token) => collateralOptions.includes(token.symbol)) ?? [],
@@ -59,16 +64,6 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     const handleLoanSelection = (value: string) => {
         form.setValue('loanToken', value, { shouldValidate: true });
     };
-
-    const ValidationError = () => (
-        validationError ? (
-            <Card className="bg-red-800/10 px-5 py-3">
-                <CardContent className="p-0">
-                    <p className="text-sm text-red-500">{validationError}</p>
-                </CardContent>
-            </Card>
-        ) : null
-    );
 
     return (
         <div className={`transition-opacity duration-300 h-full ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
@@ -116,7 +111,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                             </FormItem>
                         )}
                     />
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
 
@@ -134,9 +129,9 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                             <SelectValue placeholder="Select rate model" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent>
+                                    <SelectContent className='cursor-pointer'>
                                         {irmOptions.map((option) => (
-                                            <SelectItem key={option} value={option}>
+                                            <SelectItem key={option} value={option} className='cursor-pointer'>
                                                 {option}
                                             </SelectItem>
                                         ))}
@@ -170,7 +165,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                             </FormItem>
                         )}
                     />
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
 
@@ -183,24 +178,22 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                             <FormItem>
                                 <FormLabel>Loan to Value (LTV)</FormLabel>
                                 <FormControl>
-                                    <div className="relative">
-                                        <Input
-                                            type="number"
-                                            className="pr-10"
-                                            placeholder="Enter LTV percentage (0-100)"
-                                            {...field}
-                                            value={field.value || ''}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                const sanitizedValue = value.replace(/[^0-9]/g, '');
-                                                const cappedValue = Math.min(Number(sanitizedValue), 100);
-                                                field.onChange(cappedValue.toString());
-                                            }}
-                                            min="0"
-                                            max="100"
-                                        />
-                                        <Percent className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-                                    </div>
+                                    <SkeletonWrapper isLoading={ltvLoading}>
+                                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select LTV Percentage" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className='cursor-pointer'>
+                                                {ltvData?.map((option, index) => (
+                                                    <SelectItem key={index} value={option.ltv} className={`${option.enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`} disabled={!option.enabled}>
+                                                        {option.ltv}%
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </SkeletonWrapper>
                                 </FormControl>
                                 <FormDescription>
                                     Enter the Loan to Value ratio in percentage
@@ -242,7 +235,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                             </FormItem>
                         )}
                     />
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
         </div>

@@ -130,7 +130,7 @@ export function DataTable<TData extends PoolSchema, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => window.location.href = `/pool/${row.original.MockArthaEvent_id}`}
+                  onClick={() => window.location.href = `/pool/${row.original.id}`}
                   className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (

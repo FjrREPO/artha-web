@@ -32,7 +32,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
         refetchInterval: 3600000000,
     });
     
-    const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.MockArthaEvent_id === PoolId);
+    const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
 
     return (
         <div>

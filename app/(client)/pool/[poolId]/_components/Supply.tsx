@@ -46,7 +46,7 @@ export default function Supply({
     });
 
     const handleSubmit = async (data: SupplyValues) => {
-        await handleSupply(filteredData?.MockArthaEvent_id ?? "", data.supplyAmount, address ?? "");
+        await handleSupply(filteredData?.id ?? "", data.supplyAmount, address ?? "");
     };
 
     const handleMaxSupply = () => {

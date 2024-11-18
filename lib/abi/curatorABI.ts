@@ -2,6 +2,17 @@ export const curatorABI = [
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "_artha",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "bytes32",
                 "name": "pool",
                 "type": "bytes32"
@@ -32,12 +43,41 @@ export const curatorABI = [
         "type": "error"
     },
     {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "pool",
+                "type": "bytes32"
+            }
+        ],
+        "name": "InvalidPool",
+        "type": "error"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
                 "indexed": true,
                 "internalType": "address",
                 "name": "curator",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "asset",
                 "type": "address"
             },
             {
@@ -64,6 +104,19 @@ export const curatorABI = [
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "artha",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
             }
         ],
         "stateMutability": "view",

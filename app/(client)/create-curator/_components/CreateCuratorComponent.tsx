@@ -193,7 +193,7 @@ const CreateCuratorComponent = () => {
                                 {activeStep === steps.length - 1 ? (
                                     <Button 
                                         type="submit"
-                                        disabled={isCreateCuratorPending || isCreateCuratorConfirming}
+                                        disabled={isCreateCuratorPending || isCreateCuratorConfirming || form.getValues('pools').length === 0}
                                     >
                                         Create Curator
                                     </Button>

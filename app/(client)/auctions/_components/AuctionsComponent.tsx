@@ -43,7 +43,7 @@ const Sidebar: React.FC<{ onFilterChange: (filters: { search: string; selectedCo
     };
 
     return (
-        <div className="w-64 p-4 border-r">
+        <div className="w-full lg:w-64 p-4 border-r">
             <Input
                 type="text"
                 placeholder="Token ID"
@@ -233,7 +233,7 @@ const AuctionsComponent: React.FC = () => {
     });
 
     return (
-        <div className="flex flex-col sm:flex-row min-h-screen w-full">
+        <div className="flex flex-col lg:flex-row min-h-screen w-full">
             <Sidebar onFilterChange={setFilters} data={data?.data}/>
             <div className="flex-1 px-6 py-4">
                 <div className="mb-6">

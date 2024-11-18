@@ -53,7 +53,7 @@ export default function Borrow({
     }, [nftData, selectedNft, form]);
 
     const handleSubmit = async (data: BorrowValues) => {
-        await handleBorrow(filteredData?.MockArthaEvent_id ?? "", data.borrowAmount, selectedNft?.tokenId ?? "");
+        await handleBorrow(filteredData?.id ?? "", data.borrowAmount, selectedNft?.tokenId ?? "");
     };
 
     useEffect(() => {

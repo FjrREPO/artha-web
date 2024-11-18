@@ -53,7 +53,7 @@ export default function Repay({ filteredData }: RepayProps) {
     }, [nftData, selectedNft, form]);
 
     const handleSubmit = async (data: RepayFormValues) => {
-        await handleRepay(filteredData?.MockArthaEvent_id ?? "", data.repayAmount, selectedNft?.tokenId ?? "", address ?? "");
+        await handleRepay(filteredData?.id ?? "", data.repayAmount, selectedNft?.tokenId ?? "", address ?? "");
     };
 
     useEffect(() => {

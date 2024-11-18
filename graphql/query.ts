@@ -4,23 +4,30 @@ export const queryPool = gql`{
     pools(orderBy: blockTimestamp, orderDirection: desc) {
         id
         collateralToken
-        irm
         loanToken
+        irm
+        oracle
         lth
         ltv
-        oracle
-        MockArthaEvent_id
+        supplyAssets
+        borrowAssets
+    }
+}`
+
+export const queryLTV = gql`{
+    ltvs(orderBy: blockTimestamp, orderDirection: desc) {
+        ltv
+        enabled
     }
 }`
 
 export const queryCurator = gql`{
     curatorDeployeds(orderBy: blockTimestamp, orderDirection: desc) {
-        id
-        curator
-        pools
-        transactionHash
-        blockTimestamp
-        blockNumber
         allocations
+        curator
+        id
+        pools {
+            id
+        }
     }
 }`

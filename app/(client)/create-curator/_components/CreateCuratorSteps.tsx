@@ -1,7 +1,6 @@
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { X } from 'lucide-react';
@@ -11,6 +10,7 @@ import { CoinSymbol } from '@/components/coin/CoinSymbol';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { PoolSchema } from '@/lib/validation/types';
 import MultiSelectCoinImage from '@/components/select/MultiSelectCoinImage';
+import ValidationError from '@/components/error/validation-error';
 
 interface StepProps {
     form: UseFormReturn;
@@ -37,29 +37,19 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
     poolData,
     isPoolsLoading
 }) => {
-    const ValidationError = () => (
-        validationError ? (
-            <Card className="bg-red-800/10 px-5 py-3">
-                <CardContent className="p-0">
-                    <p className="text-sm text-red-500">{validationError}</p>
-                </CardContent>
-            </Card>
-        ) : null
-    );
-
     const handlePoolSelection = (
         valueOrUpdater: Array<{ poolId: string; allocation: number; }> |
-        ((current: Array<{ poolId: string; allocation: number; }>) => Array<{ poolId: string; allocation: number; }>)
+            ((current: Array<{ poolId: string; allocation: number; }>) => Array<{ poolId: string; allocation: number; }>)
     ) => {
-        const newSelectedPools = typeof valueOrUpdater === 'function' 
+        const newSelectedPools = typeof valueOrUpdater === 'function'
             ? valueOrUpdater(selectedPools)
             : valueOrUpdater;
-        
+
         setSelectedPools(newSelectedPools);
-        
+
         const newPoolIds = newSelectedPools.map(pool => pool.poolId);
         const newAllocations = newSelectedPools.map(pool => pool.allocation);
-        
+
         form.setValue('pools', newPoolIds);
         form.setValue('allocations', newAllocations);
         updateTotalAllocation(newAllocations);
@@ -68,10 +58,10 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
     const handleRemovePool = (poolId: string) => {
         const newSelectedPools = selectedPools.filter(p => p.poolId !== poolId);
         setSelectedPools(newSelectedPools);
-        
+
         const newPoolIds = newSelectedPools.map(pool => pool.poolId);
         const newAllocations = newSelectedPools.map(pool => pool.allocation);
-        
+
         form.setValue('pools', newPoolIds);
         form.setValue('allocations', newAllocations);
         updateTotalAllocation(newAllocations);
@@ -94,8 +84,8 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
         newAllocations[index] = clampedValue;
 
         form.setValue(`allocations.${index}`, clampedValue);
-        setSelectedPools(current => 
-            current.map((pool, i) => 
+        setSelectedPools(current =>
+            current.map((pool, i) =>
                 i === index ? { ...pool, allocation: clampedValue } : pool
             )
         );
@@ -138,7 +128,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                             </FormItem>
                         )}
                     />
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
 
@@ -160,7 +150,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                             </FormItem>
                         )}
                     />
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
 
@@ -186,7 +176,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                     )}
                     <SkeletonWrapper isLoading={isPoolsLoading}>
                         {selectedPools.map((selectedPool, index) => {
-                            const pool = poolData?.pools.find(p => p.MockArthaEvent_id === selectedPool.poolId);
+                            const pool = poolData?.pools.find(p => p.id === selectedPool.poolId);
                             return (
                                 <div key={selectedPool.poolId} className="relative p-4 border rounded-lg">
                                     <Button
@@ -211,12 +201,11 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                                                 <FormControl>
                                                     <Input
                                                         type="number"
-                                                        defaultValue={"0"}
                                                         min="0"
                                                         max="100"
                                                         step="0.1"
                                                         placeholder="Enter allocation percentage"
-                                                        {...field}
+                                                        value={field.value || "0"}
                                                         onChange={(e) => {
                                                             const value = parseFloat(e.target.value);
                                                             handleAllocationChange(value, index);
@@ -231,7 +220,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                             );
                         })}
                     </SkeletonWrapper>
-                    <ValidationError />
+                    <ValidationError message={validationError} />
                 </div>
             )}
         </div>

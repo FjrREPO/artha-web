@@ -34,7 +34,7 @@ export const useCreatePool = () => {
                     collateralToken: collateralToken as HexAddress,
                     loanToken: loanToken as HexAddress,
                     oracle: oracle as HexAddress,
-                    irm: "0xca455C5DBCfefC55DDEBcaA69fb849aa7787C657",
+                    irm: irm as HexAddress,
                     ltv: BigInt(ltv),
                     lth: BigInt(lth)
                 }],

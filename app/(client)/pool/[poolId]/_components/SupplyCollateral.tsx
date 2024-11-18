@@ -52,7 +52,7 @@ export default function SupplyCollateral({ filteredData }: SupplyCollateralProps
     } = useSupplyCollateral();
 
     const handleSubmit = async (data: FormData) => {
-        await handleSupplyCollateral(filteredData?.MockArthaEvent_id ?? "", data.tokenId, address ?? "");
+        await handleSupplyCollateral(filteredData?.id ?? "", data.tokenId, address ?? "");
     };
 
     useEffect(() => {

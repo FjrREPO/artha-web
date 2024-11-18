@@ -16,6 +16,7 @@ import { CreatePoolSteps } from './CreatePoolSteps';
 import { z } from 'zod';
 import { useOracle } from '@/hooks/useOracle';
 import { useCryptoToken } from '@/hooks/useCryptoToken';
+import { useLTV } from '@/hooks/useLTV';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -33,6 +34,7 @@ const CreatePoolComponent = () => {
 
     const { oracleData, oracleLoading } = useOracle()
     const { cryptoTokenData, cryptoTokenLoading } = useCryptoToken()
+    const { ltvData, ltvLoading } = useLTV()
 
     const form = useForm<FormData>({
         resolver: zodResolver(poolSchema),
@@ -114,6 +116,11 @@ const CreatePoolComponent = () => {
                 return;
             }
 
+            if (data.lth && data.ltv && parseFloat(data.lth) <= parseFloat(data.ltv)) {
+                setValidationError("Liquidation Threshold (LTH) must be higher than Loan to Value (LTV)");
+                return;
+            }
+
             handleCreatePool(
                 findCollateralToken.platform?.token_address,
                 findLoanToken.platform?.token_address,
@@ -172,6 +179,8 @@ const CreatePoolComponent = () => {
                                 isOracleLoading={oracleLoading}
                                 cryptoTokenData={cryptoTokenData}
                                 cryptoTokenLoading={cryptoTokenLoading}
+                                ltvData={ltvData}
+                                ltvLoading={ltvLoading}
                             />
 
                             <div className="flex justify-between mt-8">
@@ -186,7 +195,7 @@ const CreatePoolComponent = () => {
                                 {activeStep === steps.length - 1 ? (
                                     <Button
                                         type="submit"
-                                        disabled={isCreatePoolPending || isCreatePoolConfirming}
+                                        disabled={isCreatePoolPending || isCreatePoolConfirming || form.getValues().collateralToken === "" || form.getValues().loanToken === "" || form.getValues().oracle === "" || form.getValues().irm === "" || form.getValues().ltv === "" || form.getValues().lth === ""}
                                         onClick={() => onSubmit(form.getValues())}
                                     >
                                         Create Pool

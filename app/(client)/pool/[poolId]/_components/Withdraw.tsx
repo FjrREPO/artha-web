@@ -46,7 +46,7 @@ export default function Withdraw({
     });
 
     const handleSubmit = async (data: WithdrawValues) => {
-        await handleWithdraw(filteredData?.MockArthaEvent_id ?? "", data.withdrawAmount, address ?? "");
+        await handleWithdraw(filteredData?.id ?? "", data.withdrawAmount, address ?? "");
     };
 
     const handleMaxWithdraw = () => {

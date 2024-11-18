@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 export const poolSchema = z.object({
-    MockArthaEvent_id: z.string(),
     id: z.string().optional().nullable(),
     collateralToken: z.string().min(1, "Please select a collateral").nullable(),
     loanToken: z.string().min(1, "Please select a loan token").nullable(),
@@ -9,13 +8,34 @@ export const poolSchema = z.object({
     oracle: z.string().min(1, "Please select an oracle").nullable(),
     ltv: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
     lth: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
+}).refine((data) => {
+    const ltvValue = parseFloat(data.ltv!);
+    const lthValue = parseFloat(data.lth!);
+
+    if (isNaN(ltvValue) || isNaN(lthValue)) {
+        return false;
+    }
+
+    return lthValue > ltvValue;
+}, {
+    message: "Liquidation Threshold (LTH) must be higher than Loan to Value (LTV)",
+    path: ["lth"]
 });
 
+export const ltvSchema = z.object({
+    id: z.string().optional(),
+    ltv: z.string(),
+    enabled: z.boolean(),
+})
+
+const earnPoolSchema = z.object({
+    id: z.string(), 
+});
 
 export const earnSchema = z.object({
     id: z.string(),
     curator: z.string(),
-    pools: z.array(z.string()),
+    pools: z.array(earnPoolSchema),
     transactionHash: z.string().optional(),
     blockTimestamp: z.number().optional(),
     blockNumber: z.number().optional(),

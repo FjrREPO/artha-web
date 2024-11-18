@@ -32,11 +32,11 @@ const data = [
 export default function DashboardPage() {
     return (
         <div className='w-full h-full flex flex-col gap-5'>
-            <div className='flex flex-row w-full justify-between items-center gap-5'>
+            <div className='flex flex-col lg:flex-row w-full justify-between items-center gap-5'>
                 <CardPortfolio />
                 <CardRewards />
             </div>
-            <div>
+            <div className='flex flex-col gap-5'>
                 {data.map((item, index) => (
                     <CardFeatures name={item.name} icon={item.icon} text={item.text} link={item.link} key={index} />
                 ))}

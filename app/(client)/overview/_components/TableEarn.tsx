@@ -13,7 +13,7 @@ type QueryData = {
     curatorDeployeds: EarnSchema[];
 };
 
-export default function TablePool() {
+export default function TableEarn() {
     const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {

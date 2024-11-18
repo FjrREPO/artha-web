@@ -469,90 +469,195 @@ export const CryptoToken = [
         "infinite_supply": true
     },
     {
-        "id": 1839,
-        "name": "BNB",
-        "symbol": "BNB",
-        "category": "coin",
-        "description": "BNB (BNB) is a cryptocurrency . BNB has a current supply of 144,098,775.95432031. The last known price of BNB is 634.71321112 USD and is up 1.86 over the last 24 hours. It is currently trading on 2282 active market(s) with $2,575,892,404.19 traded over the last 24 hours. More information can be found at https://bnbchain.org/en.",
-        "slug": "bnb",
-        "logo": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
-        "subreddit": "bnbchainofficial",
+        "id": 4687,
+        "name": "BUSD",
+        "symbol": "BUSD",
+        "category": "token",
+        "description": "BUSD (BUSD) is a cryptocurrency and operates on the BNB Beacon Chain (BEP2) platform. BUSD has a current supply of 68,223,480.92411248. The last known price of BUSD is 1.00088568 USD and is down -0.14 over the last 24 hours. It is currently trading on 7905 active market(s) with $13,556,277.72 traded over the last 24 hours. More information can be found at https://www.binance.com/en/busd.",
+        "slug": "binance-usd",
+        "logo": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png",
+        "subreddit": "",
         "notice": "",
         "tags": [
-            "marketplace",
-            "centralized-exchange",
-            "payments",
-            "smart-contracts",
-            "alameda-research-portfolio",
-            "multicoin-capital-portfolio",
-            "bnb-chain",
-            "layer-1",
-            "sec-security-token",
+            "stablecoin",
+            "asset-backed-stablecoin",
+            "binance-chain",
+            "harmony-ecosystem",
+            "moonriver-ecosystem",
+            "usd-stablecoin",
+            "optimism-ecosystem",
             "alleged-sec-securities",
-            "celsius-bankruptcy-estate"
+            "linea-ecosystem",
+            "fiat-stablecoin"
         ],
         "tag-names": [
-            "Marketplace",
-            "Centralized Exchange (CEX) Token",
-            "Payments",
-            "Smart Contracts",
-            "Alameda Research Portfolio",
-            "Multicoin Capital Portfolio",
-            "BNB Chain",
-            "Layer 1",
-            "SEC Security Token",
+            "Stablecoin",
+            "Asset-Backed Stablecoin",
+            "Binance Chain",
+            "Harmony Ecosystem",
+            "Moonriver Ecosystem",
+            "USD Stablecoin",
+            "Optimism Ecosystem",
             "Alleged SEC Securities",
-            "Celsius Bankruptcy Estate"
+            "Linea Ecosystem",
+            "Fiat Stablecoin"
         ],
         "tag-groups": [
-            "INDUSTRY",
             "CATEGORY",
-            "INDUSTRY",
+            "CATEGORY",
+            "PLATFORM",
+            "PLATFORM",
+            "PLATFORM",
+            "CATEGORY",
+            "PLATFORM",
+            "CATEGORY",
+            "PLATFORM",
+            "CATEGORY"
+        ],
+        "urls": {
+            "website": [
+                "https://www.binance.com/en/busd",
+                "https://www.paxos.com/busd/"
+            ],
+            "twitter": [
+                "https://twitter.com/binance"
+            ],
+            "message_board": [
+                "https://coinmarketcap.com/community/profile/BUSD"
+            ],
+            "chat": [],
+            "facebook": [],
+            "explorer": [
+                "https://solscan.io/token/33fsBLA8djQm82RpHmE3SuVrPGtZBWNYExsEUeKX1HXX",
+                "https://etherscan.io/token/0x4Fabb145d64652a948d72533023f6E7A623C7C53",
+                "https://bscscan.com/token/0xe9e7cea3dedca5984780bafc599bd69add087d56",
+                "https://explorer.binance.org/asset/BUSD-BD1",
+                "https://snowtrace.io/token/0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39"
+            ],
+            "reddit": [],
+            "technical_doc": [],
+            "source_code": [
+                "https://github.com/paxosglobal/busd-contract"
+            ],
+            "announcement": [
+                "https://www.binance.com/en/blog/376335367507857408/Binance-Partners-with-Paxos-to-Launch-USDBacked-Stablecoin-BUSD"
+            ]
+        },
+        "platform": {
+            "id": "1839",
+            "name": "BNB",
+            "slug": "bnb",
+            "symbol": "BNB",
+            "token_address": "BUSD-BD1"
+        },
+        "date_added": "2019-09-20T00:00:00.000Z",
+        "twitter_username": "binance",
+        "is_hidden": 0,
+        "date_launched": null,
+        "contract_address": [
+            {
+                "contract_address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+                "platform": {
+                    "name": "BNB Smart Chain (BEP20)",
+                    "coin": {
+                        "id": "1839",
+                        "name": "BNB",
+                        "symbol": "BNB",
+                        "slug": "bnb"
+                    }
+                }
+            }
+        ],
+        "self_reported_circulating_supply": null,
+        "self_reported_tags": null,
+        "self_reported_market_cap": null,
+        "infinite_supply": true
+    },
+    {
+        "id": 2563,
+        "name": "TrueUSD",
+        "symbol": "TUSD",
+        "category": "token",
+        "description": "TrueUSD (TUSD) is a cryptocurrency and operates on the Ethereum platform. TrueUSD has a current supply of 495,601,552.61. The last known price of TrueUSD is 0.99797288 USD and is down -0.01 over the last 24 hours. It is currently trading on 560 active market(s) with $59,241,016.93 traded over the last 24 hours. More information can be found at https://tusd.io/.",
+        "slug": "trueusd",
+        "logo": "https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png",
+        "subreddit": "",
+        "notice": "",
+        "tags": [
+            "store-of-value",
+            "stablecoin",
+            "asset-backed-stablecoin",
+            "avalanche-ecosystem",
+            "arbitrum-ecosytem",
+            "bnb-chain",
+            "usd-stablecoin",
+            "fiat-stablecoin"
+        ],
+        "tag-names": [
+            "Store Of Value",
+            "Stablecoin",
+            "Asset-Backed Stablecoin",
+            "Avalanche Ecosystem",
+            "Arbitrum Ecosystem",
+            "BNB Chain",
+            "USD Stablecoin",
+            "Fiat Stablecoin"
+        ],
+        "tag-groups": [
             "CATEGORY",
             "CATEGORY",
             "CATEGORY",
             "PLATFORM",
-            "CATEGORY",
-            "CATEGORY",
+            "PLATFORM",
+            "PLATFORM",
             "CATEGORY",
             "CATEGORY"
         ],
         "urls": {
             "website": [
-                "https://bnbchain.org/en"
+                "https://tusd.io/"
             ],
             "twitter": [
-                "https://twitter.com/bnbchain"
+                "https://twitter.com/tusdio"
             ],
-            "message_board": [],
+            "message_board": [
+                "https://trueusd.medium.com/"
+            ],
             "chat": [
-                "https://t.me/BNBchaincommunity",
-                "https://t.me/bnbchain"
+                "https://discord.gg/tusdio",
+                "https://t.me/TUSDofficial_EN"
             ],
             "facebook": [],
             "explorer": [
-                "https://explorer.bnbchain.org/",
-                "https://bsctrace.com/",
-                "https://bscscan.com/token/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-                "https://www.okx.com/web3/explorer/bsc"
+                "https://etherscan.io/token/0x0000000000085d4780B73119b644AE5ecd22b376",
+                "https://explorer.binance.org/asset/TUSDB-888",
+                "https://bscscan.com/token/0x40af3827f39d0eacbf4a168f8d4ee67c121d11c9",
+                "https://tronscan.org/#/token20/TUpMhErZL2fhh4sVNULAbNKLokS4GjC1F4",
+                "https://snowtrace.io/token/0x1c20e891bab6b1727d14da358fae2984ed9b59eb"
             ],
-            "reddit": [
-                "https://reddit.com/r/bnbchainofficial"
-            ],
+            "reddit": [],
             "technical_doc": [],
             "source_code": [
-                "https://github.com/bnb-chain"
+                "https://github.com/trusttoken/smart-contracts"
             ],
-            "announcement": []
+            "announcement": [
+                "https://t.me/TUSDofficialChannel"
+            ]
         },
-        "platform": null,
-        "date_added": "2017-07-25T00:00:00.000Z",
-        "twitter_username": "bnbchain",
+        "platform": {
+            "id": "1027",
+            "name": "Ethereum",
+            "slug": "ethereum",
+            "symbol": "ETH",
+            "token_address": "0x0000000000085d4780B73119b644AE5ecd22b376"
+        },
+        "date_added": "2018-03-06T00:00:00.000Z",
+        "twitter_username": "tusdio",
         "is_hidden": 0,
         "date_launched": null,
         "contract_address": [
             {
-                "contract_address": "0xb8c77482e45f1f44de1745f52c74426c631bdd52",
+                "contract_address": "0x0000000000085d4780B73119b644AE5ecd22b376",
                 "platform": {
                     "name": "Ethereum",
                     "coin": {

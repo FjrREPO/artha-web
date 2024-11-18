@@ -26,10 +26,12 @@ const NavbarItem = memo(function NavbarItem({
   link,
   label,
   isActive,
+  onNavigate,
 }: {
   link: string;
   label: string;
   isActive: boolean;
+  onNavigate?: () => void;
 }) {
   return (
     <div className="relative flex items-center">
@@ -40,6 +42,7 @@ const NavbarItem = memo(function NavbarItem({
           isActive && "text-blue-600 text-[14px] border-r-2 border-blue-500 sm:border-none font-bold"
         )}
         aria-current={isActive ? "page" : undefined}
+        onClick={onNavigate}
       >
         {label}
       </Link>
@@ -50,6 +53,10 @@ const NavbarItem = memo(function NavbarItem({
 function MobileNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const handleNavigate = () => {
+    setIsOpen(false);
+  };
 
   const navItems = useMemo(() =>
     NAVIGATION_ITEMS.map((item) => ({
@@ -91,6 +98,7 @@ function MobileNavbar() {
                     link={item.link}
                     label={item.label}
                     isActive={item.isActive}
+                    onNavigate={handleNavigate}
                   />
                 ))}
                 <DropdownMenu>
@@ -101,14 +109,23 @@ function MobileNavbar() {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <Link href={"/create-pool"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Pool</DropdownMenuItem></Link>
-                    <Link href={"/create-curator"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Curator</DropdownMenuItem></Link>
+                    <Link href={"/create-pool"} className="cursor-pointer" onClick={handleNavigate}>
+                      <DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
+                        Create Pool
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href={"/create-curator"} className="cursor-pointer" onClick={handleNavigate}>
+                      <DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
+                        Create Curator
+                      </DropdownMenuItem>
+                    </Link>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <NavbarItem
                   link="/dashboard"
                   label="Dashboard"
                   isActive={pathname.startsWith('/dashboard')}
+                  onNavigate={handleNavigate}
                 />
               </nav>
               <div className="pt-5">
@@ -159,8 +176,16 @@ function DesktopNavbar() {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <Link href={"/create-pool"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Pool</DropdownMenuItem></Link>
-                  <Link href={"/create-curator"} className="cursor-pointer"><DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>Create Curator</DropdownMenuItem></Link>
+                  <Link href={"/create-pool"} className="cursor-pointer">
+                    <DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
+                      Create Pool
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href={"/create-curator"} className="cursor-pointer">
+                    <DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
+                      Create Curator
+                    </DropdownMenuItem>
+                  </Link>
                 </DropdownMenuContent>
               </DropdownMenu>
 

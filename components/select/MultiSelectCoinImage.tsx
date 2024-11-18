@@ -37,20 +37,20 @@ const MultiSelectCoinImage: React.FC<MultiSelectCoinImageProps> = ({
             <div className="flex flex-wrap gap-4 p-4">
                 {data?.map((pool) => (
                     <div
-                        key={pool.MockArthaEvent_id}
+                        key={pool.id}
                         className="relative cursor-pointer transform transition-all duration-200 hover:scale-105 active:scale-95"
-                        onClick={() => pool.MockArthaEvent_id && handleClick(pool.MockArthaEvent_id)}
+                        onClick={() => pool.id && handleClick(pool.id)}
                     >
                         <div className={`
                             relative rounded-full overflow-hidden transition-all duration-200
-                            ${isSelected(pool.MockArthaEvent_id!) ? 'ring-4 ring-gray-400 dark:ring-white' : 'ring-1 ring-gray-200 hover:ring-primary/50'}
+                            ${isSelected(pool.id!) ? 'ring-4 ring-gray-400 dark:ring-white' : 'ring-1 ring-gray-200 hover:ring-primary/50'}
                         `}>
                             <CoinImageCustom
                                 address={pool.collateralToken || ""}
                                 className="w-20 h-20 object-cover brightness-90"
                             />
 
-                            {isSelected(pool.MockArthaEvent_id!) && (
+                            {isSelected(pool.id!) && (
                                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                                     <CheckCircle className="w-8 h-8 text-white" />
                                 </div>
@@ -59,9 +59,9 @@ const MultiSelectCoinImage: React.FC<MultiSelectCoinImageProps> = ({
 
                         <div className={`
                             mt-2 text-center text-sm font-medium truncate max-w-[80px]
-                            ${isSelected(pool.MockArthaEvent_id!) ? 'text-primary' : 'text-gray-600'}
+                            ${isSelected(pool.id!) ? 'text-primary' : 'text-gray-600'}
                         `}>
-                            Pool {pool.MockArthaEvent_id?.slice(0, 6)}...
+                            Pool {pool.id?.slice(0, 6)}...
                         </div>
                     </div>
                 ))}

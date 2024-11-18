@@ -11,9 +11,6 @@ import { decodeEventLog, Log } from 'viem';
 import { curatorABI } from '@/lib/abi/curatorABI';
 import { serializeBigInt } from '@/lib/utils';
 
-// Custom type for hex addresses
-type HexAddress = `0x${string}`;
-
 interface SuccessDialogProps {
     isOpen: boolean;
     onClose: () => void;

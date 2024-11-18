@@ -38,10 +38,10 @@ export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], i
           <SkeletonWrapper isLoading={isLoadingPool}>
             <div className="flex flex-wrap gap-1">
               {row.original.pools && row.original.pools.map((pool) => {
-                const findPoolById = dataPool && dataPool.find((datPool) => datPool.MockArthaEvent_id === pool);
+                const findPoolById = dataPool && dataPool.find((datPool) => datPool.id === pool.id);
                 return (
                   <div
-                    key={pool}
+                    key={pool.id}
                     className="px-2 py-0.5 text-sm flex flex-row gap-1 items-center"
                   >
                     <CoinImage address={findPoolById?.collateralToken || ""} />

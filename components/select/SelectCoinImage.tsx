@@ -70,7 +70,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                 ) : (
                     <>
                         {mainDisplayCoins?.map((coin: CoinMarketCapSchema) => {
-                            const tokenAddress = coin.platform?.token_address || '';
+                            const tokenAddress = coin.contract_address[0]?.contract_address || '';
 
                             return (
                                 <motion.div
@@ -134,7 +134,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                 </DialogHeader>
                                 <ScrollArea className="max-h-80 overflow-auto">
                                     {dialogCoins?.map((token: CoinMarketCapSchema) => {
-                                        const tokenAddress = token.platform?.token_address || '';
+                                        const tokenAddress = token.contract_address[0]?.contract_address || '';
                                         return (
                                             <Button
                                                 key={token.id}
