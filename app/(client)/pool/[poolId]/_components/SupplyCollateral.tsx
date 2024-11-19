@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useAccount } from 'wagmi';
-import { useOwnerNft } from '@/hooks/useOwnerNft';
 import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
 import { useSupplyCollateral } from '@/hooks/useSupplyCollateral';
@@ -13,18 +12,20 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
+import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 
 interface SupplyCollateralProps {
+    nftData?: AlchemyNftSchema[];
     filteredData?: PoolSchema;
+    nftLoading: boolean;
 }
 
 interface FormData {
     tokenId: string;
 }
 
-export default function SupplyCollateral({ filteredData }: SupplyCollateralProps) {
+export default function SupplyCollateral({ nftData, filteredData, nftLoading }: SupplyCollateralProps) {
     const { address } = useAccount();
-    const { nftData, nftLoading } = useOwnerNft();
 
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -107,22 +108,32 @@ export default function SupplyCollateral({ filteredData }: SupplyCollateralProps
                                             <div className="relative">
                                                 <Input
                                                     {...field}
-                                                    className="w-full pr-10 py-7 rounded-xl"
+                                                    className="w-full pr-10 py-7 rounded-xl hidden"
                                                     type="text"
                                                     placeholder="Enter token id"
                                                 />
-                                                <DialogSelectNft
-                                                    nftData={nftData}
-                                                    isDialogOpen={isDialogOpen}
-                                                    setDialogOpen={setIsDialogOpen}
-                                                    handleSelect={handleSelectNft}
-                                                    nftLoading={nftLoading}
-                                                    trigger={
-                                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
-                                                            <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
-                                                        </div>
-                                                    }
-                                                />
+                                                <SkeletonWrapper isLoading={nftLoading}>
+                                                    <DialogSelectNft
+                                                        nftData={nftData || []}
+                                                        isDialogOpen={isDialogOpen}
+                                                        setDialogOpen={setIsDialogOpen}
+                                                        handleSelect={handleSelectNft}
+                                                        nftLoading={nftLoading}
+                                                        trigger={
+                                                            <Button
+                                                                value={selectedNft?.tokenId}
+                                                                variant={"outline"}
+                                                                className="w-full h-auto flex justify-start items-center gap-4"
+                                                            >
+                                                                <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
+                                                                <div className="flex flex-col items-start justify-center gap-3">
+                                                                    <Label className="cursor-pointer">{selectedNft?.contract.symbol}</Label>
+                                                                    <Label className="cursor-pointer text-gray-500">Token id: {selectedNft?.tokenId}</Label>
+                                                                </div>
+                                                            </Button>
+                                                        }
+                                                    />
+                                                </SkeletonWrapper>
                                             </div>
                                         </FormControl>
                                         <FormMessage />

@@ -10,14 +10,16 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TopPoolData from './TopPoolData';
 import PoolDetails from './PoolDetails';
-import Borrow from './Borrow';
 import Lend from './Lend';
 import { PoolSchema } from '@/lib/validation/types';
 import { API_SUBGRAPH } from '@/constants/config';
 import { queryPool } from '@/graphql/query';
 import request from 'graphql-request';
-import Repay from './Repay';
 import SupplyCollateral from './SupplyCollateral';
+import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useOwnerNft } from '@/hooks/useOwnerNft';
+import { NftImage } from '@/components/nft/NftImage';
 
 type QueryData = {
     pools: PoolSchema[];
@@ -31,8 +33,10 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
         },
         refetchInterval: 3600000000,
     });
-    
+
     const filteredData: PoolSchema | undefined = data?.pools?.find((item: PoolSchema) => item.id === PoolId);
+
+    const { nftData, nftLoading } = useOwnerNft()
 
     return (
         <div>
@@ -59,36 +63,58 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
                             </Card>
                         </SkeletonWrapper>
                     </div>
-                    <SkeletonWrapper isLoading={isLoading}>
-                        <div className='w-full lg:w-[50%]'>
+                    <div className='flex flex-col gap-5 lg:w-[50%]'>
+                        <SkeletonWrapper isLoading={isLoading}>
                             <Card className='w-full'>
                                 <CardContent className='p-5 space-y-5'>
                                     <Tabs defaultValue='supplyCollateral' className='w-full'>
                                         <TabsList className='w-full'>
                                             <TabsTrigger value="supplyCollateral" className='w-full'>Supply collateral</TabsTrigger>
-                                            <TabsTrigger value="borrow" className='w-full'>Borrow</TabsTrigger>
-                                            <TabsTrigger value="repay" className='w-full'>Repay</TabsTrigger>
                                             <TabsTrigger value="lend" className='w-full'>Lend</TabsTrigger>
                                         </TabsList>
                                         <TabsContent value="supplyCollateral">
-                                            <SupplyCollateral filteredData={filteredData} />
-                                        </TabsContent>
-                                        <TabsContent value="borrow">
-                                            <Borrow filteredData={filteredData} />
-                                        </TabsContent>
-                                        <TabsContent value="repay">
-                                            <Repay filteredData={filteredData} />
+                                            <SupplyCollateral nftData={nftData || []} filteredData={filteredData} nftLoading={nftLoading} />
                                         </TabsContent>
                                         <TabsContent value="lend">
-                                            <Lend
-                                                filteredData={filteredData}
-                                            />
+                                            <Lend filteredData={filteredData} />
                                         </TabsContent>
                                     </Tabs>
                                 </CardContent>
                             </Card>
-                        </div>
-                    </SkeletonWrapper>
+                        </SkeletonWrapper>
+                        <SkeletonWrapper isLoading={isLoading}>
+                            <Card className='w-full'>
+                                <SkeletonWrapper isLoading={nftLoading}>
+                                    <CardContent className='p-5 space-y-5'>
+                                        <Label className='text-lg'>Your Collateral</Label>
+                                        <Separator className='w-full' />
+                                        <ScrollArea className="max-h-80 overflow-auto h-auto">
+                                            <div className='flex flex-col w-full gap-2 h-auto'>
+                                                {nftData.map((nft, index) => (
+                                                    <DialogSupplyBorrowRepay
+                                                        key={index}
+                                                        filteredData={filteredData}
+                                                        nftData={nft}
+                                                        trigger={
+                                                            <div
+                                                                className="w-full h-auto flex justify-start items-center gap-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg px-4 py-3"
+                                                            >
+                                                                <NftImage path={nft?.contract.openSeaMetadata.imageUrl || ""} />
+                                                                <div className="flex flex-col items-start justify-center gap-3">
+                                                                    <Label className="cursor-pointer">{nft.contract.symbol}</Label>
+                                                                    <Label className="cursor-pointer text-gray-500">Token id: {nft.tokenId}</Label>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    />
+                                                ))}
+                                            </div>
+                                        </ScrollArea>
+                                    </CardContent>
+                                </SkeletonWrapper>
+                            </Card>
+                        </SkeletonWrapper>
+                    </div>
                 </div>
             </div>
         </div >

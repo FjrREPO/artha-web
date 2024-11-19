@@ -17,12 +17,17 @@ export const queryPool = gql`{
 export const queryLTV = gql`{
     ltvs(orderBy: blockTimestamp, orderDirection: desc) {
         ltv
-        enabled
+    }
+}`
+
+export const queryIRM = gql`{
+    interestRateModels(orderBy: blockTimestamp, orderDirection: desc) {
+        irm
     }
 }`
 
 export const queryCurator = gql`{
-    curatorDeployeds(orderBy: blockTimestamp, orderDirection: desc) {
+    curators(orderBy: blockTimestamp, orderDirection: desc) {
         allocations
         curator
         id

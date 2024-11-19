@@ -1,4 +1,3 @@
-import { CoinImage } from '@/components/coin/CoinImage'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -6,14 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Wallet } from 'lucide-react'
 import React from 'react'
 
-interface WithdrawProps {
-    filteredData: EarnData;
-    handleWithdrawChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleMaxWithdraw: () => void;
-    withdrawAmount: number;
-}
-
-export default function Withdraw({ filteredData, handleWithdrawChange, handleMaxWithdraw, withdrawAmount }: WithdrawProps) {
+export default function Withdraw() {
     return (
         <div className='flex flex-col gap-5'>
             <Card className='w-full p-5'>
@@ -26,7 +18,6 @@ export default function Withdraw({ filteredData, handleWithdrawChange, handleMax
                             <Button
                                 variant={'outline'}
                                 className="cursor-pointer px-3"
-                                onClick={handleMaxWithdraw}
                             >
                                 <Label className='text-[11px] cursor-pointer'>Max</Label>
                             </Button>
@@ -35,14 +26,12 @@ export default function Withdraw({ filteredData, handleWithdrawChange, handleMax
                     <div className='relative flex flex-row justify-between items-center'>
                         <Input
                             className='w-full pr-10'
-                            value={withdrawAmount}
-                            onChange={handleWithdrawChange}
                             type="number"
                             min={0}
                         />
-                        <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                            <CoinImage symbol={filteredData?.lendAsset || ""} />
-                        </div>
+                        {/* <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
+                            <CoinImage symbol={filteredData?.curator || ""} />
+                        </div> */}
                     </div>
                 </CardContent>
             </Card>

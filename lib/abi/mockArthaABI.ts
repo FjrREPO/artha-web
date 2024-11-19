@@ -36,12 +36,22 @@ export const mockArthaABI = [
     },
     {
         "inputs": [],
+        "name": "LTVExceeded",
+        "type": "error"
+    },
+    {
+        "inputs": [],
         "name": "LTVGreaterThanLTH",
         "type": "error"
     },
     {
         "inputs": [],
         "name": "LTVNotExist",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotAllowed",
         "type": "error"
     },
     {
@@ -101,6 +111,42 @@ export const mockArthaABI = [
         "inputs": [],
         "name": "ZeroAddress",
         "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ZeroAmount",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "Id",
+                "name": "id",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "borrowRate",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "interest",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "feeShares",
+                "type": "uint256"
+            }
+        ],
+        "name": "Accrued",
+        "type": "event"
     },
     {
         "anonymous": false,
@@ -217,6 +263,31 @@ export const mockArthaABI = [
         "anonymous": false,
         "inputs": [
             {
+                "indexed": true,
+                "internalType": "address",
+                "name": "caller",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "FlashLoan",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "irm",
@@ -249,6 +320,31 @@ export const mockArthaABI = [
             }
         ],
         "name": "LTVChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+            }
+        ],
+        "name": "OperatorSet",
         "type": "event"
     },
     {
@@ -710,6 +806,40 @@ export const mockArthaABI = [
     {
         "inputs": [
             {
+                "internalType": "contract IERC3156FlashBorrower",
+                "name": "receiver",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "flashLoan",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "Id",
                 "name": "id",
                 "type": "bytes32"
@@ -740,7 +870,7 @@ export const mockArthaABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "",
+                "name": "irm",
                 "type": "address"
             }
         ],
@@ -748,7 +878,7 @@ export const mockArthaABI = [
         "outputs": [
             {
                 "internalType": "bool",
-                "name": "",
+                "name": "enabled",
                 "type": "bool"
             }
         ],
@@ -758,12 +888,12 @@ export const mockArthaABI = [
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
+                "internalType": "Id",
+                "name": "id",
+                "type": "bytes32"
             }
         ],
-        "name": "ltvs",
+        "name": "isPoolExist",
         "outputs": [
             {
                 "internalType": "bool",
@@ -777,23 +907,42 @@ export const mockArthaABI = [
     {
         "inputs": [
             {
+                "internalType": "uint256",
+                "name": "ltv",
+                "type": "uint256"
+            }
+        ],
+        "name": "ltvs",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "enabled",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
-                "name": "operator",
+                "name": "",
                 "type": "address"
             },
             {
                 "internalType": "address",
-                "name": "from",
+                "name": "",
                 "type": "address"
             },
             {
                 "internalType": "uint256",
-                "name": "id",
+                "name": "",
                 "type": "uint256"
             },
             {
                 "internalType": "bytes",
-                "name": "data",
+                "name": "",
                 "type": "bytes"
             }
         ],
@@ -805,7 +954,31 @@ export const mockArthaABI = [
                 "type": "bytes4"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            }
+        ],
+        "name": "operators",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "isOperator",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -899,7 +1072,7 @@ export const mockArthaABI = [
             },
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "tokenId",
                 "type": "uint256"
             }
         ],
@@ -1019,6 +1192,30 @@ export const mockArthaABI = [
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+            }
+        ],
+        "name": "setOperator",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "Id",
                 "name": "id",
                 "type": "bytes32"
@@ -1061,7 +1258,7 @@ export const mockArthaABI = [
             },
             {
                 "internalType": "address",
-                "name": "",
+                "name": "owner",
                 "type": "address"
             }
         ],
@@ -1069,7 +1266,7 @@ export const mockArthaABI = [
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "",
+                "name": "shares",
                 "type": "uint256"
             }
         ],
@@ -1129,6 +1326,39 @@ export const mockArthaABI = [
             }
         ],
         "name": "supplyCollateral",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "Id",
+                "name": "id",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "onBehalfOf",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "receiver",
+                "type": "address"
+            }
+        ],
+        "name": "supplyCollateralAndBorrow",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

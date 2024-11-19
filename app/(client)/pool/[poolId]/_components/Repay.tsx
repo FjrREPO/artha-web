@@ -1,6 +1,5 @@
 "use client"
 
-import { DialogSelectNft } from '@/components/dialog/DialogSelectNft'
 import SuccessDialog from '@/components/dialog/SuccessDialog'
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
 import { NftImage } from '@/components/nft/NftImage'
@@ -9,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useOwnerNft } from '@/hooks/useOwnerNft'
 import { useRepay } from '@/hooks/useRepay'
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types'
 import React, { useState, useEffect } from 'react'
@@ -18,19 +16,17 @@ import { useAccount } from 'wagmi'
 
 interface RepayProps {
     filteredData?: PoolSchema;
+    nftData?: AlchemyNftSchema
 }
 
 interface RepayFormValues {
     repayAmount: string;
 }
 
-export default function Repay({ filteredData }: RepayProps) {
+export default function Repay({ filteredData, nftData }: RepayProps) {
     const { address } = useAccount();
-    const { nftData, nftLoading } = useOwnerNft();
 
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedNft, setSelectedNft] = useState<AlchemyNftSchema | null>(null);
 
     const {
         repayHash,
@@ -46,14 +42,8 @@ export default function Repay({ filteredData }: RepayProps) {
         }
     });
 
-    useEffect(() => {
-        if (nftData && nftData.length > 0 && !selectedNft) {
-            setSelectedNft(nftData[0]);
-        }
-    }, [nftData, selectedNft, form]);
-
     const handleSubmit = async (data: RepayFormValues) => {
-        await handleRepay(filteredData?.id ?? "", data.repayAmount, selectedNft?.tokenId ?? "", address ?? "");
+        await handleRepay(filteredData?.id ?? "", data.repayAmount, nftData?.tokenId ?? "", address ?? "");
     };
 
     useEffect(() => {
@@ -62,11 +52,6 @@ export default function Repay({ filteredData }: RepayProps) {
             form.reset();
         }
     }, [repayHash, isRepayConfirmed, form]);
-
-    const handleSelectNft = (nft: AlchemyNftSchema) => {
-        setSelectedNft(nft);
-        setIsDialogOpen(false);
-    };
 
     if (!filteredData) {
         return (
@@ -112,18 +97,9 @@ export default function Repay({ filteredData }: RepayProps) {
                                                     min={0}
                                                     placeholder="Enter repay amount"
                                                 />
-                                                <DialogSelectNft
-                                                    nftData={nftData}
-                                                    isDialogOpen={isDialogOpen}
-                                                    setDialogOpen={setIsDialogOpen}
-                                                    handleSelect={handleSelectNft}
-                                                    nftLoading={nftLoading}
-                                                    trigger={
-                                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
-                                                            <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
-                                                        </div>
-                                                    }
-                                                />
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
+                                                    <NftImage path={nftData?.contract.openSeaMetadata.imageUrl || ""} />
+                                                </div>
                                             </div>
                                         </FormControl>
                                         <FormMessage />

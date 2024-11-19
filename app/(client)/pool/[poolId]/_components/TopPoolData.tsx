@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { PoolSchema } from '@/lib/validation/types';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
+import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
 
 export default function TopPoolData({ filteredData, isLoading }: { filteredData?: PoolSchema, isLoading: boolean }) {
     const totalAssets = filteredData?.ltv?.toString();
@@ -23,11 +24,14 @@ export default function TopPoolData({ filteredData, isLoading }: { filteredData?
                 <Card className='p-5 w-full'>
                     <CardContent className='flex flex-col gap-8'>
                         <div className='flex flex-col md:flex-row gap-2 items-center'>
-                            <CoinSymbol address={filteredData?.collateralToken || ""} className='text-2xl font-bold'/>
+                            <div className='flex flex-row items-center gap-2'>
+                                <CoinImageCustom address={filteredData?.collateralToken || ""} className='w-8 h-8' />
+                                <CoinSymbol address={filteredData?.collateralToken || ""} className='text-2xl font-bold' />
+                            </div>
                             <div className='flex flex-row flex-wrap gap-2'>
                                 <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken}`} target='_blank' className="cursor-pointer px-1">
                                     <Button variant={'outline'} className="cursor-pointer px-1">
-                                        <Label className='text-[11px] cursor-pointer'>{formatAddress(filteredData && filteredData.collateralToken ? filteredData.collateralToken : '', 4)}</Label>
+                                        <Label className='text-[11px] cursor-pointer'>{filteredData && formatAddress(filteredData && filteredData.collateralToken ? filteredData.collateralToken : '', 4)}</Label>
                                         <ExternalLink className='w-2 h-2' />
                                     </Button>
                                 </Link>

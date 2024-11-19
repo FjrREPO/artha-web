@@ -19,6 +19,7 @@ import { API_SUBGRAPH } from '@/constants/config';
 import { queryPool } from '@/graphql/query';
 import { PoolSchema } from '@/lib/validation/types';
 import request from 'graphql-request';
+import { PreviewDialogCurator } from './PreviewDialogCurator';
 
 type FormData = z.infer<typeof curatorSchema>;
 
@@ -38,6 +39,17 @@ const CreateCuratorComponent = () => {
     const [validationError, setValidationError] = useState<string | null>(null);
     const [selectedPools, setSelectedPools] = useState<PoolAllocation[]>([]);
     const [totalAllocation, setTotalAllocation] = useState(0);
+    const [hasReviewed, setHasReviewed] = useState(false);
+    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+
+    const handlePreviewClose = () => {
+        setShowPreviewDialog(false);
+    };
+
+    const handlePreviewConfirm = () => {
+        setShowPreviewDialog(false);
+        setHasReviewed(true);
+    };
 
     const steps = [
         { title: 'Basic Information', fields: ['_name', '_symbol'] },
@@ -127,6 +139,7 @@ const CreateCuratorComponent = () => {
             data.pools,
             data.allocations
         );
+        setShowPreviewDialog(false);
     };
 
     useEffect(() => {
@@ -136,6 +149,7 @@ const CreateCuratorComponent = () => {
             setSelectedPools([]);
             setActiveStep(0);
             setTotalAllocation(0);
+            setHasReviewed(false);
         }
     }, [createCuratorHash, isCreateCuratorConfirmed, form]);
 
@@ -190,13 +204,28 @@ const CreateCuratorComponent = () => {
                                 >
                                     <ChevronLeft className="h-4 w-4" /> Back
                                 </Button>
+
                                 {activeStep === steps.length - 1 ? (
-                                    <Button 
-                                        type="submit"
-                                        disabled={isCreateCuratorPending || isCreateCuratorConfirming || form.getValues('pools').length === 0}
-                                    >
-                                        Create Curator
-                                    </Button>
+                                    !hasReviewed ? (
+                                        <Button
+                                            type="button"
+                                            onClick={() => setShowPreviewDialog(true)}
+                                            disabled={form.getValues('pools').length === 0}
+                                        >
+                                            Preview Details
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            type="submit"
+                                            disabled={
+                                                isCreateCuratorPending ||
+                                                isCreateCuratorConfirming ||
+                                                form.getValues('pools').length === 0
+                                            }
+                                        >
+                                            Create Curator
+                                        </Button>
+                                    )
                                 ) : (
                                     <Button
                                         type="button"
@@ -210,6 +239,15 @@ const CreateCuratorComponent = () => {
                     </Form>
                 </CardContent>
             </Card>
+            <PreviewDialogCurator
+                isOpen={showPreviewDialog}
+                onClose={handlePreviewClose}
+                onConfirm={handlePreviewConfirm}
+                formData={form.getValues()}
+                selectedPools={selectedPools}
+                poolData={poolData}
+                isLoading={isCreateCuratorPending || isCreateCuratorConfirming}
+            />
         </>
     );
 };

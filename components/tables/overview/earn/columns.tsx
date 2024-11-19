@@ -34,7 +34,7 @@ export function columns(): ColumnDef<EarnSchema>[] {
         };
         return (
           <div>
-            <Label>{formatAddress(row.original.curator, 4)}</Label>
+            <Label>{row.original.curator && formatAddress(row.original.curator, 4)}</Label>
             <Button
               variant="ghost"
               size="icon"

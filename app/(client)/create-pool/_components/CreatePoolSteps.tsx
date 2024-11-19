@@ -6,7 +6,7 @@ import { Percent } from 'lucide-react';
 import SelectCoinImage from '@/components/select/SelectCoinImage';
 import SelectOracleImage from '@/components/select/SelectOracleImage';
 import { UseFormReturn } from 'react-hook-form';
-import { CoinMarketCapSchema, LTVSchema } from '@/lib/validation/types';
+import { CoinMarketCapSchema, IRMSchema, LTVSchema } from '@/lib/validation/types';
 import { poolSchema } from '@/lib/validation/schemas';
 import { z } from 'zod';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
@@ -25,6 +25,8 @@ interface StepProps {
     cryptoTokenLoading: boolean;
     ltvData?: LTVSchema[];
     ltvLoading: boolean;
+    irmData?: IRMSchema[];
+    irmLoading: boolean;
 }
 
 export const CreatePoolSteps: React.FC<StepProps> = ({
@@ -37,11 +39,12 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     cryptoTokenData,
     cryptoTokenLoading,
     ltvData,
-    ltvLoading
+    ltvLoading,
+    irmData,
+    irmLoading
 }) => {
     const collateralOptions = useMemo(() => ["AZUKI", "BAYC", "DAI"], []);
     const loanTokenOptions = useMemo(() => ["USDC", "USDT", "TUSD"], []);
-    const irmOptions = ["0xBB50aDd1e25539B08E95F4d23609D1262ac48432"];
 
     const findCollateralOptions = React.useMemo(() =>
         cryptoTokenData?.filter((token) => collateralOptions.includes(token.symbol)) ?? [],
@@ -123,20 +126,22 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Interest Rate Model</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value || ""}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select rate model" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent className='cursor-pointer'>
-                                        {irmOptions.map((option) => (
-                                            <SelectItem key={option} value={option} className='cursor-pointer'>
-                                                {option}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <SkeletonWrapper isLoading={irmLoading}>
+                                    <Select onValueChange={field.onChange} value={field.value || ""}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select rate model" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className='cursor-pointer'>
+                                            {irmData?.map((option, index) => (
+                                                <SelectItem key={index} value={option.irm} className='cursor-pointer'>
+                                                    {option.irm}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </SkeletonWrapper>
                                 <FormDescription>
                                     Choose the interest rate calculation model
                                 </FormDescription>
@@ -187,7 +192,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                             </FormControl>
                                             <SelectContent className='cursor-pointer'>
                                                 {ltvData?.map((option, index) => (
-                                                    <SelectItem key={index} value={option.ltv} className={`${option.enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`} disabled={!option.enabled}>
+                                                    <SelectItem key={index} value={option.ltv} className={'cursor-pointer'}>
                                                         {option.ltv}%
                                                     </SelectItem>
                                                 ))}

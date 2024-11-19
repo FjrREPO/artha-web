@@ -18,6 +18,7 @@ import { Label } from "../ui/label";
 const NAVIGATION_ITEMS = [
   { label: "Overview", link: "/overview", icon: <Info /> },
   { label: "Earn", link: "/earn", icon: <Bookmark /> },
+  { label: "Borrow", link: "/borrow", icon: <Bookmark /> },
   { label: "Pool", link: "/pool", icon: <BellDot /> },
   { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
 ] as const;

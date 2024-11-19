@@ -24,9 +24,23 @@ export const poolSchema = z.object({
 
 export const ltvSchema = z.object({
     id: z.string().optional(),
-    ltv: z.string(),
-    enabled: z.boolean(),
+    ltv: z.string()
 })
+
+export const irmSchema = z.object({
+    id: z.string().optional(),
+    irm: z.string()
+})
+
+export const supplyCollateralAndBorrow = z.object({
+    id: z.string().optional(),
+    poolId: z.string(),
+    depositToken: z.string().optional(),
+    depositAmount: z.string(),
+    borrowToken: z.string().optional(),
+    borrowAmount: z.string(),
+    ltv: z.array(z.number()).min(1).max(100)
+});
 
 const earnPoolSchema = z.object({
     id: z.string(), 

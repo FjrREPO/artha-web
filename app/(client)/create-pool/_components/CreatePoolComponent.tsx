@@ -17,6 +17,8 @@ import { z } from 'zod';
 import { useOracle } from '@/hooks/useOracle';
 import { useCryptoToken } from '@/hooks/useCryptoToken';
 import { useLTV } from '@/hooks/useLTV';
+import PreviewDialogPool from './PreviewDialogPool';
+import { useIRM } from '@/hooks/useIRM';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -25,6 +27,7 @@ const CreatePoolComponent = () => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
     const steps = [
         { title: 'Token Selection', fields: ['collateralToken', 'loanToken'] },
@@ -35,6 +38,7 @@ const CreatePoolComponent = () => {
     const { oracleData, oracleLoading } = useOracle()
     const { cryptoTokenData, cryptoTokenLoading } = useCryptoToken()
     const { ltvData, ltvLoading } = useLTV()
+    const { irmData, irmLoading } = useIRM()
 
     const form = useForm<FormData>({
         resolver: zodResolver(poolSchema),
@@ -94,21 +98,18 @@ const CreatePoolComponent = () => {
         }, 300);
     };
 
-    const onSubmit = async (data: FormData) => {
+    const handleConfirmCreatePool = async () => {
         try {
-            const isValid = await validateCurrentStep();
-            if (!isValid) return;
-
-            setValidationError(null);
-
-            const findCollateralToken = await cryptoTokenData?.find(
-                (token) => token.platform?.token_address === data.collateralToken
+            const formData = form.getValues();
+            
+            const findCollateralToken = cryptoTokenData?.find(
+                (token) => token.platform?.token_address === formData.collateralToken
             );
-            const findLoanToken = await cryptoTokenData?.find(
-                (token) => token.platform?.token_address === data.loanToken
+            const findLoanToken = cryptoTokenData?.find(
+                (token) => token.platform?.token_address === formData.loanToken
             );
-            const findOracle = await oracleData?.find(
-                (token) => token.platform?.token_address === data.oracle
+            const findOracle = oracleData?.find(
+                (token) => token.platform?.token_address === formData.oracle
             );
 
             if (!findCollateralToken || !findLoanToken || !findOracle) {
@@ -116,19 +117,36 @@ const CreatePoolComponent = () => {
                 return;
             }
 
-            if (data.lth && data.ltv && parseFloat(data.lth) <= parseFloat(data.ltv)) {
+            if (formData.lth && formData.ltv && parseFloat(formData.lth) <= parseFloat(formData.ltv)) {
                 setValidationError("Liquidation Threshold (LTH) must be higher than Loan to Value (LTV)");
                 return;
             }
+
+            console.log("data = ", formData);
 
             handleCreatePool(
                 findCollateralToken.platform?.token_address,
                 findLoanToken.platform?.token_address,
                 findOracle.platform?.token_address,
-                data.irm || "",
-                data.ltv || "",
-                data.lth || ""
+                formData.irm || "",
+                formData.ltv || "",
+                formData.lth || ""
             );
+            
+            setShowPreviewDialog(false);
+        } catch (error) {
+            setValidationError("An error occurred while creating the pool.");
+            console.error(error);
+        }
+    };
+
+    const onSubmit = async () => {
+        try {
+            const isValid = await validateCurrentStep();
+            if (!isValid) return;
+
+            setValidationError(null);
+            setShowPreviewDialog(true);
         } catch (error) {
             setValidationError("An error occurred while submitting the form.");
             console.error(error);
@@ -150,6 +168,15 @@ const CreatePoolComponent = () => {
                     message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
                 />
             )}
+            <PreviewDialogPool
+                isOpen={showPreviewDialog}
+                onClose={() => setShowPreviewDialog(false)}
+                onConfirm={handleConfirmCreatePool}
+                formData={form.getValues()}
+                oracleData={oracleData}
+                isCreatePoolPending={isCreatePoolPending}
+                isCreatePoolConfirming={isCreatePoolConfirming}
+            />
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
@@ -169,7 +196,7 @@ const CreatePoolComponent = () => {
 
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="space-y-6">
                             <CreatePoolSteps
                                 form={form}
                                 validationError={validationError}
@@ -181,6 +208,8 @@ const CreatePoolComponent = () => {
                                 cryptoTokenLoading={cryptoTokenLoading}
                                 ltvData={ltvData}
                                 ltvLoading={ltvLoading}
+                                irmData={irmData}
+                                irmLoading={irmLoading}
                             />
 
                             <div className="flex justify-between mt-8">
@@ -195,10 +224,18 @@ const CreatePoolComponent = () => {
                                 {activeStep === steps.length - 1 ? (
                                     <Button
                                         type="submit"
-                                        disabled={isCreatePoolPending || isCreatePoolConfirming || form.getValues().collateralToken === "" || form.getValues().loanToken === "" || form.getValues().oracle === "" || form.getValues().irm === "" || form.getValues().ltv === "" || form.getValues().lth === ""}
-                                        onClick={() => onSubmit(form.getValues())}
+                                        disabled={
+                                            isCreatePoolPending || 
+                                            isCreatePoolConfirming || 
+                                            !form.getValues().collateralToken || 
+                                            !form.getValues().loanToken || 
+                                            !form.getValues().oracle || 
+                                            !form.getValues().irm || 
+                                            !form.getValues().ltv || 
+                                            !form.getValues().lth
+                                        }
                                     >
-                                        Create Pool
+                                        Preview Pool
                                     </Button>
                                 ) : (
                                     <Button

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { USDC_DECIMALS } from "@/constants/config";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -70,4 +71,15 @@ export const serializeBigInt = (obj: unknown): unknown => {
   }
   
   return obj;
+};
+
+export function convertBigIntToNumber(bigIntValue: bigint): number {
+  return Number(bigIntValue) / 1_000_000;
+}
+
+export const toUSDCAmount = (amount: string): bigint => {
+  const cleanAmount = amount.replace(/,/g, '');
+  const [whole, fraction = ""] = cleanAmount.split('.');
+  const paddedFraction = fraction.padEnd(USDC_DECIMALS, '0').slice(0, USDC_DECIMALS);
+  return BigInt(whole + paddedFraction);
 };

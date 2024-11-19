@@ -10,7 +10,7 @@ import { queryCurator } from "@/graphql/query";
 import request from "graphql-request";
 
 type QueryData = {
-    curatorDeployeds: EarnSchema[];
+    curators: EarnSchema[];
 };
 
 export default function TableEarn() {
@@ -35,7 +35,7 @@ export default function TableEarn() {
     return (
         <div className="w-full space-y-4 h-auto z-10">
             <DataTable
-                data={data?.curatorDeployeds || []}
+                data={data?.curators || []}
                 columns={columns()}
                 isLoading={isLoading || isRefetching}
             />

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from 'react';
 import InterestRateCurve from '@/components/chart/InterestRateCurve';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,43 +11,26 @@ import TablePool from './TablePool';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TopEarnData from './TopEarnData';
 import Deposit from './Deposit';
+import request from 'graphql-request';
+import { EarnSchema } from '@/lib/validation/types';
+import { API_SUBGRAPH } from '@/constants/config';
+import { queryCurator } from '@/graphql/query';
 import Withdraw from './Withdraw';
 
+type QueryData = {
+    curators: EarnSchema[];
+};
+
 export default function EarnAddressPage({ earnAddress }: { earnAddress: string }) {
-    const [depositAmount, setDepositAmount] = useState<number>(0);
-    const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-
-    const { data: earnData, isLoading } = useQuery<EarnData[]>({
-        queryKey: ['earn', earnAddress],
+    const { data, isLoading } = useQuery<QueryData>({
+        queryKey: ['earn'],
         queryFn: async () => {
-            const response = await fetch(`https://gist.githubusercontent.com/azizrosyid/3f8d9c2da91d6b5a893067762b26de73/raw/9bc70f649d38d78b3b4d819904fe5811a05da317/earn.json`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+            return await request(API_SUBGRAPH, queryCurator);
         },
-        refetchInterval: 600000000
-    })
+        refetchInterval: 600000000,
+    });
 
-    const filteredData = earnData?.find((item: EarnData) => item.address === earnAddress);
-
-    const handleMaxDeposit = () => {
-        setDepositAmount(0);
-    };
-
-    const handleMaxWithdraw = () => {
-        setWithdrawAmount(0);
-    };
-
-    const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value) || 0;
-        setDepositAmount(value);
-    };
-
-    const handleWithdrawChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value) || 0;
-        setWithdrawAmount(value);
-    };
+    const filteredData = data?.curators?.find((item) => item.id === earnAddress);
 
     return (
         <div>
@@ -85,10 +67,10 @@ export default function EarnAddressPage({ earnAddress }: { earnAddress: string }
                                             <TabsTrigger value="withdraw" className='w-full'>Withdraw</TabsTrigger>
                                         </TabsList>
                                         <TabsContent value="deposit">
-                                            <Deposit filteredData={filteredData!} handleDepositChange={handleDepositChange} handleMaxDeposit={handleMaxDeposit} depositAmount={depositAmount} />
+                                            <Deposit filteredData={filteredData!} />
                                         </TabsContent>
                                         <TabsContent value="withdraw">
-                                            <Withdraw filteredData={filteredData!} handleWithdrawChange={handleWithdrawChange} handleMaxWithdraw={handleMaxWithdraw} withdrawAmount={withdrawAmount} />
+                                            <Withdraw />
                                         </TabsContent>
                                     </Tabs>
                                 </CardContent>

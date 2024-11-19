@@ -49,7 +49,7 @@ export default function AuctionsIdComponent({ auctionsId }: { auctionsId: string
                         </div>
                         <div className='flex flex-col gap-3'>
                             <Label className='text-textGraycustom'>Owner</Label>
-                            <Label>{formatAddress(findDataById?.nftAsset.nftItemInfo.ownerAddress || "", 6)}</Label>
+                            <Label>{findDataById && formatAddress(findDataById?.nftAsset.nftItemInfo.ownerAddress || "", 6)}</Label>
                         </div>
                     </CardContent>
                 </Card>

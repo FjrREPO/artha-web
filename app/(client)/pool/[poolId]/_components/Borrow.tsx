@@ -11,12 +11,11 @@ import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useBorrow } from '@/hooks/useBorrow';
-import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
 import { NftImage } from '@/components/nft/NftImage';
-import { useOwnerNft } from '@/hooks/useOwnerNft';
 
 interface BorrowProps {
     filteredData?: PoolSchema;
+    nftData?: AlchemyNftSchema
 }
 
 interface BorrowValues {
@@ -24,13 +23,10 @@ interface BorrowValues {
 }
 
 export default function Borrow({
-    filteredData
+    filteredData,
+    nftData
 }: BorrowProps) {
-    const { nftData, nftLoading } = useOwnerNft();
-
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedNft, setSelectedNft] = useState<AlchemyNftSchema | null>(null);
 
     const {
         borrowHash,
@@ -46,14 +42,8 @@ export default function Borrow({
         }
     });
 
-    useEffect(() => {
-        if (nftData && nftData.length > 0 && !selectedNft) {
-            setSelectedNft(nftData[0]);
-        }
-    }, [nftData, selectedNft, form]);
-
     const handleSubmit = async (data: BorrowValues) => {
-        await handleBorrow(filteredData?.id ?? "", data.borrowAmount, selectedNft?.tokenId ?? "");
+        await handleBorrow(filteredData?.id ?? "", data.borrowAmount, nftData?.tokenId ?? "");
     };
 
     useEffect(() => {
@@ -62,11 +52,6 @@ export default function Borrow({
             form.reset();
         }
     }, [borrowHash, isBorrowConfirmed, form]);
-
-    const handleSelectNft = (nft: AlchemyNftSchema) => {
-        setSelectedNft(nft);
-        setIsDialogOpen(false);
-    };
 
     if (!filteredData) {
         return (
@@ -112,18 +97,9 @@ export default function Borrow({
                                                     min={0}
                                                     placeholder="Enter borrow amount"
                                                 />
-                                                <DialogSelectNft
-                                                    nftData={nftData}
-                                                    isDialogOpen={isDialogOpen}
-                                                    setDialogOpen={setIsDialogOpen}
-                                                    handleSelect={handleSelectNft}
-                                                    nftLoading={nftLoading}
-                                                    trigger={
-                                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
-                                                            <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
-                                                        </div>
-                                                    }
-                                                />
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
+                                                    <NftImage path={nftData?.contract.openSeaMetadata.imageUrl || ""} />
+                                                </div>
                                             </div>
                                         </FormControl>
                                         <FormMessage />
