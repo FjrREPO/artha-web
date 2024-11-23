@@ -3,8 +3,10 @@ import AuctionsComponent from './_components/AuctionsComponent'
 
 export default function page() {
     return (
-        <div className='pt-[100px]'>
-            <AuctionsComponent />
+        <div className="w-full flex-1 px-5 sm:px-10 lg:px-20">
+            <div className="w-full h-full flex xl:max-w-screen-xl lg:max-w-screen-lg mx-auto">
+                <AuctionsComponent />
+            </div>
         </div>
     )
 }

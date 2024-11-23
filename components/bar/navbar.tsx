@@ -68,16 +68,16 @@ function MobileNavbar() {
   );
 
   return (
-    <div className="absolute z-40 h-auto w-full py-5 xl:py-0">
-      <div className="block xl:hidden">
-        <nav className="flex items-center justify-between px-8">
+    <div className="z-40 h-auto w-full py-5 xl:py-0 px-5 sm:px-10 lg:px-20">
+      <div className="block xl:hidden xl:max-w-screen-xl lg:max-w-screen-lg mx-auto">
+        <nav className="flex items-center justify-between">
           <Sheet
             open={isOpen}
             onOpenChange={setIsOpen}
           >
             <SheetTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 aria-label="Open navigation menu"
               >
@@ -155,8 +155,8 @@ function DesktopNavbar() {
   );
 
   return (
-    <div className="absolute z-40 h-fit w-full px-20 shadow-lg shadow-b-textSecondary dark:border">
-      <div className="hidden xl:block">
+    <div className="z-40 h-fit w-full px-20 shadow-lg shadow-b-textSecondary dark:border-b">
+      <div className="hidden xl:block w-full xl:max-w-screen-xl lg:max-w-screen-lg mx-auto">
         <nav className="flex items-center justify-between gap-x-4" aria-label="Main navigation">
           <div className="flex h-[80px] min-h-[60px] items-center gap-x-8">
             <Logo />
@@ -209,9 +209,9 @@ function DesktopNavbar() {
 
 export default function Navbar() {
   return (
-    <>
+    <div className="">
       <DesktopNavbar />
       <MobileNavbar />
-    </>
+    </div>
   );
 }

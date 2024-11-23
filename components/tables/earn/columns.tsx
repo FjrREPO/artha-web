@@ -21,9 +21,38 @@ export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], i
     },
     {
       accessorKey: "Asset",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Asset"
+        />
+      ),
+      cell: ({ row }) => {
+        return (
+          <SkeletonWrapper isLoading={isLoadingPool}>
+            <div className="flex items-center gap-2">
+              <CoinImage address={row.original.asset || ""} />
+              <CoinSymbol address={row.original.asset || ""} />
+            </div>
+          </SkeletonWrapper>
+        )
+      },
     },
     {
       accessorKey: "Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Name"
+        />
+      ),
+      cell: ({ row }) => {
+        return (
+          <SkeletonWrapper isLoading={isLoadingPool}>
+            <span>{row.original.name}</span>
+          </SkeletonWrapper>
+        )
+      },
     },
     {
       accessorKey: "pools",
@@ -56,6 +85,13 @@ export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], i
     },
     {
       accessorKey: "APY",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="APY"
+          className="justify-end"
+        />
+      )
     },
     {
       accessorKey: "TVL",

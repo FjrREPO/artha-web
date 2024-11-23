@@ -19,29 +19,33 @@ import { formatAddress } from '@/lib/utils';
 interface PreviewDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onConfirm: () => void;
     formData: FieldValues;
     selectedPools: Array<{ poolId: string; allocation: number; }>;
     poolData?: { pools: PoolSchema[] };
     isLoading?: boolean;
+    onCreateCurator: (data: FieldValues) => void;
 }
 
 export const PreviewDialogCurator: React.FC<PreviewDialogProps> = ({
     isOpen,
     onClose,
-    onConfirm,
     formData,
     selectedPools,
     poolData,
-    isLoading
+    isLoading,
+    onCreateCurator
 }) => {
+    const handleCreate = () => {
+        onCreateCurator(formData);
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-xl">
                 <DialogHeader>
-                    <DialogTitle>Review Curator Details</DialogTitle>
+                    <DialogTitle>Create Curator</DialogTitle>
                     <DialogDescription>
-                        Please review your curator configuration carefully. After confirming, you&quot;ll be able to create the curator.
+                        Review your curator configuration and click Create to proceed.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -62,7 +66,6 @@ export const PreviewDialogCurator: React.FC<PreviewDialogProps> = ({
                             </div>
                         </div>
 
-                        {/* Asset Configuration */}
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">Asset Configuration</h3>
                             <div className="p-3 bg-secondary/20 rounded-lg">
@@ -71,7 +74,6 @@ export const PreviewDialogCurator: React.FC<PreviewDialogProps> = ({
                             </div>
                         </div>
 
-                        {/* Pool Allocations */}
                         <div className="space-y-2">
                             <h3 className="text-lg font-semibold">Pool Allocations</h3>
                             <Alert>
@@ -106,10 +108,10 @@ export const PreviewDialogCurator: React.FC<PreviewDialogProps> = ({
 
                 <DialogFooter className="flex flex-row gap-2 w-full sm:justify-between">
                     <Button variant="outline" onClick={onClose}>
-                        Back
+                        Cancel
                     </Button>
-                    <Button onClick={onConfirm} disabled={isLoading}>
-                        Create Curator
+                    <Button onClick={handleCreate} disabled={isLoading}>
+                        {isLoading ? "Creating..." : "Create Curator"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

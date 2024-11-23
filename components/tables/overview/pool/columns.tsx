@@ -38,6 +38,13 @@ export function columns(): ColumnDef<PoolSchema>[] {
     },
     {
       accessorKey: "APY",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="APY"
+          className="justify-end"
+        />
+      ),
     },
     {
       accessorKey: "TVL",

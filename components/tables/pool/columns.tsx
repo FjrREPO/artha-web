@@ -38,12 +38,33 @@ export function columns(): ColumnDef<PoolSchema>[] {
     },
     {
       accessorKey: "Total Supplied",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Total Supplied"
+          className="justify-end"
+        />
+      )
     },
     {
       accessorKey: "Lend APR",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Lend APR"
+          className="justify-end"
+        />
+      ),
     },
     {
       accessorKey: "Borrow APR",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Borrow APR"
+          className="justify-end"
+        />
+      ),
     },
     {
       accessorKey: "Utilization Rate",

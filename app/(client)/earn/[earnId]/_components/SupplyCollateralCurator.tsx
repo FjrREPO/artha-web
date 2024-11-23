@@ -4,19 +4,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { useAccount } from 'wagmi';
 import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useSupplyCollateral } from '@/hooks/useSupplyCollateral';
+import { AlchemyNftSchema, EarnSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
+import { useSupplyCollateralCurator } from '@/hooks/useSupplyCollateralCurator';
 
-interface SupplyCollateralProps {
+interface SupplyCollateralCuratorProps {
     nftData?: AlchemyNftSchema[];
-    filteredData?: PoolSchema;
+    filteredData?: EarnSchema;
     nftLoading: boolean;
 }
 
@@ -24,9 +23,7 @@ interface FormData {
     tokenId: string;
 }
 
-export default function SupplyCollateral({ nftData, filteredData, nftLoading }: SupplyCollateralProps) {
-    const { address } = useAccount();
-
+export default function SupplyCollateralCurator({ nftData, filteredData, nftLoading }: SupplyCollateralCuratorProps) {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedNft, setSelectedNft] = useState<AlchemyNftSchema | null>(null);
@@ -45,23 +42,23 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
     }, [nftData, selectedNft, form]);
 
     const {
-        handleSupplyCollateral,
-        isSupplyCollateralPending,
-        isSupplyCollateralConfirming,
-        isSupplyCollateralConfirmed,
-        supplyCollateralHash
-    } = useSupplyCollateral();
+        handleSupplyCollateralCurator,
+        isSupplyCollateralCuratorPending,
+        isSupplyCollateralCuratorConfirming,
+        isSupplyCollateralCuratorConfirmed,
+        supplyCollateralCuratorHash
+    } = useSupplyCollateralCurator(filteredData?.curator as HexAddress);
 
     const handleSubmit = async (data: FormData) => {
-        await handleSupplyCollateral(filteredData?.id ?? "", data.tokenId, address ?? "");
+        await handleSupplyCollateralCurator(data.tokenId);
     };
 
     useEffect(() => {
-        if (supplyCollateralHash && isSupplyCollateralConfirmed) {
+        if (supplyCollateralCuratorHash && isSupplyCollateralCuratorConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
         }
-    }, [supplyCollateralHash, isSupplyCollateralConfirmed, form]);
+    }, [supplyCollateralCuratorHash, isSupplyCollateralCuratorConfirmed, form]);
 
     const handleSelectNft = (nft: AlchemyNftSchema) => {
         setSelectedNft(nft);
@@ -81,15 +78,15 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
 
     return (
         <>
-            {(isSupplyCollateralConfirming || isSupplyCollateralPending) && (
+            {(isSupplyCollateralCuratorConfirming || isSupplyCollateralCuratorPending) && (
                 <LoadingTransaction
-                    message={isSupplyCollateralConfirming ? "Supplying..." : "Confirming supply..."}
+                    message={isSupplyCollateralCuratorConfirming ? "Supplying..." : "Confirming supply..."}
                 />
             )}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={supplyCollateralHash as HexAddress || ""}
+                txHash={supplyCollateralCuratorHash as HexAddress || ""}
                 processName="Supply Collateral"
             />
             <Form {...form}>
@@ -144,11 +141,11 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isSupplyCollateralPending || isSupplyCollateralConfirming}
+                                disabled={isSupplyCollateralCuratorPending || isSupplyCollateralCuratorConfirming}
                             >
-                                {isSupplyCollateralPending
+                                {isSupplyCollateralCuratorPending
                                     ? 'Supplying Collateral...'
-                                    : isSupplyCollateralConfirming
+                                    : isSupplyCollateralCuratorConfirming
                                         ? 'Confirming Transaction...'
                                         : 'Add Collateral'
                                 }

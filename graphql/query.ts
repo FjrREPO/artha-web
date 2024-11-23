@@ -28,9 +28,12 @@ export const queryIRM = gql`{
 
 export const queryCurator = gql`{
     curators(orderBy: blockTimestamp, orderDirection: desc) {
-        allocations
-        curator
         id
+        name
+        asset
+        symbol
+        curator
+        allocations
         pools {
             id
         }

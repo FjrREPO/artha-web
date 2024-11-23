@@ -122,8 +122,6 @@ const CreatePoolComponent = () => {
                 return;
             }
 
-            console.log("data = ", formData);
-
             handleCreatePool(
                 findCollateralToken.platform?.token_address,
                 findLoanToken.platform?.token_address,

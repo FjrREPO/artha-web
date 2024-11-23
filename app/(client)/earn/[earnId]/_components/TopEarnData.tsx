@@ -1,3 +1,4 @@
+import React from 'react'
 import { formatAddress } from '@/lib/utils';
 import { BadgeCheck, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
@@ -5,44 +6,34 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { CoinImage } from '@/components/coin/CoinImage';
 import { Separator } from '@/components/ui/separator';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { CoinSymbol } from '@/components/coin/CoinSymbol';
-import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
+import { AlchemyNftSchema, EarnSchema } from '@/lib/validation/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
+import { DialogOverviewWithdraw } from './DialogOverviewWithdraw';
 import { NftImage } from '@/components/nft/NftImage';
 
 interface Props {
-    filteredData?: PoolSchema;
+    filteredData?: EarnSchema;
     isLoading: boolean;
     nftData: AlchemyNftSchema[];
     nftLoading: boolean;
 }
 
-export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading }: Props) {
-    const totalAssets = filteredData?.ltv?.toString();
-    const ltv = filteredData?.ltv;
-
-    const utilization = ltv && totalAssets && !isNaN(parseFloat(totalAssets as string)) && !isNaN(parseFloat(ltv.toString()))
-        ? (parseFloat(totalAssets) / parseFloat(ltv.toString())) * 100
-        : null
+export default function TopEarnData({ filteredData, isLoading, nftData, nftLoading }: Props) {
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
-            <div className='flex flex-col w-full gap-5 lg:w-3/6 flex-1 shrink-0 self-stretch'>
+            <div className='flex-1 shrink-0 self-stretch'>
                 <SkeletonWrapper isLoading={isLoading}>
-                    <Card className='p-5 w-full'>
+                    <Card className='w-full py-5 h-full'>
                         <CardContent className='flex flex-col gap-8'>
                             <div className='flex flex-col md:flex-row gap-2 items-center'>
-                                <div className='flex flex-row items-center gap-2'>
-                                    <CoinImageCustom address={filteredData?.collateralToken || ""} className='w-8 h-8' />
-                                    <CoinSymbol address={filteredData?.collateralToken || ""} className='text-2xl font-bold' />
-                                </div>
+                                <Label className='text-2xl font-bold'>Curator {filteredData && formatAddress(filteredData?.curator as HexAddress, 4)}</Label>
                                 <div className='flex flex-row flex-wrap gap-2'>
-                                    <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken}`} target='_blank' className="cursor-pointer px-1">
+                                    <Link href={`https://etherscan.io/address/${filteredData?.curator}`} target='_blank' className="cursor-pointer px-1">
                                         <Button variant={'outline'} className="cursor-pointer px-1">
-                                            <Label className='text-[11px] cursor-pointer'>{filteredData && formatAddress(filteredData && filteredData.collateralToken ? filteredData.collateralToken : '', 4)}</Label>
+                                            <Label className='text-[11px] cursor-pointer'>{filteredData && formatAddress(filteredData && filteredData.curator ? filteredData.curator : '', 4)}</Label>
                                             <ExternalLink className='w-2 h-2' />
                                         </Button>
                                     </Link>
@@ -60,32 +51,23 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                             <div className='flex flex-row w-full'>
                                 <div className='flex flex-row flex-wrap w-full gap-10 sm:gap-20'>
                                     <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Reserve Size</Label>
-                                        <Label className='text-lg font-medium'>{totalAssets}</Label>
+                                        <Label className='text-textSecondary'>Lend Asset</Label>
+                                        <div className='flex flex-row gap-2'>
+                                            <CoinImage symbol={"USDC"} />
+                                            <Label className='text-lg font-medium'>{"USDC"}</Label>
+                                        </div>
                                     </div>
                                     <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Available Liquidity</Label>
-                                        <Label className='text-lg font-medium'>{totalAssets}</Label>
+                                        <Label className='text-textSecondary'>TVL</Label>
+                                        <Label className='text-lg font-medium'>0</Label>
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <Label className='text-textSecondary'>APY</Label>
+                                        <Label className='text-lg font-medium'>0</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Utitlization Rate</Label>
-                                        {utilization === null ? (
-                                            <Label className='text-lg font-medium'>N/A</Label>
-                                        ) : (
-                                            <Label className='text-lg font-medium'>10%</Label>
-                                        )}
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Lend APR</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Collateral APY</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth !== undefined ? "10%" : 'N/A'}</Label>
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Borrow APR</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
+                                        <Label className='text-lg font-medium break-all'>0</Label>
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +75,6 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                     </Card>
                 </SkeletonWrapper>
             </div>
-
             <div className='w-full lg:w-[480px] self-stretch'>
                 <SkeletonWrapper isLoading={isLoading || nftLoading}>
                     <Card className='w-full h-full'>
@@ -103,7 +84,7 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                             <ScrollArea>
                                 <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
                                     {nftData.map((nft, index) => (
-                                        <DialogSupplyBorrowRepay
+                                        <DialogOverviewWithdraw
                                             key={index}
                                             filteredData={filteredData}
                                             nftData={nft}

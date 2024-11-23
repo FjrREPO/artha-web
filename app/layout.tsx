@@ -30,11 +30,11 @@ export default function RootLayout({
               duration: 3000,
             }}
           />
-          <Navbar />
-          <div className="px-10 sm:px-20 min-h-screen w-full">
+          <div className="relative flex flex-col min-h-screen w-full overflow-y-auto gap-5">
+            <Navbar />
             {children}
+            <Footer />
           </div>
-          <Footer />
         </Providers>
       </body>
     </html>

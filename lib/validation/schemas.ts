@@ -35,11 +35,10 @@ export const irmSchema = z.object({
 export const supplyCollateralAndBorrow = z.object({
     id: z.string().optional(),
     poolId: z.string(),
-    depositToken: z.string().optional(),
-    depositAmount: z.string(),
-    borrowToken: z.string().optional(),
+    tokenId: z.string(),
     borrowAmount: z.string(),
-    ltv: z.array(z.number()).min(1).max(100)
+    ltv: z.number().min(1).max(100),
+    supplyPool: z.string().optional()
 });
 
 const earnPoolSchema = z.object({
@@ -48,6 +47,9 @@ const earnPoolSchema = z.object({
 
 export const earnSchema = z.object({
     id: z.string(),
+    name: z.string().optional(),
+    asset: z.string().optional(),
+    symbol: z.string().optional(),
     curator: z.string(),
     pools: z.array(earnPoolSchema),
     transactionHash: z.string().optional(),
