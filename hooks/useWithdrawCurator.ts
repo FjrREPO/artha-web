@@ -2,38 +2,38 @@ import { toast } from "sonner";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { mockCuratorABI } from "@/lib/abi/mockCuratorABI";
 
-export const useWithdrawCollateralCurator = (curatorAddress: HexAddress) => {
+export const useWithdrawCurator = (curatorAddress: HexAddress) => {
     const { address } = useAccount();
     
     const {
-        data: withdrawCollateralCuratorHash,
-        isPending: isWithdrawCollateralCuratorPending,
-        writeContract: writeWithdrawCollateralCurator
+        data: withdrawCuratorHash,
+        isPending: isWithdrawCuratorPending,
+        writeContract: writeWithdrawCurator
     } = useWriteContract();
 
     const {
-        isLoading: isWithdrawCollateralCuratorConfirming,
-        isSuccess: isWithdrawCollateralCuratorConfirmed
+        isLoading: isWithdrawCuratorConfirming,
+        isSuccess: isWithdrawCuratorConfirmed
     } = useWaitForTransactionReceipt({
-        hash: withdrawCollateralCuratorHash
+        hash: withdrawCuratorHash
     });
 
-    const handleWithdrawCollateralCurator = async (
-        tokenId: string
+    const handleWithdrawCurator = async (
+        amount: string
     ) => {
         try {
-            await writeWithdrawCollateralCurator({
+            await writeWithdrawCurator({
                 abi: mockCuratorABI,
                 address: curatorAddress,
                 functionName: 'withdraw',
                 args: [
-                    BigInt(tokenId),
+                    BigInt(amount),
                     address as HexAddress,
                     curatorAddress as HexAddress
                 ],
             });
 
-            while (!isWithdrawCollateralCuratorConfirmed) {
+            while (!isWithdrawCuratorConfirmed) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
@@ -45,10 +45,10 @@ export const useWithdrawCollateralCurator = (curatorAddress: HexAddress) => {
     };
 
     return {
-        withdrawCollateralCuratorHash,
-        isWithdrawCollateralCuratorPending,
-        isWithdrawCollateralCuratorConfirming,
-        isWithdrawCollateralCuratorConfirmed,
-        handleWithdrawCollateralCurator
+        withdrawCuratorHash,
+        isWithdrawCuratorPending,
+        isWithdrawCuratorConfirming,
+        isWithdrawCuratorConfirmed,
+        handleWithdrawCurator
     }
 }

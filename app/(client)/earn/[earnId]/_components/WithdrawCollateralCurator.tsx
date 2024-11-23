@@ -9,7 +9,7 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
-import { useWithdrawCollateralCurator } from '@/hooks/useWithdrawCollateralCurator';
+import { useWithdrawCollateralCurator } from '@/hooks/useWithdrawCurator';
 
 interface WithdrawCollateralCuratorProps {
     nftData?: AlchemyNftSchema;

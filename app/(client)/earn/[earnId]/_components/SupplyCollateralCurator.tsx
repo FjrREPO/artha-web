@@ -11,7 +11,7 @@ import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { useSupplyCollateralCurator } from '@/hooks/useSupplyCollateralCurator';
+import { useSupplyCollateralCurator } from '@/hooks/useDepositCurator';
 
 interface SupplyCollateralCuratorProps {
     nftData?: AlchemyNftSchema[];

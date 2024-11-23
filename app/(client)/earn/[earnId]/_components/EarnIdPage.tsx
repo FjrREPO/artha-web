@@ -13,8 +13,9 @@ import request from 'graphql-request';
 import { EarnSchema } from '@/lib/validation/types';
 import { API_SUBGRAPH } from '@/constants/config';
 import { queryCurator } from '@/graphql/query';
-import SupplyCollateralCurator from './SupplyCollateralCurator';
-import { useOwnerNft } from '@/hooks/useOwnerNft';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Deposit from './Deposit';
+import Withdraw from './Withdraw';
 
 type QueryData = {
     curators: EarnSchema[];
@@ -31,11 +32,9 @@ export default function EarnIdPage({ earnId }: { earnId: string }) {
 
     const filteredData = data?.curators?.find((item) => item.id === earnId);
 
-    const { nftData, nftLoading } = useOwnerNft()
-
     return (
         <div className='flex flex-col gap-5 w-full'>
-            <TopEarnData filteredData={filteredData} isLoading={isLoading} nftData={nftData || []} nftLoading={nftLoading} />
+            <TopEarnData filteredData={filteredData} isLoading={isLoading} />
             <div className='flex flex-col-reverse lg:flex-row w-full gap-5'>
                 <div className='flex flex-col w-full lg:w-3/6 gap-5 flex-1 shrink-0 self-stretch'>
                     <SkeletonWrapper isLoading={isLoading}>
@@ -59,7 +58,22 @@ export default function EarnIdPage({ earnId }: { earnId: string }) {
                 </div>
                 <div className='w-full lg:w-[480px] self-stretch'>
                     <SkeletonWrapper isLoading={isLoading}>
-                        <SupplyCollateralCurator nftData={nftData || []} filteredData={filteredData} nftLoading={nftLoading} />
+                        <Card className='w-full'>
+                            <CardContent className='p-5 space-y-5'>
+                                <Tabs defaultValue='deposit' className='w-full'>
+                                    <TabsList className='w-full'>
+                                        <TabsTrigger value="deposit" className='w-full'>Deposit</TabsTrigger>
+                                        <TabsTrigger value="withdraw" className='w-full'>Withdraw</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="deposit">
+                                        <Deposit filteredData={filteredData!} />
+                                    </TabsContent>
+                                    <TabsContent value="withdraw">
+                                        <Withdraw filteredData={filteredData!} />
+                                    </TabsContent>
+                                </Tabs>
+                            </CardContent>
+                        </Card>
                     </SkeletonWrapper>
                 </div>
             </div>

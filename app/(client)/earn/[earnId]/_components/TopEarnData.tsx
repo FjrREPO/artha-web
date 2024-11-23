@@ -9,19 +9,14 @@ import { Button } from '@/components/ui/button';
 import { CoinImage } from '@/components/coin/CoinImage';
 import { Separator } from '@/components/ui/separator';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { AlchemyNftSchema, EarnSchema } from '@/lib/validation/types';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { DialogOverviewWithdraw } from './DialogOverviewWithdraw';
-import { NftImage } from '@/components/nft/NftImage';
+import { EarnSchema } from '@/lib/validation/types';
 
 interface Props {
     filteredData?: EarnSchema;
     isLoading: boolean;
-    nftData: AlchemyNftSchema[];
-    nftLoading: boolean;
 }
 
-export default function TopEarnData({ filteredData, isLoading, nftData, nftLoading }: Props) {
+export default function TopEarnData({ filteredData, isLoading }: Props) {
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
             <div className='flex-1 shrink-0 self-stretch'>
@@ -76,33 +71,15 @@ export default function TopEarnData({ filteredData, isLoading, nftData, nftLoadi
                 </SkeletonWrapper>
             </div>
             <div className='w-full lg:w-[480px] self-stretch'>
-                <SkeletonWrapper isLoading={isLoading || nftLoading}>
+                <SkeletonWrapper isLoading={isLoading}>
                     <Card className='w-full h-full'>
-                        <CardContent className='p-5 space-y-5'>
-                            <Label className='text-lg'>Your Position</Label>
+                        <CardContent className='p-5 flex flex-col gap-5'>
+                            <Label className='text-lg'>Your Deposit</Label>
                             <Separator className='w-full' />
-                            <ScrollArea>
-                                <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
-                                    {nftData.map((nft, index) => (
-                                        <DialogOverviewWithdraw
-                                            key={index}
-                                            filteredData={filteredData}
-                                            nftData={nft}
-                                            trigger={
-                                                <div
-                                                    className="w-full h-auto flex justify-start items-center gap-4 py-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg px-4"
-                                                >
-                                                    <NftImage path={nft?.contract.openSeaMetadata.imageUrl || ""} />
-                                                    <div className="flex flex-col items-start justify-center gap-1">
-                                                        <Label className="cursor-pointer">{nft.contract.symbol}</Label>
-                                                        <Label className="cursor-pointer text-gray-500 text-xs">Token id: {nft.tokenId}</Label>
-                                                    </div>
-                                                </div>
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </ScrollArea>
+                            <div className='flex flex-row justify-between'>
+                                <Label>Deposit :</Label>
+                                <Label>0</Label>
+                            </div>
                         </CardContent>
                     </Card>
                 </SkeletonWrapper>
