@@ -55,29 +55,29 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Collateral Token:</span>
                                     <div className="flex flex-row gap-2 items-center">
-                                        <CoinSymbol address={formData.collateralToken.collateralToken!} />
-                                        <CoinImage address={formData.collateralToken.collateralToken!} />
+                                        <CoinSymbol address={formData.collateralAddress || ""} />
+                                        <CoinImage address={formData.collateralAddress || ""} />
                                     </div>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Loan Token:</span>
                                     <div className="flex flex-row gap-2 items-center">
-                                        <CoinSymbol address={formData.loanToken.loanToken!} />
-                                        <CoinImage address={formData.loanToken.loanToken!} />
+                                        <CoinSymbol address={formData.loanAddress || ""} />
+                                        <CoinImage address={formData.loanAddress || ""} />
                                     </div>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Oracle:</span>
                                     <div className="flex flex-row gap-1 items-center">
                                         {getTokenName(formData.oracle || "", oracleData)}
-                                        <CoinSymbol address={formData.oracle!} />
-                                        <OracleImageCustom address={formData.oracle!} className='w-6 h-6'/>
+                                        <CoinSymbol address={formData.oracle || ""} />
+                                        <OracleImageCustom address={formData.oracle || ""} className='w-6 h-6'/>
                                     </div>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Interest Rate Model:</span>
                                     <span className="font-medium truncate max-w-[200px]" title={formData.irm || ""}>
-                                        {formData && formatAddress(formData.irm!, 4)}
+                                        {formData && formatAddress(formData.irm || "", 4)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">

@@ -30,7 +30,7 @@ const CreatePoolComponent = () => {
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
     const steps = [
-        { title: 'Token Selection', fields: ['collateralToken', 'loanToken'] },
+        { title: 'Token Selection', fields: ['collateralAddress', 'loanAddress'] },
         { title: 'Risk Parameters & Oracle', fields: ['irm', 'oracle'] },
         { title: 'Loan to Value (LTV) & Liquidation Threshold (LTH)', fields: ['ltv', 'lth'] }
     ];
@@ -102,17 +102,17 @@ const CreatePoolComponent = () => {
         try {
             const formData = form.getValues();
             
-            const findCollateralToken = cryptoTokenData?.find(
-                (token) => token.platform?.token_address === formData.collateralToken
+            const findCollateralAddress = cryptoTokenData?.find(
+                (token) => token.platform?.token_address === formData.collateralAddress
             );
-            const findLoanToken = cryptoTokenData?.find(
-                (token) => token.platform?.token_address === formData.loanToken
+            const findLoanAddress = cryptoTokenData?.find(
+                (token) => token.platform?.token_address === formData.loanAddress
             );
             const findOracle = oracleData?.find(
                 (token) => token.platform?.token_address === formData.oracle
             );
 
-            if (!findCollateralToken || !findLoanToken || !findOracle) {
+            if (!findCollateralAddress || !findLoanAddress || !findOracle) {
                 console.error('Missing token data');
                 return;
             }
@@ -123,8 +123,8 @@ const CreatePoolComponent = () => {
             }
 
             handleCreatePool(
-                findCollateralToken.platform?.token_address,
-                findLoanToken.platform?.token_address,
+                findCollateralAddress.platform?.token_address,
+                findLoanAddress.platform?.token_address,
                 findOracle.platform?.token_address,
                 formData.irm || "",
                 formData.ltv || "",
@@ -225,8 +225,8 @@ const CreatePoolComponent = () => {
                                         disabled={
                                             isCreatePoolPending || 
                                             isCreatePoolConfirming || 
-                                            !form.getValues().collateralToken || 
-                                            !form.getValues().loanToken || 
+                                            !form.getValues().collateralAddress || 
+                                            !form.getValues().loanAddress || 
                                             !form.getValues().oracle || 
                                             !form.getValues().irm || 
                                             !form.getValues().ltv || 
