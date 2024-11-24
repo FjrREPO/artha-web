@@ -189,8 +189,8 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
                                         <X className="h-4 w-4" />
                                     </Button>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <CoinImage address={pool?.collateralToken ?? ""} />
-                                        <CoinSymbol address={pool?.collateralToken ?? ""} />
+                                        <CoinImage address={pool?.collateralToken.collateralToken ?? ""} />
+                                        <CoinSymbol address={pool?.collateralToken.collateralToken ?? ""} />
                                     </div>
                                     <FormField
                                         control={form.control}
