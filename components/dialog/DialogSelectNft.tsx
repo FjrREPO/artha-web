@@ -41,7 +41,7 @@ export const DialogSelectNft = ({
                                     <NftImage path={nft?.contract.openSeaMetadata.imageUrl || ""} />
                                     <div className="flex flex-col items-start justify-center gap-3">
                                         <Label className="cursor-pointer">{nft.contract.symbol}</Label>
-                                        <Label className="cursor-pointer text-gray-500">{nft.name}</Label>
+                                        <Label className="cursor-pointer text-gray-500">token id: {nft.tokenId}</Label>
                                     </div>
                                 </div>
                             </Button>

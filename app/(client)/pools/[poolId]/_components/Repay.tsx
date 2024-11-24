@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useRepay } from '@/hooks/useRepay'
+import { useRepay } from '@/hooks/contract/useRepay'
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -65,7 +65,7 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
 
     return (
         <>
-            {(isRepayConfirming || isRepayPending) && (
+            {(isRepayConfirming || isRepayPending) && !isRepayConfirmed && (
                 <LoadingTransaction
                     message={isRepayConfirming ? "Repaying..." : "Confirming repay..."}
                 />

@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from "./ColumnHeader";
 import { CoinImage } from "@/components/coin/CoinImage";
 import { PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import { formatCurrency } from "@/lib/utils";
 
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
@@ -11,12 +12,14 @@ export function columns(): ColumnDef<PoolSchema>[] {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Collateral" />
       ),
-      cell: ({ row }) => (
+      cell: ({ row }) => {
+        console.log(row.original.collateralToken.collateralToken)
+        return (
         <div className="flex items-center gap-2">
-          <CoinImage address={row.original.collateralToken || ""} />
-          <CoinSymbol address={row.original.collateralToken || ""} />
+          <CoinImage address={row.original.collateralToken.collateralToken || ""} />
+          <CoinSymbol address={row.original.collateralAddress || ""} />
         </div>
-      ),
+      )},
     },
     {
       accessorKey: "borrow",
@@ -27,8 +30,8 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <div className="flex items-center gap-2">
           {row.original.loanToken ? (
             <>
-              <CoinImage address={row.original.loanToken || ""} />
-              <CoinSymbol address={row.original.loanToken || ""} />
+              <CoinImage address={row.original.loanToken.loanToken || ""} />
+              <CoinSymbol address={row.original.loanToken.loanToken || ""} />
             </>
           ) : (
             <span>No Token</span>
@@ -42,8 +45,12 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <DataTableColumnHeader
           column={column}
           title="Total Supplied"
-          className="justify-end"
         />
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <span>{formatCurrency((row.original.totalSupplyAssets ?? 0)/1e6)}</span>
+        </div>
       )
     },
     {
@@ -52,9 +59,16 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <DataTableColumnHeader
           column={column}
           title="Lend APR"
-          className="justify-end"
         />
       ),
+      cell: ({ row }) => {
+        const lendAPR = (row.original.borrowRate! ?? 0) * (row.original.totalBorrowAssets! ?? 0) / (row.original.totalSupplyAssets! ?? 0)
+        return (
+          <div className="flex items-center gap-2">
+            <span>{(lendAPR/1e16).toFixed(2)}%</span>
+          </div>
+        )
+      }
     },
     {
       accessorKey: "Borrow APR",
@@ -62,9 +76,16 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <DataTableColumnHeader
           column={column}
           title="Borrow APR"
-          className="justify-end"
+          className="justify-center"
         />
       ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex items-center gap-2 justify-center">
+            <span>{row.original.borrowRate!/1e16}%</span>
+          </div>
+        )
+      }
     },
     {
       accessorKey: "Utilization Rate",
@@ -75,6 +96,14 @@ export function columns(): ColumnDef<PoolSchema>[] {
           className="justify-end"
         />
       ),
+      cell: ({ row }) => {
+        const utilizationRate = (row.original.totalBorrowAssets! ?? 0) / (row.original.totalSupplyAssets! ?? 0)
+        return (
+          <div className="flex items-center gap-2 justify-end">
+            <span>{(utilizationRate*100).toFixed(2)}%</span>
+          </div>
+        )
+      }
     }
   ];
 }

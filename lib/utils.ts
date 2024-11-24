@@ -18,6 +18,11 @@ export const formatPercent = (value: number | null) => {
   return value ? `${value.toFixed(2)}%` : 'N/A';
 };
 
+export function formatBigNumber(value: number) {
+  const zero =  '0'.repeat(value);
+  return parseInt('1'+zero)
+}
+
 export const formatCurrency = (value: number | null) => {
   if (value === null) return 'N/A';
   return new Intl.NumberFormat('en-US', {

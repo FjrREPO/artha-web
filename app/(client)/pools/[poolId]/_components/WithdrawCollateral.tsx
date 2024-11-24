@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useAccount } from 'wagmi';
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
+import { useWithdrawCollateral } from '@/hooks/contract/useWithdrawCollateral';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';

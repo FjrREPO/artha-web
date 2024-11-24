@@ -31,10 +31,6 @@ const calculateSupplyRate = (borrowRate: number, utilization: number) => {
     return (borrowRate * (utilization / 100)) * 0.85;
 };
 
-const calculateStableRate = (borrowRate: number, utilization: number) => {
-    return borrowRate * (1 + (utilization / 100) * 0.2);
-};
-
 const InterestRateChart = () => {
     const [currentUtilization, setCurrentUtilization] = useState(38.09);
     const [timeframe, setTimeframe] = useState('1d');
@@ -199,41 +195,6 @@ const InterestRateChart = () => {
 
                             </AreaChart>
                         </ResponsiveContainer>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {[
-                            {
-                                label: "Current Borrow APR",
-                                value: calculateOptimalRate(currentUtilization).toFixed(2) + "%",
-                                color: "text-blue-500"
-                            },
-                            {
-                                label: "Current Supply APR",
-                                value: calculateSupplyRate(
-                                    calculateOptimalRate(currentUtilization),
-                                    currentUtilization
-                                ).toFixed(2) + "%",
-                                color: "text-green-500"
-                            },
-                            {
-                                label: "Current Stable Rate",
-                                value: calculateStableRate(
-                                    calculateOptimalRate(currentUtilization),
-                                    currentUtilization
-                                ).toFixed(2) + "%",
-                                color: "text-amber-500"
-                            }
-                        ].map((stat, index) => (
-                            <Card key={index} className="">
-                                <CardContent className="p-4">
-                                    <div className="text-sm text-textGraycustom">{stat.label}</div>
-                                    <div className={`text-xl font-bold ${stat.color}`}>
-                                        {stat.value}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
                     </div>
                 </div>
             </CardContent>

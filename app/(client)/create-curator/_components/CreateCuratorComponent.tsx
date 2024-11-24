@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { curatorSchema } from '@/lib/validation/schemas';
-import { useCreateCurator } from '@/hooks/useCreateCurator';
+import { useCreateCurator } from '@/hooks/contract/useCreateCurator';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
@@ -147,7 +147,7 @@ const CreateCuratorComponent = () => {
 
     return (
         <div className='relative w-full'>
-            {(isCreateCuratorConfirming || isCreateCuratorPending) && (
+            {(isCreateCuratorConfirming || isCreateCuratorPending) && !isCreateCuratorConfirmed && (
                 <LoadingTransaction
                     message={isCreateCuratorConfirming ? "Creating..." : "Confirming create..."}
                 />

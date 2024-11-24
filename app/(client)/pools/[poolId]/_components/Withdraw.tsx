@@ -13,8 +13,8 @@ import { PoolSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
-import { useERC721Balance } from '@/hooks/useERC721Balance';
-import { useWithdraw } from '@/hooks/useWithdraw';
+import { useERC721Balance } from '@/hooks/contract/useERC721Balance';
+import { useWithdraw } from '@/hooks/contract/useWithdraw';
 
 interface WithdrawProps {
     filteredData?: PoolSchema;
@@ -72,7 +72,7 @@ export default function Withdraw({
 
     return (
         <>
-            {(isWithdrawConfirming || isWithdrawPending) && (
+            {(isWithdrawConfirming || isWithdrawPending) && !isWithdrawConfirmed && (
                 <LoadingTransaction
                     message={isWithdrawConfirming ? "Withdrawing..." : "Confirming withdraw..."}
                 />
@@ -117,7 +117,7 @@ export default function Withdraw({
                                                     placeholder="Enter withdraw amount"
                                                 />
                                                 <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
-                                                    <CoinImage address={filteredData?.loanToken || ""} />
+                                                    <CoinImage address={filteredData?.loanToken.loanToken || ""} />
                                                 </div>
                                             </div>
                                         </FormControl>

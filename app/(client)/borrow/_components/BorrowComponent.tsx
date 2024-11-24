@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Label } from '@/components/ui/label';
 import { LTVSection } from './LTVSection';
 import { DepositAndBorrowSection } from './DepositAndBorrowSection';
-import usePools from "@/hooks/usePools";
+import usePools from "@/hooks/graphql/usePools";
 import { PoolSchema, SupplyCollateralAndBorrow } from "@/lib/validation/types";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
 import { CoinImage } from "@/components/coin/CoinImage";
@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import SuccessDialog from "@/components/dialog/SuccessDialog";
 import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
 import { useCallback, useEffect, useState } from "react";
-import { useSupplyCollateralAndBorrow } from "@/hooks/useSupplyCollateralAndBorrow";
+import { useSupplyCollateralAndBorrow } from "@/hooks/contract/useSupplyCollateralAndBorrow";
 
 const BorrowComponent: React.FC = () => {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -40,7 +40,7 @@ const BorrowComponent: React.FC = () => {
     });
 
     const uniqueCollateralTokens = Array.from(
-        new Set(poolData?.map(pool => pool.collateralToken || "").filter(Boolean))
+        new Set(poolData?.map(pool => pool.collateralToken.collateralToken || "").filter(Boolean))
     );
 
     const handleCollateralTokenSelect = useCallback((token: string) => {
@@ -49,10 +49,10 @@ const BorrowComponent: React.FC = () => {
         setFilteredPools([]);
 
         if (poolData) {
-            const poolsWithCollateral = poolData.filter(pool => pool.collateralToken === token);
+            const poolsWithCollateral = poolData.filter(pool => pool.collateralToken.collateralToken === token);
 
             const borrowTokens = Array.from(
-                new Set(poolsWithCollateral.map(pool => pool.loanToken || "").filter(Boolean))
+                new Set(poolsWithCollateral.map(pool => pool.loanToken.loanToken || "").filter(Boolean))
             );
             setAvailableBorrowTokens(borrowTokens);
         }
@@ -63,7 +63,7 @@ const BorrowComponent: React.FC = () => {
 
         if (poolData && selectedCollateralToken) {
             const filtered = poolData.filter(
-                pool => pool.collateralToken === selectedCollateralToken && pool.loanToken === token
+                pool => pool.collateralToken.collateralToken === selectedCollateralToken && pool.loanToken.loanToken === token
             );
             setFilteredPools(filtered);
         }
@@ -95,7 +95,7 @@ const BorrowComponent: React.FC = () => {
 
     return (
         <>
-            {(isSupplyCollateralAndBorrowConfirming || isSupplyCollateralAndBorrowPending) && (
+            {(isSupplyCollateralAndBorrowConfirming || isSupplyCollateralAndBorrowPending) && !isSupplyCollateralAndBorrowConfirmed && (
                 <LoadingTransaction
                     message={isSupplyCollateralAndBorrowConfirming ? "Submitting..." : "Confirming submission..."}
                 />
@@ -156,8 +156,8 @@ const BorrowComponent: React.FC = () => {
                                                                                 <SelectItem key={pool.id} value={pool.id!} className="py-3">
                                                                                     <div className="flex items-center gap-2">
                                                                                         <div className="flex items-center gap-2">
-                                                                                            <CoinImage address={pool.collateralToken || ""} />
-                                                                                            <CoinSymbol address={pool.collateralToken || ""} />
+                                                                                            <CoinImage address={pool.collateralToken.collateralToken || ""} />
+                                                                                            <CoinSymbol address={pool.collateralToken.collateralToken || ""} />
                                                                                         </div>
                                                                                         <Badge variant="outline">{pool.ltv}% LTV</Badge>
                                                                                     </div>

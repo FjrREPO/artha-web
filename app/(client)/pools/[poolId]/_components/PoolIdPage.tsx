@@ -7,9 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TopPoolData from './TopPoolData';
-import PoolDetails from './PoolDetails';
 import Lend from './Lend';
 import { PoolSchema } from '@/lib/validation/types';
 import { API_SUBGRAPH } from '@/constants/config';
@@ -37,7 +35,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
 
     return (
         <div className='flex flex-col gap-5'>
-            <TopPoolData filteredData={filteredData} isLoading={isLoading} nftData={nftData || []} nftLoading={nftLoading} />
+            <TopPoolData filteredData={filteredData} isLoading={isLoading} nftData={nftData || []} nftLoading={nftLoading} poolId={PoolId} />
             <div className='flex flex-col-reverse lg:flex-row w-full gap-5'>
                 <div className='flex flex-col w-full gap-5 lg:w-3/6 flex-1 shrink-0 self-stretch'>
                     <SkeletonWrapper isLoading={isLoading}>
@@ -53,31 +51,10 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
                 <div className='w-full lg:w-[480px] self-stretch'>
                     <div className='flex flex-col gap-5 w-full'>
                         <SkeletonWrapper isLoading={isLoading}>
-                            <Card className='w-full'>
-                                <CardContent className='p-5 space-y-5'>
-                                    <Tabs defaultValue='supplyCollateral' className='w-full'>
-                                        <TabsList className='w-full'>
-                                            <TabsTrigger value="supplyCollateral" className='w-full'>Supply collateral</TabsTrigger>
-                                            <TabsTrigger value="lend" className='w-full'>Lend</TabsTrigger>
-                                        </TabsList>
-                                        <TabsContent value="supplyCollateral">
-                                            <SupplyCollateral nftData={nftData || []} filteredData={filteredData} nftLoading={nftLoading} />
-                                        </TabsContent>
-                                        <TabsContent value="lend">
-                                            <Lend filteredData={filteredData} />
-                                        </TabsContent>
-                                    </Tabs>
-                                </CardContent>
-                            </Card>
+                            <SupplyCollateral nftData={nftData || []} filteredData={filteredData} nftLoading={nftLoading} />
                         </SkeletonWrapper>
                         <SkeletonWrapper isLoading={isLoading}>
-                            <Card className='w-full'>
-                                <CardContent className='p-5 space-y-5'>
-                                    <Label>Details</Label>
-                                    <Separator className='w-full' />
-                                    <PoolDetails />
-                                </CardContent>
-                            </Card>
+                            <Lend filteredData={filteredData} />
                         </SkeletonWrapper>
                     </div>
                 </div>

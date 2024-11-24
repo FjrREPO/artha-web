@@ -59,7 +59,6 @@ export const LTVSection = ({ form, poolData, poolLoading }: Props) => {
                                     <Slider
                                         value={[field.value || 0]}
                                         max={maxLTV}
-                                        disabled
                                         step={1}
                                         onValueChange={(values) => {
                                             field.onChange(values[0]);

@@ -1,49 +1,32 @@
 import { gql } from "graphql-request";
 
-// export const queryPool = gql`{
-//     pools(orderBy: blockTimestamp, orderDirection: desc) {
-//         borrowRate
-//         id
-//         irm
-//         lendingRate
-//         lth
-//         ltv
-//         oracle
-//         totalBorrowAssets
-//         totalBorrowShares
-//         totalSupplyAssets
-//         totalSupplyShares
-//         utilizationRate
-//         collateralToken {
-//             collateralToken
-//             id
-//         }
-//         loanToken {
-//             id
-//             loanToken
-//         }
-//     }
-// }`
-
 export const queryPool = gql`{
     pools(orderBy: blockTimestamp, orderDirection: desc) {
         id
-        collateralToken
-        loanToken
+        collateralAddress
+        borrowRate
         irm
-        oracle
+        lendingRate
+        loanAddress
         lth
         ltv
+        oracle
+        totalBorrowAssets
+        totalBorrowShares
+        totalSupplyAssets
+        totalSupplyShares
+        transactionHash
+        utilizationRate
+        collateralToken {
+            id
+            collateralToken
+        }
+        loanToken {
+            id
+            loanToken
+        }
     }
 }`
-
-// id
-// collateralToken
-// loanToken
-// irm
-// oracle
-// lth
-// ltv
 
 export const queryLTV = gql`{
     ltvs(orderBy: blockTimestamp, orderDirection: desc) {
@@ -66,6 +49,37 @@ export const queryCurator = gql`{
         curator
         allocations
         pools {
+            id
+        }
+    }
+}`
+
+export const queryCollateralTokens = gql`{
+    collaterals(orderBy: blockTimestamp, orderDirection: desc) {
+        id
+        collateralToken
+        pool {
+            id
+        }
+    }
+}`
+
+export const queryLoanTokens = gql`{
+    loanTokens(orderBy: blockTimestamp, orderDirection: desc) {
+        id
+        loanToken
+        pool {
+            id
+        }
+    }
+}`
+
+export const queryPosition = (account: string, poolId: string) => gql`{
+    positions(where: {account: "${account.toLowerCase()}", pool_: {id: "${poolId}"}}) {
+        id
+        tokenId
+        borrowShares
+        pool {
             id
         }
     }

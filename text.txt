@@ -1,0 +1,6 @@
+total supplied = total supply asset
+borrow APR = borrow rate
+utilization rate = total borrow asset / total supply asset = %
+lend APR = borrow rate * utilization Rate = %
+
+total borrow asset * borrow shares / total borrow shares = nilai loan token

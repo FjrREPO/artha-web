@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useAccount } from 'wagmi';
 import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useSupplyCollateral } from '@/hooks/useSupplyCollateral';
+import { useSupplyCollateral } from '@/hooks/contract/useSupplyCollateral';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
@@ -81,7 +81,7 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
 
     return (
         <>
-            {(isSupplyCollateralConfirming || isSupplyCollateralPending) && (
+            {(isSupplyCollateralConfirming || isSupplyCollateralPending) && !isSupplyCollateralConfirmed && (
                 <LoadingTransaction
                     message={isSupplyCollateralConfirming ? "Supplying..." : "Confirming supply..."}
                 />

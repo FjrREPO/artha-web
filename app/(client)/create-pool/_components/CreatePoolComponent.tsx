@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { poolSchema } from '@/lib/validation/schemas';
-import { useCreatePool } from '@/hooks/useCreatePool';
+import { useCreatePool } from '@/hooks/contract/useCreatePool';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
@@ -16,9 +16,9 @@ import { CreatePoolSteps } from './CreatePoolSteps';
 import { z } from 'zod';
 import { useOracle } from '@/hooks/useOracle';
 import { useCryptoToken } from '@/hooks/useCryptoToken';
-import { useLTV } from '@/hooks/useLTV';
+import { useLTV } from '@/hooks/graphql/useLTV';
 import PreviewDialogPool from './PreviewDialogPool';
-import { useIRM } from '@/hooks/useIRM';
+import { useIRM } from '@/hooks/graphql/useIRM';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -43,8 +43,8 @@ const CreatePoolComponent = () => {
     const form = useForm<FormData>({
         resolver: zodResolver(poolSchema),
         defaultValues: {
-            collateralToken: "",
-            loanToken: "",
+            collateralAddress: "",
+            loanAddress: "",
             irm: "",
             oracle: "",
             ltv: "",
@@ -161,7 +161,7 @@ const CreatePoolComponent = () => {
 
     return (
         <>
-            {(isCreatePoolConfirming || isCreatePoolPending) && (
+            {(isCreatePoolConfirming || isCreatePoolPending) && !isCreatePoolConfirmed && (
                 <LoadingTransaction
                     message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
                 />

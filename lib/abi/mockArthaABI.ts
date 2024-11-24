@@ -640,6 +640,19 @@ export const mockArthaABI = [
                 "internalType": "Id",
                 "name": "id",
                 "type": "bytes32"
+            }
+        ],
+        "name": "accrueInterest",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "Id",
+                "name": "id",
+                "type": "bytes32"
             },
             {
                 "internalType": "uint256",

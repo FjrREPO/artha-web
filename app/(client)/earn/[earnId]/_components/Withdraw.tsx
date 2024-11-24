@@ -14,7 +14,7 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form"
-import { useWithdrawCurator } from '@/hooks/useWithdrawCurator'
+import { useWithdrawCurator } from '@/hooks/contract/useWithdrawCurator'
 import SuccessDialog from '@/components/dialog/SuccessDialog'
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
 
@@ -60,7 +60,7 @@ export default function Withdraw({ filteredData }: WithdrawProps) {
 
     return (
         <>
-            {(isWithdrawCuratorConfirming || isWithdrawCuratorPending) && (
+            {(isWithdrawCuratorConfirming || isWithdrawCuratorPending) && !isWithdrawCuratorConfirmed && (
                 <LoadingTransaction
                     message={isWithdrawCuratorConfirming ? "Withdrawing..." : "Confirming withdraw..."}
                 />

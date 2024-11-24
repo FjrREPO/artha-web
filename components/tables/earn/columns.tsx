@@ -73,8 +73,8 @@ export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], i
                     key={pool.id}
                     className="px-2 py-0.5 text-sm flex flex-row gap-1 items-center"
                   >
-                    <CoinImage address={findPoolById?.collateralToken || ""} />
-                    <CoinSymbol address={findPoolById?.collateralToken || ""} />
+                    <CoinImage address={findPoolById?.collateralToken.collateralToken || ""} />
+                    <CoinSymbol address={findPoolById?.collateralToken.collateralToken || ""} />
                   </div>
                 )
               })}

@@ -61,11 +61,11 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     };
 
     const handleCollateralSelection = (value: string) => {
-        form.setValue('collateralToken', value, { shouldValidate: true });
+        form.setValue('collateralAddress', value, { shouldValidate: true });
     };
 
     const handleLoanSelection = (value: string) => {
-        form.setValue('loanToken', value, { shouldValidate: true });
+        form.setValue('loanAddress', value, { shouldValidate: true });
     };
 
     return (
@@ -74,7 +74,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                 <div className="space-y-5">
                     <FormField
                         control={form.control}
-                        name="collateralToken"
+                        name="collateralAddress"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Collateral Token</FormLabel>
@@ -95,7 +95,7 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                     />
                     <FormField
                         control={form.control}
-                        name="loanToken"
+                        name="loanAddress"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Loan Token</FormLabel>

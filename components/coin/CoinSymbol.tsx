@@ -1,9 +1,11 @@
-import { CryptoToken } from "@/constants/cryptoToken";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
+import { useCryptoToken } from "@/hooks/useCryptoToken";
 
 export const CoinSymbol = ({ address, className }: { address: string, className?: string }) => {
-    const coinSymbolByAddress = CryptoToken.find(
+    const { cryptoTokenData } = useCryptoToken();
+
+    const coinSymbolByAddress = cryptoTokenData && cryptoTokenData.find(
         (coin) => coin.contract_address[0].contract_address.toLowerCase() === address?.toLowerCase()
     )?.symbol;
 

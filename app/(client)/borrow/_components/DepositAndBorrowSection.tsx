@@ -4,12 +4,13 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { UseFormReturn } from 'react-hook-form';
-import { CoinMarketCapSchema, SupplyCollateralAndBorrow } from '@/lib/validation/types';
+import { AlchemyNftSchema, CoinMarketCapSchema, SupplyCollateralAndBorrow } from '@/lib/validation/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CoinImage } from '@/components/coin/CoinImage';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
 import { useCryptoToken } from '@/hooks/useCryptoToken';
+import { useOwnerNft } from '@/hooks/useOwnerNft';
 
 interface Props {
     form: UseFormReturn<SupplyCollateralAndBorrow>;
@@ -36,6 +37,8 @@ export const DepositAndBorrowSection = ({
 
     const { cryptoTokenData } = useCryptoToken();
 
+    const { nftData, nftLoading } = useOwnerNft();
+
     useEffect(() => {
         if (!poolLoading && cryptoTokenData && cryptoTokenData.length > 0 && !selectedCoin) {
             const defaultCoin = cryptoTokenData[0];
@@ -43,8 +46,6 @@ export const DepositAndBorrowSection = ({
             form.setValue('collateralToken', defaultCoin.id.toString());
         }
     }, [cryptoTokenData, poolLoading, form, selectedCoin]);
-
-    const filterCollateralTokenByCollateral = cryptoTokenData?.filter(token => token.contract_address[0].contract_address.toLowerCase() === selectedCollateralToken.toLowerCase());
 
     return (
         <div className="flex flex-col lg:flex-row gap-2 h-fit">
@@ -94,30 +95,32 @@ export const DepositAndBorrowSection = ({
                                 <FormItem className="w-full py-5 flex flex-col gap-3">
                                     <FormLabel className="text-xl">Choose Token Id</FormLabel>
                                     <SkeletonWrapper isLoading={poolLoading}>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <Select
-                                                    onValueChange={field.onChange}
-                                                    value={field.value}
-                                                    disabled={!selectedCollateralToken}
-                                                >
-                                                    <SelectTrigger className="w-full py-8">
-                                                        <SelectValue placeholder="Select token id" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <ScrollArea className="max-h-52">
-                                                            {filterCollateralTokenByCollateral?.map((token: CoinMarketCapSchema) => (
-                                                                <SelectItem key={token.id} value={token.id.toString()} className="py-5">
-                                                                    <div className="flex items-center gap-2">
-                                                                        {token.id}
-                                                                    </div>
-                                                                </SelectItem>
-                                                            ))}
-                                                        </ScrollArea>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </FormControl>
+                                        <SkeletonWrapper isLoading={nftLoading}>
+                                            <FormControl>
+                                                <div className="relative">
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        value={field.value}
+                                                        disabled={!selectedCollateralToken}
+                                                    >
+                                                        <SelectTrigger className="w-full py-8">
+                                                            <SelectValue placeholder="Select token id" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <ScrollArea className="max-h-52">
+                                                                {nftData?.map((token: AlchemyNftSchema) => (
+                                                                    <SelectItem key={token.tokenId} value={token.tokenId.toString()} className="py-5">
+                                                                        <div className="flex items-center gap-2">
+                                                                            {token.tokenId}
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </ScrollArea>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            </FormControl>
+                                        </SkeletonWrapper>
                                     </SkeletonWrapper>
                                     <FormMessage />
                                 </FormItem>

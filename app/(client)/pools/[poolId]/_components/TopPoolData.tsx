@@ -13,21 +13,26 @@ import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
 import { NftImage } from '@/components/nft/NftImage';
+import { usePosition } from '@/hooks/graphql/usePosition';
+import { useDecimal } from '@/hooks/contract/useDecimal';
 
 interface Props {
     filteredData?: PoolSchema;
     isLoading: boolean;
     nftData: AlchemyNftSchema[];
     nftLoading: boolean;
+    poolId: string;
 }
 
-export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading }: Props) {
-    const totalAssets = filteredData?.ltv?.toString();
-    const ltv = filteredData?.ltv;
+export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading, poolId }: Props) {
+    const { positionData, positionLoading } = usePosition(poolId)
 
-    const utilization = ltv && totalAssets && !isNaN(parseFloat(totalAssets as string)) && !isNaN(parseFloat(ltv.toString()))
-        ? (parseFloat(totalAssets) / parseFloat(ltv.toString())) * 100
-        : null
+    const getTokenByPosition = nftData?.find((nft) => nft.tokenId === positionData[0]?.tokenId);
+
+    console.log(getTokenByPosition)
+
+    const { decimal } = useDecimal(filteredData?.loanAddress as HexAddress || '')
+
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
             <div className='flex flex-col w-full gap-5 lg:w-3/6 flex-1 shrink-0 self-stretch'>
@@ -36,13 +41,13 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                         <CardContent className='flex flex-col gap-8'>
                             <div className='flex flex-col md:flex-row gap-2 items-center'>
                                 <div className='flex flex-row items-center gap-2'>
-                                    <CoinImageCustom address={filteredData?.collateralToken || ""} className='w-8 h-8' />
-                                    <CoinSymbol address={filteredData?.collateralToken || ""} className='text-2xl font-bold' />
+                                    <CoinImageCustom address={filteredData?.collateralToken.collateralToken || ""} className='w-8 h-8' />
+                                    <CoinSymbol address={filteredData?.collateralToken.collateralToken || ""} className='text-2xl font-bold' />
                                 </div>
                                 <div className='flex flex-row flex-wrap gap-2'>
-                                    <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken}`} target='_blank' className="cursor-pointer px-1">
+                                    <Link href={`https://sepolia.basescan.org/address/${filteredData?.collateralToken.collateralToken}`} target='_blank' className="cursor-pointer px-1">
                                         <Button variant={'outline'} className="cursor-pointer px-1">
-                                            <Label className='text-[11px] cursor-pointer'>{filteredData && formatAddress(filteredData && filteredData.collateralToken ? filteredData.collateralToken : '', 4)}</Label>
+                                            <Label className='text-[11px] cursor-pointer'>{filteredData && formatAddress(filteredData && filteredData.collateralToken.collateralToken ? filteredData.collateralToken.collateralToken : '', 4)}</Label>
                                             <ExternalLink className='w-2 h-2' />
                                         </Button>
                                     </Link>
@@ -61,31 +66,45 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                                 <div className='flex flex-row flex-wrap w-full gap-10 sm:gap-20'>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Reserve Size</Label>
-                                        <Label className='text-lg font-medium'>{totalAssets}</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) / decimal).toFixed(2)}</Label>
+                                        </SkeletonWrapper>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Available Liquidity</Label>
-                                        <Label className='text-lg font-medium'>{totalAssets}</Label>
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Utitlization Rate</Label>
-                                        {utilization === null ? (
-                                            <Label className='text-lg font-medium'>N/A</Label>
-                                        ) : (
-                                            <Label className='text-lg font-medium'>10%</Label>
-                                        )}
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Lend APR</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
-                                    </div>
-                                    <div className='flex flex-col gap-1'>
-                                        <Label className='text-textSecondary'>Collateral APY</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth !== undefined ? "10%" : 'N/A'}</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) - (filteredData?.totalBorrowAssets ?? 0)) / decimal}</Label>
+                                        </SkeletonWrapper>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Borrow APR</Label>
-                                        <Label className='text-lg font-medium'>{filteredData?.lth}</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{(filteredData?.borrowRate ?? 0) / 1e16}%</Label>
+                                        </SkeletonWrapper>
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <Label className='text-textSecondary'>Lend APR</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{((filteredData?.borrowRate ?? 0) * (filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) / 1e16).toFixed(2)}%</Label>
+                                        </SkeletonWrapper>
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <Label className='text-textSecondary'>Utitlization Rate</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{((filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) * 100).toFixed(2)}%</Label>
+                                        </SkeletonWrapper>
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <Label className='text-textSecondary'>Max LTV</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{filteredData?.ltv}%</Label>
+                                        </SkeletonWrapper>
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <Label className='text-textSecondary'>Max LTH</Label>
+                                        <SkeletonWrapper isLoading={positionLoading}>
+                                            <Label className='text-lg font-medium'>{filteredData?.lth}%</Label>
+                                        </SkeletonWrapper>
                                     </div>
                                 </div>
                             </div>

@@ -8,7 +8,7 @@ type QueryData = {
     pools: PoolSchema[];
 };
 
-export default function TablePool() {
+export default function usePools() {
     const { data, isLoading: poolLoading } = useQuery<QueryData>({
         queryKey: ['pool'],
         queryFn: async () => {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useDepositCurator } from '@/hooks/useDepositCurator'
+import { useDepositCurator } from '@/hooks/contract/useDepositCurator'
 import { EarnSchema } from '@/lib/validation/types'
 import { Wallet } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -13,9 +13,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAccount } from 'wagmi'
-import { useBalance } from '@/hooks/useBalance'
+import { useBalance } from '@/hooks/contract/useBalance'
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper'
-import { useAssetCurator } from '@/hooks/useAssetCurator'
+import { useAssetCurator } from '@/hooks/contract/useAssetCurator'
 
 const depositFormSchema = z.object({
     amount: z.string().min(1, "Amount is required").refine(
@@ -103,12 +103,12 @@ export default function Deposit({ filteredData }: DepositProps) {
 
     return (
         <>
-            {(isApprovalConfirming || isApprovalPending) && (
+            {(isApprovalConfirming || isApprovalPending) && !approvalHash && (
                 <LoadingTransaction
                     message={isApprovalConfirming ? "Approving..." : "Confirming approval..."}
                 />
             )}
-            {(isDepositCuratorConfirming || isDepositCuratorPending) && approvalHash && (
+            {(isDepositCuratorConfirming || isDepositCuratorPending) && !depositCuratorHash && (
                 <LoadingTransaction
                     message={isDepositCuratorConfirming ? "Depositing..." : "Confirming deposit..."}
                 />

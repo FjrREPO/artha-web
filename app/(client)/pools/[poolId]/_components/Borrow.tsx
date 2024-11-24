@@ -10,8 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { useBorrow } from '@/hooks/useBorrow';
-import { NftImage } from '@/components/nft/NftImage';
+import { useBorrow } from '@/hooks/contract/useBorrow';
+import { CoinImage } from '@/components/coin/CoinImage';
 
 interface BorrowProps {
     filteredData?: PoolSchema;
@@ -65,7 +65,7 @@ export default function Borrow({
 
     return (
         <>
-            {(isBorrowConfirming || isBorrowPending) && (
+            {(isBorrowConfirming || isBorrowPending) && !isBorrowConfirmed && (
                 <LoadingTransaction
                     message={isBorrowConfirming ? "Borrowing..." : "Confirming borrow..."}
                 />
@@ -98,7 +98,7 @@ export default function Borrow({
                                                     placeholder="Enter borrow amount"
                                                 />
                                                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
-                                                    <NftImage path={nftData?.contract.openSeaMetadata.imageUrl || ""} />
+                                                    <CoinImage address={filteredData?.loanToken?.loanToken || ""} />
                                                 </div>
                                             </div>
                                         </FormControl>

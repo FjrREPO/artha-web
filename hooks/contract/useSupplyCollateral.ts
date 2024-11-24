@@ -4,7 +4,6 @@ import { ADDRESS_ARTHA } from "@/constants/config";
 import { mockArthaABI } from "@/lib/abi/mockArthaABI";
 
 export const useSupplyCollateral = () => {
-
     const {
         data: supplyCollateralHash,
         isPending: isSupplyCollateralPending,
