@@ -46,7 +46,7 @@ const MultiSelectCoinImage: React.FC<MultiSelectCoinImageProps> = ({
                             ${isSelected(pool.id!) ? 'ring-4 ring-gray-400 dark:ring-white' : 'ring-1 ring-gray-200 hover:ring-primary/50'}
                         `}>
                             <CoinImageCustom
-                                address={pool.collateralToken || ""}
+                                address={pool.collateralToken.collateralToken || ""}
                                 className="w-20 h-20 object-cover brightness-90"
                             />
 

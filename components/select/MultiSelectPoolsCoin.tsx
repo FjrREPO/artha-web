@@ -58,8 +58,8 @@ const MultiSelectPoolsCoin: React.FC<MultiSelectPoolsCoinProps> = ({
                                         key={pool.id}
                                         className="flex items-center gap-1"
                                     >
-                                        <CoinImage address={pool.collateralToken || ""} />
-                                        <CoinSymbol address={pool.collateralToken || ""} />
+                                        <CoinImage address={pool.collateralToken.collateralToken || ""} />
+                                        <CoinSymbol address={pool.collateralToken.collateralToken || ""} />
                                         <span>{pool.ltv}% LTV</span>
                                     </Badge>
                                 ) : null;
@@ -88,8 +88,8 @@ const MultiSelectPoolsCoin: React.FC<MultiSelectPoolsCoinProps> = ({
                                                 }`}
                                         />
                                         <div className="flex items-center gap-2">
-                                            <CoinImage address={pool.collateralToken || ""} />
-                                            <CoinSymbol address={pool.collateralToken || ""} />
+                                            <CoinImage address={pool.collateralToken.collateralToken || ""} />
+                                            <CoinSymbol address={pool.collateralToken.collateralToken || ""} />
                                         </div>
                                         <Badge variant="outline">{pool.ltv}% LTV</Badge>
                                     </div>
