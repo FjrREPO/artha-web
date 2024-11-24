@@ -87,8 +87,8 @@ export const PreviewDialogCurator: React.FC<PreviewDialogProps> = ({
                                     return (
                                         <div key={selectedPool.poolId} className="p-3 bg-secondary/20 rounded-lg">
                                             <div className="flex items-center gap-2 mb-2">
-                                                <CoinImage address={pool?.collateralToken ?? ""} />
-                                                <CoinSymbol address={pool?.collateralToken ?? ""} />
+                                                <CoinImage address={pool?.collateralToken.collateralToken ?? ""} />
+                                                <CoinSymbol address={pool?.collateralToken.collateralToken ?? ""} />
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <p className="text-sm text-muted-foreground">Pool ID</p>

@@ -55,15 +55,15 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Collateral Token:</span>
                                     <div className="flex flex-row gap-2 items-center">
-                                        <CoinSymbol address={formData.collateralToken!} />
-                                        <CoinImage address={formData.collateralToken!} />
+                                        <CoinSymbol address={formData.collateralToken.collateralToken!} />
+                                        <CoinImage address={formData.collateralToken.collateralToken!} />
                                     </div>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Loan Token:</span>
                                     <div className="flex flex-row gap-2 items-center">
-                                        <CoinSymbol address={formData.loanToken!} />
-                                        <CoinImage address={formData.loanToken!} />
+                                        <CoinSymbol address={formData.loanToken.loanToken!} />
+                                        <CoinImage address={formData.loanToken.loanToken!} />
                                     </div>
                                 </div>
                                 <div className="flex justify-between">
