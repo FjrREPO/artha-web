@@ -7,9 +7,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Label } from '@/components/ui/label';
 import { LTVSection } from './LTVSection';
 import { DepositAndBorrowSection } from './DepositAndBorrowSection';
-import { useOwnerNft } from '@/hooks/useOwnerNft';
 import usePools from "@/hooks/usePools";
-import { SupplyCollateralAndBorrow } from "@/lib/validation/types";
+import { PoolSchema, SupplyCollateralAndBorrow } from "@/lib/validation/types";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
 import { CoinImage } from "@/components/coin/CoinImage";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
@@ -18,14 +17,21 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import SuccessDialog from "@/components/dialog/SuccessDialog";
 import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSupplyCollateralAndBorrow } from "@/hooks/useSupplyCollateralAndBorrow";
 
 const BorrowComponent: React.FC = () => {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    
+    const [selectedCollateralToken, setSelectedCollateralToken] = useState<string>("");
+    const [selectedBorrowToken, setSelectedBorrowToken] = useState<string>("");
+    const [filteredPools, setFilteredPools] = useState<PoolSchema[]>([]);
+    const [availableBorrowTokens, setAvailableBorrowTokens] = useState<string[]>([]);
+
+    const { poolData, poolLoading } = usePools();
+
     const form = useForm<SupplyCollateralAndBorrow>({
         defaultValues: {
+            collateralToken: "",
             tokenId: "",
             borrowAmount: "",
             ltv: 0,
@@ -33,8 +39,36 @@ const BorrowComponent: React.FC = () => {
         }
     });
 
-    const { nftData, nftLoading } = useOwnerNft()
-    const { poolData, poolLoading } = usePools()
+    const uniqueCollateralTokens = Array.from(
+        new Set(poolData?.map(pool => pool.collateralToken || "").filter(Boolean))
+    );
+
+    const handleCollateralTokenSelect = useCallback((token: string) => {
+        setSelectedCollateralToken(token);
+        setSelectedBorrowToken("")
+        setFilteredPools([]);
+
+        if (poolData) {
+            const poolsWithCollateral = poolData.filter(pool => pool.collateralToken === token);
+
+            const borrowTokens = Array.from(
+                new Set(poolsWithCollateral.map(pool => pool.loanToken || "").filter(Boolean))
+            );
+            setAvailableBorrowTokens(borrowTokens);
+        }
+    }, [poolData]);
+
+    const handleBorrowTokenSelect = useCallback((token: string) => {
+        setSelectedBorrowToken(token);
+
+        if (poolData && selectedCollateralToken) {
+            const filtered = poolData.filter(
+                pool => pool.collateralToken === selectedCollateralToken && pool.loanToken === token
+            );
+            setFilteredPools(filtered);
+        }
+    }, [poolData, selectedCollateralToken]);
+
     const {
         supplyCollateralAndBorrowHash,
         handleSupplyCollateralAndBorrow,
@@ -83,6 +117,16 @@ const BorrowComponent: React.FC = () => {
                     <div className='w-full lg:w-4/6 space-y-4'>
                         <Form {...form}>
                             <form onSubmit={handleFormSubmit} className="space-y-4">
+                                <DepositAndBorrowSection
+                                    form={form}
+                                    poolLoading={poolLoading}
+                                    uniqueCollateralTokens={uniqueCollateralTokens}
+                                    availableBorrowTokens={availableBorrowTokens}
+                                    handleCollateralTokenSelect={handleCollateralTokenSelect}
+                                    handleBorrowTokenSelect={handleBorrowTokenSelect}
+                                    selectedCollateralToken={selectedCollateralToken}
+                                    selectedBorrowToken={selectedBorrowToken}
+                                />
                                 <div className="flex flex-col gap-4">
                                     <Card>
                                         <CardContent className="p-6">
@@ -95,9 +139,11 @@ const BorrowComponent: React.FC = () => {
                                                             <FormLabel className="text-lg font-semibold">Select Pool</FormLabel>
                                                             <SkeletonWrapper isLoading={poolLoading}>
                                                                 <Select
-                                                                    onValueChange={field.onChange}
-                                                                    defaultValue={poolData?.[0]?.id || ""}
-                                                                    disabled={poolLoading}
+                                                                    onValueChange={(value) => {
+                                                                        field.onChange(value);
+                                                                    }}
+                                                                    value={field.value}
+                                                                    disabled={poolLoading || filteredPools?.length === 0}
                                                                 >
                                                                     <FormControl>
                                                                         <SelectTrigger className="w-full py-8">
@@ -106,7 +152,7 @@ const BorrowComponent: React.FC = () => {
                                                                     </FormControl>
                                                                     <SelectContent>
                                                                         <ScrollArea className="max-h-52">
-                                                                            {poolData?.map((pool) => (
+                                                                            {filteredPools?.map((pool) => (
                                                                                 <SelectItem key={pool.id} value={pool.id!} className="py-3">
                                                                                     <div className="flex items-center gap-2">
                                                                                         <div className="flex items-center gap-2">
@@ -129,7 +175,6 @@ const BorrowComponent: React.FC = () => {
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <DepositAndBorrowSection form={form} nftData={nftData} nftLoading={nftLoading} />
                                 <LTVSection form={form} poolData={poolData} poolLoading={poolLoading} />
                                 <Button
                                     type="submit"

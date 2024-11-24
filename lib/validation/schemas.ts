@@ -1,5 +1,33 @@
 import { z } from 'zod';
 
+// export const poolSchema = z.object({
+//     id: z.string().optional().nullable(),
+//     irm: z.string().min(1, "Please select an interest rate model").nullable(),
+//     lendingRate: z.string().min(1, "Please specify a lending rate").nullable(),
+//     lth: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
+//     ltv: z.string().transform((val) => (val === '' ? '0' : val)).nullable(),
+//     oracle: z.string().min(1, "Please select an oracle").nullable(),
+//     totalBorrowAssets: z.string().min(1, "Please specify total borrow assets").nullable(),
+//     totalBorrowShares: z.string().min(1, "Please specify total borrow shares").nullable(),
+//     totalSupplyAssets: z.string().min(1, "Please specify total supply assets").nullable(),
+//     totalSupplyShares: z.string().min(1, "Please specify total supply shares").nullable(),
+//     utilizationRate: z.string().min(1, "Please specify utilization rate").nullable(),
+//     collateralToken: z.string().min(1, "Please select a collateral token").nullable(),
+//     loanToken: z.string().min(1, "Please select a loan token").nullable(),
+// }).refine((data) => {
+//     const ltvValue = parseFloat(data.ltv!);
+//     const lthValue = parseFloat(data.lth!);
+
+//     if (isNaN(ltvValue) || isNaN(lthValue)) {
+//         return false;
+//     }
+
+//     return lthValue > ltvValue;
+// }, {
+//     message: "Liquidation Threshold (LTH) must be higher than Loan to Value (LTV)",
+//     path: ["lth"]
+// });
+
 export const poolSchema = z.object({
     id: z.string().optional().nullable(),
     collateralToken: z.string().min(1, "Please select a collateral").nullable(),
@@ -35,6 +63,7 @@ export const irmSchema = z.object({
 export const supplyCollateralAndBorrow = z.object({
     id: z.string().optional(),
     poolId: z.string(),
+    collateralToken: z.string().optional(),
     tokenId: z.string(),
     borrowAmount: z.string(),
     ltv: z.number().min(1).max(100),

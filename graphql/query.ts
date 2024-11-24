@@ -1,5 +1,30 @@
 import { gql } from "graphql-request";
 
+// export const queryPool = gql`{
+//     pools(orderBy: blockTimestamp, orderDirection: desc) {
+//         borrowRate
+//         id
+//         irm
+//         lendingRate
+//         lth
+//         ltv
+//         oracle
+//         totalBorrowAssets
+//         totalBorrowShares
+//         totalSupplyAssets
+//         totalSupplyShares
+//         utilizationRate
+//         collateralToken {
+//             collateralToken
+//             id
+//         }
+//         loanToken {
+//             id
+//             loanToken
+//         }
+//     }
+// }`
+
 export const queryPool = gql`{
     pools(orderBy: blockTimestamp, orderDirection: desc) {
         id
@@ -9,10 +34,16 @@ export const queryPool = gql`{
         oracle
         lth
         ltv
-        supplyAssets
-        borrowAssets
     }
 }`
+
+// id
+// collateralToken
+// loanToken
+// irm
+// oracle
+// lth
+// ltv
 
 export const queryLTV = gql`{
     ltvs(orderBy: blockTimestamp, orderDirection: desc) {

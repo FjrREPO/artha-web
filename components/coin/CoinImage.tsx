@@ -14,7 +14,7 @@ export const CoinImage = ({ symbol, address, className }: { symbol?: string, add
     )?.logo;
 
     return (
-        <div className={cn("w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center", className)}>
+        <div className={cn("w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center cursor-pointer", className)}>
             {symbol ?
                 <Image
                     src={coinLogoBySymbol ?? fallbackImage}

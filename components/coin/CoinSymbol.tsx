@@ -1,5 +1,6 @@
 import { CryptoToken } from "@/constants/cryptoToken";
 import { Label } from "../ui/label";
+import { cn } from "@/lib/utils";
 
 export const CoinSymbol = ({ address, className }: { address: string, className?: string }) => {
     const coinSymbolByAddress = CryptoToken.find(
@@ -7,6 +8,6 @@ export const CoinSymbol = ({ address, className }: { address: string, className?
     )?.symbol;
 
     return (
-        <Label className={className}>{coinSymbolByAddress}</Label>
+        <Label className={cn("cursor-pointer", className)}>{coinSymbolByAddress}</Label>
     );
 };

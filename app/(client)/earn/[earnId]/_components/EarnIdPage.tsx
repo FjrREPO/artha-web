@@ -42,7 +42,12 @@ export default function EarnIdPage({ earnId }: { earnId: string }) {
                             <CardContent className='p-5 space-y-5'>
                                 <Label>Performance</Label>
                                 <Separator className='w-full' />
-                                <InterestRateChart />
+                                <div className='relative'>
+                                    <InterestRateChart />
+                                    <div className='absolute inset-0 bg-background/50 backdrop-blur-sm flex justify-center items-center'>
+                                        <Label className='text-lg bg-primary text-background px-5 py-3 rounded-full font-bold'>Coming Soon</Label>
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                     </SkeletonWrapper>

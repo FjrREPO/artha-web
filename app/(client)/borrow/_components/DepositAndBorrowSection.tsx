@@ -4,101 +4,121 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { UseFormReturn } from 'react-hook-form';
-import { AlchemyNftSchema, SupplyCollateralAndBorrow } from '@/lib/validation/types';
-import { NftImage } from '@/components/nft/NftImage';
-import { Button } from '@/components/ui/button';
-import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
-import { Label } from '@/components/ui/label';
+import { CoinMarketCapSchema, SupplyCollateralAndBorrow } from '@/lib/validation/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { CoinImage } from '@/components/coin/CoinImage';
+import { CoinSymbol } from '@/components/coin/CoinSymbol';
+import { useCryptoToken } from '@/hooks/useCryptoToken';
 
 interface Props {
     form: UseFormReturn<SupplyCollateralAndBorrow>;
-    nftData: AlchemyNftSchema[];
-    nftLoading: boolean;
+    poolLoading: boolean;
+    uniqueCollateralTokens: string[];
+    availableBorrowTokens: string[];
+    handleCollateralTokenSelect: (token: string) => void;
+    handleBorrowTokenSelect: (token: string) => void;
+    selectedCollateralToken: string;
+    selectedBorrowToken: string;
 }
 
-export const DepositAndBorrowSection = ({ form, nftData, nftLoading }: Props) => {
-    const [selectedNft, setSelectedNft] = useState<AlchemyNftSchema | null>(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+export const DepositAndBorrowSection = ({
+    form,
+    poolLoading,
+    uniqueCollateralTokens,
+    availableBorrowTokens,
+    handleCollateralTokenSelect,
+    handleBorrowTokenSelect,
+    selectedCollateralToken,
+    selectedBorrowToken
+}: Props) => {
+    const [selectedCoin, setSelectedCoin] = useState<CoinMarketCapSchema | null>(null);
+
+    const { cryptoTokenData } = useCryptoToken();
 
     useEffect(() => {
-        if (!nftLoading && nftData && nftData.length > 0 && !selectedNft) {
-            const defaultNft = nftData[0];
-            setSelectedNft(defaultNft);
-            form.setValue('tokenId', defaultNft.tokenId);
+        if (!poolLoading && cryptoTokenData && cryptoTokenData.length > 0 && !selectedCoin) {
+            const defaultCoin = cryptoTokenData[0];
+            setSelectedCoin(defaultCoin);
+            form.setValue('collateralToken', defaultCoin.id.toString());
         }
-    }, [nftData, nftLoading, form, selectedNft]);
+    }, [cryptoTokenData, poolLoading, form, selectedCoin]);
 
-    const handleSelectNft = (nft: AlchemyNftSchema) => {
-        setSelectedNft(nft);
-        setIsDialogOpen(false);
-        form.setValue('tokenId', nft.tokenId);
-    };
-
-    const renderNftContent = () => {
-        if (nftLoading) {
-            return (
-                <Button variant="outline" className="w-full h-auto py-4" disabled>
-                    Loading NFTs...
-                </Button>
-            );
-        }
-
-        if (!nftData || nftData.length === 0) {
-            return (
-                <Button variant="outline" className="w-full h-auto py-4" disabled>
-                    No NFTs available
-                </Button>
-            );
-        }
-
-        return (
-            <Button
-                value={selectedNft?.tokenId}
-                variant="outline"
-                className="w-full h-auto flex justify-start items-center gap-4 py-4"
-            >
-                <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
-                <div className="flex flex-col items-start justify-center gap-1">
-                    <Label className="cursor-pointer">{selectedNft?.contract.symbol}</Label>
-                    <Label className="cursor-pointer text-gray-500 text-xs">
-                        Token id: {selectedNft?.tokenId}
-                    </Label>
-                </div>
-            </Button>
-        );
-    };
+    const filterCollateralTokenByCollateral = cryptoTokenData?.filter(token => token.contract_address[0].contract_address.toLowerCase() === selectedCollateralToken.toLowerCase());
 
     return (
         <div className="flex flex-col lg:flex-row gap-2 h-fit">
             <div className="w-full lg:w-1/2">
                 <Card className="flex w-full">
-                    <CardContent className="flex w-full">
+                    <CardContent className="flex flex-col w-full gap-5">
+                        <FormField
+                            control={form.control}
+                            name="collateralToken"
+                            render={() => (
+                                <FormItem className="w-full py-5 flex flex-col gap-3">
+                                    <FormLabel className="text-xl">Supply Collateral</FormLabel>
+                                    <SkeletonWrapper isLoading={poolLoading}>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Select
+                                                    onValueChange={handleCollateralTokenSelect}
+                                                    value={selectedCollateralToken}
+                                                >
+                                                    <SelectTrigger className="w-full py-8">
+                                                        <SelectValue placeholder="Select collateral token" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <ScrollArea className="max-h-52">
+                                                            {uniqueCollateralTokens.map((token) => (
+                                                                <SelectItem key={token} value={token} className="py-5">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <CoinImage address={token} />
+                                                                        <CoinSymbol address={token} />
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </ScrollArea>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                    </SkeletonWrapper>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="tokenId"
                             render={({ field }) => (
                                 <FormItem className="w-full py-5 flex flex-col gap-3">
-                                    <FormLabel className="text-xl">Supply Collateral</FormLabel>
-                                    <FormControl>
-                                        <div className="relative">
-                                            <Input
-                                                {...field}
-                                                className="w-full pr-10 py-7 rounded-xl hidden"
-                                                type="text"
-                                                placeholder="Enter token id"
-                                            />
-                                            <SkeletonWrapper isLoading={nftLoading}>
-                                                <DialogSelectNft
-                                                    nftData={nftData || []}
-                                                    isDialogOpen={isDialogOpen}
-                                                    setDialogOpen={setIsDialogOpen}
-                                                    handleSelect={handleSelectNft}
-                                                    nftLoading={nftLoading}
-                                                    trigger={renderNftContent()}
-                                                />
-                                            </SkeletonWrapper>
-                                        </div>
-                                    </FormControl>
+                                    <FormLabel className="text-xl">Choose Token Id</FormLabel>
+                                    <SkeletonWrapper isLoading={poolLoading}>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    value={field.value}
+                                                    disabled={!selectedCollateralToken}
+                                                >
+                                                    <SelectTrigger className="w-full py-8">
+                                                        <SelectValue placeholder="Select token id" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <ScrollArea className="max-h-52">
+                                                            {filterCollateralTokenByCollateral?.map((token: CoinMarketCapSchema) => (
+                                                                <SelectItem key={token.id} value={token.id.toString()} className="py-5">
+                                                                    <div className="flex items-center gap-2">
+                                                                        {token.id}
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </ScrollArea>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </FormControl>
+                                    </SkeletonWrapper>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -106,7 +126,7 @@ export const DepositAndBorrowSection = ({ form, nftData, nftLoading }: Props) =>
                     </CardContent>
                 </Card>
             </div>
-            <div className="w-full lg:w-1/2 h-full">
+            <div className="w-full lg:w-1/2">
                 <Card className="flex w-full">
                     <CardContent className="flex w-full">
                         <FormField
@@ -116,17 +136,40 @@ export const DepositAndBorrowSection = ({ form, nftData, nftLoading }: Props) =>
                                 <FormItem className="w-full py-5 flex flex-col gap-3">
                                     <FormLabel className="text-xl">Borrow</FormLabel>
                                     <FormControl>
-                                        <SkeletonWrapper isLoading={nftLoading}>
-                                            <div className="relative">
-                                                <Input
-                                                    {...field}
-                                                    className="w-full pr-10 py-8 rounded-lg"
-                                                    type="number"
-                                                    min={0}
-                                                    placeholder="Enter borrow amount"
-                                                />
-                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer">
-                                                    <NftImage path={selectedNft?.contract.openSeaMetadata.imageUrl || ""} />
+                                        <SkeletonWrapper isLoading={poolLoading}>
+                                            <div className="flex flex-col gap-4">
+                                                <div className="relative">
+                                                    <Input
+                                                        {...field}
+                                                        className="w-full pl-32 py-8 rounded-lg"
+                                                        type="number"
+                                                        min={0}
+                                                        placeholder="Enter borrow amount"
+                                                        disabled={!selectedCollateralToken}
+                                                    />
+                                                    <div className='absolute left-3 top-1/2 transform -translate-y-1/2 w-fit'>
+                                                        <Select
+                                                            onValueChange={handleBorrowTokenSelect}
+                                                            value={selectedBorrowToken}
+                                                            disabled={!selectedCollateralToken}
+                                                        >
+                                                            <SelectTrigger className="w-28 py-6">
+                                                                <SelectValue placeholder="Select" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                <ScrollArea className="max-h-52">
+                                                                    {availableBorrowTokens.map((token) => (
+                                                                        <SelectItem key={token} value={token} className="py-5">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <CoinImage address={token} />
+                                                                                <CoinSymbol address={token} />
+                                                                            </div>
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </ScrollArea>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </SkeletonWrapper>
