@@ -24,7 +24,7 @@ export default function TopEarnData({ filteredData, isLoading }: Props) {
                     <Card className='w-full py-5 h-full'>
                         <CardContent className='flex flex-col gap-8'>
                             <div className='flex flex-col md:flex-row gap-2 items-center'>
-                                <Label className='text-2xl font-bold'>Curator {filteredData && formatAddress(filteredData?.curator as HexAddress, 4)}</Label>
+                                <Label className='text-2xl font-bold'>{filteredData && filteredData.name}</Label>
                                 <div className='flex flex-row flex-wrap gap-2'>
                                     <Link href={`https://etherscan.io/address/${filteredData?.curator}`} target='_blank' className="cursor-pointer px-1">
                                         <Button variant={'outline'} className="cursor-pointer px-1">

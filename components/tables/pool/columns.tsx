@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from "./ColumnHeader";
 import { CoinImage } from "@/components/coin/CoinImage";
 import { PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
-import { formatCurrency } from "@/lib/utils";
+import { formatNumberWithDots } from "@/lib/utils";
 
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
@@ -49,7 +49,7 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <span>{formatCurrency((row.original.totalSupplyAssets ?? 0)/1e6)}</span>
+          <span>{formatNumberWithDots((row.original.totalSupplyAssets ?? 0)/1e6)}</span>
         </div>
       )
     },

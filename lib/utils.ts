@@ -88,3 +88,11 @@ export const toUSDCAmount = (amount: string): bigint => {
   const paddedFraction = fraction.padEnd(USDC_DECIMALS, '0').slice(0, USDC_DECIMALS);
   return BigInt(whole + paddedFraction);
 };
+
+export const formatNumberWithDots = (value: number): string => {
+  const [integerPart, decimalPart] = value.toString().split(".");
+
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+}
