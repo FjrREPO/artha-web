@@ -116,7 +116,7 @@ export const DepositAndBorrowSection = ({
                                                             <SelectValue placeholder="Select collateral token" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <ScrollArea className="max-h-52">
+                                                            <ScrollArea className="max-h-52 overflow-auto">
                                                                 {uniqueCollateralTokens.map((token) => (
                                                                     <SelectItem key={token} value={token} className="py-5">
                                                                         <div className="flex items-center gap-2">
