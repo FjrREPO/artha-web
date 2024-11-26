@@ -27,10 +27,6 @@ interface Props {
 export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading, poolId }: Props) {
     const { positionData, positionLoading } = usePosition(poolId)
 
-    const getTokenByPosition = nftData?.find((nft) => nft.tokenId === positionData[0]?.tokenId);
-
-    console.log(getTokenByPosition)
-
     const { decimal } = useDecimal(filteredData?.loanAddress as HexAddress || '')
 
     return (

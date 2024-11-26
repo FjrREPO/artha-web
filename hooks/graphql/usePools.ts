@@ -9,7 +9,7 @@ type QueryData = {
 };
 
 export default function usePools() {
-    const { data, isLoading: poolLoading } = useQuery<QueryData>({
+    const { data, isLoading: poolLoading, isRefetching: poolRefetching } = useQuery<QueryData>({
         queryKey: ['pool'],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryPool);
@@ -21,6 +21,7 @@ export default function usePools() {
 
     return {
         poolData,
-        poolLoading
+        poolLoading,
+        poolRefetching
     }
 }

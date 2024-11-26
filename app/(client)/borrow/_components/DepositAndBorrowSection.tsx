@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -28,7 +28,6 @@ export const DepositAndBorrowSection = ({
     selectedBorrowToken,
     setSelectedBorrowToken
 }: Props) => {
-
     const collateralTokenSelected = form.watch('collateralToken');
     const tokenIdSelected = form.watch('tokenId');
 
@@ -42,6 +41,21 @@ export const DepositAndBorrowSection = ({
         [poolData]
     );
 
+    const [selectedTokenAddress, setSelectedTokenAddress] = useState<string>('');
+
+    const handleBorrowTokenChange = (value: string) => {
+        const normalizedValue = value.toLowerCase();
+        
+        setSelectedTokenAddress(value);
+
+        const borrowToken = cryptoTokenData?.find(coin => 
+            coin.contract_address[0].contract_address.toLowerCase() === normalizedValue
+        );
+
+        setSelectedBorrowToken(borrowToken || null);
+        form.resetField('supplyPool');
+    };
+
     const availableBorrowTokens = useMemo(() =>
         Array.from(
             new Set(
@@ -54,27 +68,15 @@ export const DepositAndBorrowSection = ({
         [poolData, collateralTokenSelected]
     );
 
-    const handleBorrowTokenChange = (value: string) => {
-        const borrowToken = cryptoTokenData?.find(coin =>
-            coin.contract_address[0].contract_address === value
-        );
-        if (borrowToken) {
-            setSelectedBorrowToken(borrowToken as CoinMarketCapSchema);
-            form.resetField('supplyPool');
-        } else {
-            setSelectedBorrowToken(null);
-        }
-    };
-
     const filteredPools = useMemo(() =>
         poolData?.filter(pool => {
             const collateralMatch = collateralTokenSelected === pool.collateralToken.collateralToken;
-            const borrowTokenMatch = selectedBorrowToken
-                ? pool.loanToken.loanToken === selectedBorrowToken.contract_address[0].contract_address.toString()
+            const borrowTokenMatch = selectedTokenAddress
+                ? pool?.loanToken.loanToken?.toLowerCase() === selectedTokenAddress.toLowerCase()
                 : true;
             return collateralMatch && borrowTokenMatch;
         }) || [],
-        [poolData, collateralTokenSelected, selectedBorrowToken]
+        [poolData, collateralTokenSelected, selectedTokenAddress]
     );
 
     const isSupplyPoolDisabled = useMemo(() => {
@@ -92,6 +94,11 @@ export const DepositAndBorrowSection = ({
         selectedBorrowToken,
         filteredPools.length
     ]);
+
+    const uniqueNftData = nftData?.filter(
+        (token, index, self) =>
+            self.findIndex(t => t.tokenId === token.tokenId) === index
+    );
 
     return (
         <div className="flex flex-col gap-4">
@@ -116,7 +123,7 @@ export const DepositAndBorrowSection = ({
                                                             <SelectValue placeholder="Select collateral token" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <ScrollArea className="max-h-52 overflow-auto">
+                                                            <ScrollArea className="max-h-52">
                                                                 {uniqueCollateralTokens.map((token) => (
                                                                     <SelectItem key={token} value={token} className="py-5">
                                                                         <div className="flex items-center gap-2">
@@ -158,8 +165,8 @@ export const DepositAndBorrowSection = ({
                                                                 <SelectValue placeholder="Select token id" />
                                                             </SelectTrigger>
                                                             <SelectContent>
-                                                                <ScrollArea className="max-h-52">
-                                                                    {nftData?.map((token: AlchemyNftSchema) => (
+                                                                <ScrollArea className="max-h-52 overflow-auto">
+                                                                    {uniqueNftData?.map((token: AlchemyNftSchema) => (
                                                                         <SelectItem
                                                                             key={token.tokenId}
                                                                             value={token.tokenId.toString()}
@@ -210,17 +217,28 @@ export const DepositAndBorrowSection = ({
                                                             <div className='absolute left-3 top-1/2 transform -translate-y-1/2 w-fit'>
                                                                 <Select
                                                                     onValueChange={handleBorrowTokenChange}
-                                                                    value={selectedBorrowToken?.contract_address[0].contract_address || ''}
+                                                                    value={selectedTokenAddress}
                                                                     disabled={!tokenIdSelected}
                                                                 >
                                                                     <SelectTrigger className="w-28 py-6">
-                                                                        <SelectValue placeholder="Select" />
+                                                                        <SelectValue placeholder="Select token">
+                                                                            {selectedTokenAddress && (
+                                                                                <div className="flex items-center gap-2">
+                                                                                    <CoinImage address={selectedTokenAddress} />
+                                                                                    <CoinSymbol address={selectedTokenAddress} />
+                                                                                </div>
+                                                                            )}
+                                                                        </SelectValue>
                                                                     </SelectTrigger>
                                                                     <SelectContent>
                                                                         <ScrollArea className="max-h-52">
                                                                             {availableBorrowTokens.map((token) => (
-                                                                                <SelectItem key={token} value={token} className="py-5">
-                                                                                    <div className="flex items-center gap-2">
+                                                                                <SelectItem
+                                                                                    key={token}
+                                                                                    value={token}
+                                                                                    className="py-5 cursor-pointer"
+                                                                                >
+                                                                                    <div className="flex items-center gap-2 cursor-pointer">
                                                                                         <CoinImage address={token} />
                                                                                         <CoinSymbol address={token} />
                                                                                     </div>

@@ -9,7 +9,7 @@ type QueryData = {
 };
 
 export default function useEarn() {
-    const { data, isLoading: earnLoading } = useQuery<QueryData>({
+    const { data, isLoading: earnLoading, isRefetching: earnRefetching } = useQuery<QueryData>({
         queryKey: ['earn'],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryCurator);
@@ -21,6 +21,7 @@ export default function useEarn() {
 
     return {
         earnData,
-        earnLoading
+        earnLoading,
+        earnRefetching
     }
 }

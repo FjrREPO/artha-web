@@ -90,9 +90,7 @@ export const toUSDCAmount = (amount: string): bigint => {
 };
 
 export const formatNumberWithDots = (value: number): string => {
-  const [integerPart, decimalPart] = value.toString().split(".");
-
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+  const isDecimal = !Number.isInteger(value);
+  const formattedValue = isDecimal ? value.toFixed(2) : value.toString();
+  return formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }

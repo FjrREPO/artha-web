@@ -74,13 +74,58 @@ export const queryLoanTokens = gql`{
     }
 }`
 
-export const queryPosition = (account: string, poolId: string) => gql`{
+export const queryPosition = (account: HexAddress, poolId: string) => gql`{
     positions(where: {account: "${account.toLowerCase()}", pool_: {id: "${poolId}"}}) {
         id
         tokenId
         borrowShares
         pool {
             id
+        }
+    }
+}`
+
+export const queryBorrow = gql`{
+    borrows(orderBy: blockTimestamp, orderDirection: desc) {
+        id
+        onBehalfOf
+        poolId
+        receiver
+        sender
+        shares
+        tokenId
+        amount
+    }
+}`
+
+export const queryAccount = (address: HexAddress) => gql`{
+    account(id: "${address.toLowerCase()}") {
+        id
+        lend {
+            id
+            shares
+            sender
+            poolId
+            onBehalfOf
+            amount
+        }
+        positions {
+            id
+            bidder
+            borrowShares
+            tokenId
+            pool {
+                id
+            }
+            token {
+                id
+                tokenId
+            }
+        }
+        earn {
+            id
+            balance
+            curator
         }
     }
 }`

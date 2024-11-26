@@ -8,18 +8,6 @@ import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
 export function columns({ dataPool, isLoadingPool }: { dataPool: PoolSchema[], isLoadingPool: boolean }): ColumnDef<EarnSchema>[] {
   return [
     {
-      accessorKey: "#",
-      header: ({ column }) => (
-        <DataTableColumnHeader
-          column={column}
-          title="#"
-        />
-      ),
-      cell: ({ row }) => (
-        <span>{row.index + 1}</span>
-      ),
-    },
-    {
       accessorKey: "Asset",
       header: ({ column }) => (
         <DataTableColumnHeader

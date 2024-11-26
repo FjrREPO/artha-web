@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
-import { PoolSchema } from "@/lib/validation/types";
+import { LendSchema } from "@/lib/validation/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   isLoading: boolean;
 }
 
-export function DataTable<TData extends PoolSchema, TValue>({
+export function DataTable<TData extends LendSchema, TValue>({
   columns,
   data,
   isLoading,
@@ -130,7 +130,6 @@ export function DataTable<TData extends PoolSchema, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => window.location.href = `/pools/${row.original.id}`}
                   className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (

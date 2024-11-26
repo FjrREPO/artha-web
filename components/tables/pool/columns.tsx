@@ -13,7 +13,6 @@ export function columns(): ColumnDef<PoolSchema>[] {
         <DataTableColumnHeader column={column} title="Collateral" />
       ),
       cell: ({ row }) => {
-        console.log(row.original.collateralToken.collateralToken)
         return (
         <div className="flex items-center gap-2">
           <CoinImage address={row.original.collateralToken.collateralToken || ""} />

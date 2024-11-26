@@ -60,7 +60,7 @@ const BorrowDetailsStepper: React.FC<BorrowDetailsStepperProps> = ({
     );
 
     const liquidationValue = useMemo(() =>
-        parseInt(selectedPool?.lth as string) * parseInt(borrowAmount || '0'),
+        parseInt(selectedPool?.lth as string) * parseInt(borrowAmount || '0') / 100,
         [selectedPool, borrowAmount]
     );
 
@@ -157,6 +157,12 @@ const BorrowDetailsStepper: React.FC<BorrowDetailsStepperProps> = ({
                                 <div>
                                     <Label>Liquidation Value</Label>
                                     <div className='font-bold'>{formatNumberWithDots(liquidationValue) || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <Label>Collateral Value</Label>
+                                    <div className='font-bold'>
+                                        {formatNumberWithDots(((priceOracle as number) / 1e6) || 0) || 'N/A'}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -26,6 +26,62 @@ export const poolSchema = z.object({
     }),
 });
 
+export const accountSchema = z.object({
+    id: z.string().optional(),
+    lend: z.array(
+        z.object({
+            id: z.string().optional(),
+            shares: z.number().optional(),
+            sender: z.string().optional(),
+            poolId: z.string().optional(),
+            onBehalfOf: z.string().optional(),
+            amount: z.number().optional(),
+        })
+    ),
+    positions: z.array(
+        z.object({
+            id: z.string().optional(),
+            bidder: z.string().optional(),
+            borrowShares: z.number().optional(),
+            tokenId: z.string().optional(),
+            pool: z.object({
+                id: z.string().optional(),
+            }),
+            token: z.object({
+                id: z.string().optional(),
+                tokenId: z.string().optional(),
+            }),
+        })
+    ),
+    earn: z.array(
+        z.object({
+            id: z.string().optional(),
+            balance: z.number().optional(),
+            curator: z.string().optional(),
+        })
+    ),
+});
+
+export const lendSchema = z.object({
+    id: z.string().optional(),
+    shares: z.number().optional(),
+    sender: z.string().optional(),
+    poolId: z.string().optional(),
+    onBehalfOf: z.string().optional(),
+    amount: z.number().optional(),
+})
+
+export const borrowSchema = z.object({
+    id: z.string().optional(),
+    onBehalfOf: z.string().optional(),
+    poolId: z.string(),
+    receiver: z.string().optional(),
+    sender: z.string().optional(),
+    shares: z.string().optional(),
+    tokenId: z.string(),
+    amount: z.string(),
+});
+
 export const positionSchema = z.object({
     id: z.string().optional(),
     tokenId: z.string(),

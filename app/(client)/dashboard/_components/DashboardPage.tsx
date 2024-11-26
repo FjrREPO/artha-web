@@ -1,35 +1,36 @@
-import React from 'react'
+"use client";
+
+import React, { useEffect, useState } from 'react'
 import CardPortfolio from './CardPortfolio'
 import CardRewards from './CardRewards'
-import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { ArrowDown, ArrowUp, ChevronUp, UserRound } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-
-const data = [
-    {
-        name: "Earn",
-        icon: <UserRound className='w-8 h-8' />,
-        text: "Earn",
-        link: "earn"
-    },
-    {
-        name: "Borrow",
-        icon: <ArrowUp className='w-8 h-8' />,
-        text: "Earn Market",
-        link: "pool"
-    },
-    {
-        name: "Lend",
-        icon: <ArrowDown className='w-8 h-8' />,
-        text: "Lend Market",
-        link: "pool"
-    }
-]
+import { BorrowSection } from './BorrowSection'
+import { EarnSection } from './EarnSection';
+import useBorrows from '@/hooks/graphql/useBorrow';
+import usePools from '@/hooks/graphql/usePools';
+import { useOwnerNft } from '@/hooks/useOwnerNft';
+import { useAccount } from 'wagmi';
+import useEarn from '@/hooks/graphql/useEarn';
+import { LendSection } from './LendSection';
+import useLend from '@/hooks/graphql/useLend';
 
 export default function DashboardPage() {
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+
+    const { address } = useAccount()
+    const { borrowData, borrowLoading, borrowRefetching } = useBorrows()
+    const { poolData, poolLoading } = usePools();
+    const { nftData, nftLoading } = useOwnerNft();
+    const { earnData, earnLoading, earnRefetching } = useEarn()
+    const { lendData, lendLoading, lendRefetching } = useLend()
+
+    if (!hasMounted) {
+        return null;
+    }
+
     return (
         <div className='w-full h-full flex flex-col gap-5'>
             <div className='flex flex-col lg:flex-row w-full justify-between items-center gap-5'>
@@ -37,37 +38,29 @@ export default function DashboardPage() {
                 <CardRewards />
             </div>
             <div className='flex flex-col gap-5'>
-                {data.map((item, index) => (
-                    <CardFeatures name={item.name} icon={item.icon} text={item.text} link={item.link} key={index} />
-                ))}
+                <EarnSection
+                    earnData={earnData}
+                    earnLoading={earnLoading}
+                    earnRefetching={earnRefetching}
+                />
+                <BorrowSection
+                    borrowData={borrowData}
+                    borrowLoading={borrowLoading}
+                    borrowRefetching={borrowRefetching}
+                    nftData={nftData}
+                    nftLoading={nftLoading}
+                    poolData={poolData}
+                    poolLoading={poolLoading}
+                    address={address as HexAddress}
+                />
+                <LendSection
+                    poolData={poolData}
+                    poolLoading={poolLoading}
+                    lendData={lendData || []}
+                    lendLoading={lendLoading}
+                    lendRefetching={lendRefetching}
+                />
             </div>
         </div>
-    )
-}
-
-export const CardFeatures = ({ name, icon, text, link }: { name: string, icon: JSX.Element, text: string, link: string }) => {
-    return (
-        <Card className='w-full'>
-            <CardContent className='p-5 space-y-5'>
-                <div className='flex flex-row justify-between items-center'>
-                    <div className='flex flex-row gap-2 items-center'>
-                        {icon}
-                        <div className='flex flex-col gap-1 justify-center'>
-                            <Label className='text-lg'>{name}</Label>
-                            <Label>0 Positions</Label>
-                        </div>
-                    </div>
-                    <div className='flex flex-row gap-2 items-center'>
-                        <Label className='text-lg'>$0.00</Label>
-                        <ChevronUp className='w-5 h-5 cursor-pointer'/>
-                    </div>
-                </div>
-                <Separator />
-                <div className='flex flex-col gap-5 items-center justify-center py-10'>
-                    <Label className='text-lg'>No Position Yet</Label>
-                    <Link href={`/${link.toLowerCase()}`}><Button className='w-fit'>View {text}</Button></Link>
-                </div>
-            </CardContent>
-        </Card>
     )
 }
