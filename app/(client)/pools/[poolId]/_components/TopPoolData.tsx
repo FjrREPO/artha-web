@@ -13,7 +13,7 @@ import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
 import { NftImage } from '@/components/nft/NftImage';
-import { usePosition } from '@/hooks/graphql/usePosition';
+// import { usePosition } from '@/hooks/graphql/usePosition';
 import { useDecimal } from '@/hooks/contract/useDecimal';
 
 interface Props {
@@ -21,11 +21,11 @@ interface Props {
     isLoading: boolean;
     nftData: AlchemyNftSchema[];
     nftLoading: boolean;
-    poolId: string;
+    // poolId: string;
 }
 
-export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading, poolId }: Props) {
-    const { positionData, positionLoading } = usePosition(poolId)
+export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading }: Props) {
+    // const { positionData, positionLoading } = usePosition(poolId)
 
     const { decimal } = useDecimal(filteredData?.loanAddress as HexAddress || '')
 
@@ -62,45 +62,31 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                                 <div className='flex flex-row flex-wrap w-full gap-10 sm:gap-20'>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Reserve Size</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) / decimal).toFixed(2)}</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) / decimal).toFixed(2)}</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Available Liquidity</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) - (filteredData?.totalBorrowAssets ?? 0)) / decimal}</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{((filteredData?.totalSupplyAssets ?? 0) - (filteredData?.totalBorrowAssets ?? 0)) / decimal}</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Borrow APR</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{(filteredData?.borrowRate ?? 0) / 1e16}%</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{(filteredData?.borrowRate ?? 0) / 1e16}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Lend APR</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{((filteredData?.borrowRate ?? 0) * (filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) / 1e16).toFixed(2)}%</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{((filteredData?.borrowRate ?? 0) * (filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) / 1e16).toFixed(2)}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Utitlization Rate</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{((filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) * 100).toFixed(2)}%</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{((filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) * 100).toFixed(2)}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Max LTV</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{filteredData?.ltv}%</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{filteredData?.ltv}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Max LTH</Label>
-                                        <SkeletonWrapper isLoading={positionLoading}>
-                                            <Label className='text-lg font-medium'>{filteredData?.lth}%</Label>
-                                        </SkeletonWrapper>
+                                        <Label className='text-lg font-medium'>{filteredData?.lth}%</Label>
                                     </div>
                                 </div>
                             </div>

@@ -35,7 +35,7 @@ export default function PoolIdPage({ PoolId }: { PoolId: string }) {
 
     return (
         <div className='flex flex-col gap-5'>
-            <TopPoolData filteredData={filteredData} isLoading={isLoading} nftData={nftData || []} nftLoading={nftLoading} poolId={PoolId} />
+            <TopPoolData filteredData={filteredData} isLoading={isLoading} nftData={nftData || []} nftLoading={nftLoading} />
             <div className='flex flex-col-reverse lg:flex-row w-full gap-5'>
                 <div className='flex flex-col w-full gap-5 lg:w-3/6 flex-1 shrink-0 self-stretch'>
                     <SkeletonWrapper isLoading={isLoading}>
