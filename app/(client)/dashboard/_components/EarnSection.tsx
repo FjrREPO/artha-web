@@ -11,9 +11,19 @@ type Props = {
     earnData: EarnSchema[];
     earnLoading: boolean;
     earnRefetching: boolean;
+    // accountCuratorData: AccountCuratorSchema[];
+    // accountCuratorLoading: boolean;
+    // accountCuratorRefetching: boolean;
 }
 
-export const EarnSection = ({ earnData, earnLoading, earnRefetching }: Props) => {
+export const EarnSection = ({
+    earnData,
+    earnLoading,
+    earnRefetching,
+    // accountCuratorData,
+    // accountCuratorLoading,
+    // accountCuratorRefetching
+}: Props) => {
     return (
         <Card className='w-full'>
             <CardContent className='p-5 space-y-5'>
@@ -33,6 +43,9 @@ export const EarnSection = ({ earnData, earnLoading, earnRefetching }: Props) =>
                 <Separator />
                 {earnData.length > 0 ?
                     <TableEarn
+                        // accountCuratorData={accountCuratorData}
+                        // accountCuratorLoading={accountCuratorLoading}
+                        // accountCuratorRefetching={accountCuratorRefetching}
                         earnData={earnData}
                         earnLoading={earnLoading}
                         earnRefetching={earnRefetching}

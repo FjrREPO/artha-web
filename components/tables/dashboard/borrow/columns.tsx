@@ -106,6 +106,25 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
       },
     },
     {
+      accessorKey: "liquidationValue",
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Liquidation Value"
+        />
+      ),
+      cell: ({ row }) => {
+        const findPoolById = poolData.find((pool) => pool.id === row.original.poolId)
+        return (
+          <div className="flex items-center gap-2">
+            <SkeletonWrapper isLoading={poolLoading}>
+              <span>{formatNumberWithDots(findPoolById?.borrowRate || 0)}</span>
+            </SkeletonWrapper>
+          </div>
+        )
+      },
+    },
+    {
       accessorKey: "loanToken",
       header: ({ column }) => (
         <DataTableColumnHeader

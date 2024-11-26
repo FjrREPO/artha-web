@@ -31,7 +31,7 @@ export default function TableBorrow({
                     poolData: poolData, 
                     poolLoading: poolLoading, 
                     nftData: nftData, 
-                    nftLoading: nftLoading,
+                    nftLoading: nftLoading
                 })}
                 isLoading={borrowLoading || borrowRefetching}
             />

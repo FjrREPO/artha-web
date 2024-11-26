@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
-import { LendSchema } from "@/lib/validation/types";
+import { AccountLendSchema } from "@/lib/validation/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   isLoading: boolean;
 }
 
-export function DataTable<TData extends LendSchema, TValue>({
+export function DataTable<TData extends AccountLendSchema, TValue>({
   columns,
   data,
   isLoading,

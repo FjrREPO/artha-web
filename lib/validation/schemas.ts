@@ -62,7 +62,27 @@ export const accountSchema = z.object({
     ),
 });
 
-export const lendSchema = z.object({
+export const accountCuratorSchema = z.object({
+    id: z.string().optional(),
+    balance: z.number().optional(),
+    curator: z.string().optional(),
+})
+
+export const accountPositionSchema = z.object({
+    id: z.string().optional(),
+    bidder: z.string().optional(),
+    borrowShares: z.number().optional(),
+    tokenId: z.string().optional(),
+    pool: z.object({
+        id: z.string().optional(),
+    }),
+    token: z.object({
+        id: z.string().optional(),
+        tokenId: z.string().optional(),
+    }),
+});
+
+export const accountLendSchema = z.object({
     id: z.string().optional(),
     shares: z.number().optional(),
     sender: z.string().optional(),

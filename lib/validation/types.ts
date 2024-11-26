@@ -1,11 +1,35 @@
 import { z } from 'zod';
-import { accountSchema, alchemyNftSchema, auctionActivitySchema, auctionHistorySchema, AuctionsDataSchema, borrowSchema, coinMarketCapSchema, collateralTokenSchema, curatorSchema, earnSchema, irmSchema, lendSchema, loanTokenSchema, ltvSchema, poolSchema, positionSchema, supplyCollateralAndBorrow } from './schemas';
+import {
+    accountSchema,
+    alchemyNftSchema,
+    auctionActivitySchema,
+    auctionHistorySchema,
+    AuctionsDataSchema,
+    borrowSchema,
+    coinMarketCapSchema,
+    collateralTokenSchema,
+    curatorSchema,
+    earnSchema,
+    irmSchema,
+    accountLendSchema,
+    loanTokenSchema,
+    ltvSchema,
+    poolSchema,
+    positionSchema,
+    supplyCollateralAndBorrow,
+    accountPositionSchema,
+    accountCuratorSchema
+} from './schemas';
 
 export type PoolSchema = z.infer<typeof poolSchema>;
 
+export type AccountCuratorSchema = z.infer<typeof accountCuratorSchema>;
+
+export type AccountPositionSchema = z.infer<typeof accountPositionSchema>;
+
 export type AccountSchema = z.infer<typeof accountSchema>;
 
-export type LendSchema = z.infer<typeof lendSchema>;
+export type AccountLendSchema = z.infer<typeof accountLendSchema>;
 
 export type BorrowSchema = z.infer<typeof borrowSchema>;
 

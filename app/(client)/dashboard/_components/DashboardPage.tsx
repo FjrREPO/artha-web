@@ -11,7 +11,7 @@ import { useOwnerNft } from '@/hooks/useOwnerNft';
 import { useAccount } from 'wagmi';
 import useEarn from '@/hooks/graphql/useEarn';
 import { LendSection } from './LendSection';
-import useLend from '@/hooks/graphql/useLend';
+import useAccountLend from '@/hooks/graphql/useAccountLend';
 
 export default function DashboardPage() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -25,7 +25,8 @@ export default function DashboardPage() {
     const { poolData, poolLoading } = usePools();
     const { nftData, nftLoading } = useOwnerNft();
     const { earnData, earnLoading, earnRefetching } = useEarn()
-    const { lendData, lendLoading, lendRefetching } = useLend()
+    const { accountLendData, accountLendLoading, accountLendRefetching } = useAccountLend()
+    // const { accountCuratorData, accountCuratorLoading, accountCuratorRefetching } = useAccountCurator()
 
     if (!hasMounted) {
         return null;
@@ -42,6 +43,9 @@ export default function DashboardPage() {
                     earnData={earnData}
                     earnLoading={earnLoading}
                     earnRefetching={earnRefetching}
+                    // accountCuratorData={accountCuratorData}
+                    // accountCuratorLoading={accountCuratorLoading}
+                    // accountCuratorRefetching={accountCuratorRefetching}
                 />
                 <BorrowSection
                     borrowData={borrowData}
@@ -56,9 +60,9 @@ export default function DashboardPage() {
                 <LendSection
                     poolData={poolData}
                     poolLoading={poolLoading}
-                    lendData={lendData || []}
-                    lendLoading={lendLoading}
-                    lendRefetching={lendRefetching}
+                    accountLendData={accountLendData || []}
+                    accountLendLoading={accountLendLoading}
+                    accountLendRefetching={accountLendRefetching}
                 />
             </div>
         </div>

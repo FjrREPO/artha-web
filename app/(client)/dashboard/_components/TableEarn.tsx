@@ -8,12 +8,18 @@ type Props = {
     earnData: EarnSchema[];
     earnLoading: boolean;
     earnRefetching: boolean;
+    // accountCuratorData: AccountCuratorSchema[];
+    // accountCuratorLoading: boolean;
+    // accountCuratorRefetching: boolean;
 };
 
 export default function TableEarn({
     earnData,
     earnLoading,
-    earnRefetching
+    earnRefetching,
+    // accountCuratorData,
+    // accountCuratorLoading,
+    // accountCuratorRefetching
 }: Props) {
     return (
         <div className="w-full space-y-4 h-auto z-10">

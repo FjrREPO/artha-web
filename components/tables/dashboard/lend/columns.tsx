@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./ColumnHeader";
 import { CoinImage } from "@/components/coin/CoinImage";
-import { LendSchema, PoolSchema } from "@/lib/validation/types";
+import { AccountLendSchema, PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
 import { formatAddress, formatNumberWithDots } from "@/lib/utils";
 import Link from "next/link";
@@ -14,7 +14,7 @@ type Props = {
   poolLoading: boolean;
 };
 
-export function columns({ poolData, poolLoading }: Props): ColumnDef<LendSchema>[] {
+export function columns({ poolData, poolLoading }: Props): ColumnDef<AccountLendSchema>[] {
   return [
     {
       accessorKey: "pool",
@@ -29,7 +29,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<LendSchema>
             <Link href={`/pools/${row.original.id}`}>
               <Button variant={"ghost"} className="p-1 px-2 py-2">
                 <div className="flex items-center gap-1">
-                  <span>{formatAddress(findPoolByAccount?.id as string, 6)}</span>
+                  <span>{formatAddress(findPoolByAccount?.id as string, 6) || ""}</span>
                   <ExternalLink className="w-4 h-4" />
                 </div>
               </Button>
@@ -68,7 +68,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<LendSchema>
 
         return (
           <div className="flex items-center gap-2">
-            <span>{(lendAPR / 1e16).toFixed(2)}%</span>
+            <span>{(lendAPR / 1e16).toFixed(2) || 0}%</span>
           </div>
         )
       }
@@ -105,7 +105,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<LendSchema>
 
         return (
         <div className="flex items-center gap-2">
-          <span>{formatNumberWithDots((totalSupplyShares ?? 0) / 1e6)}</span>
+          <span>{formatNumberWithDots((totalSupplyShares ?? 0) / 1e6) || ""}</span>
         </div>
       )}
     },

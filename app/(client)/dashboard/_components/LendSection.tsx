@@ -4,18 +4,18 @@ import { ArrowDown, ChevronUp } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-import { LendSchema, PoolSchema } from '@/lib/validation/types'
+import { AccountLendSchema, PoolSchema } from '@/lib/validation/types'
 import TableLend from './TableLend'
 
 type Props = {
     poolData: PoolSchema[];
     poolLoading: boolean;
-    lendData?: LendSchema[];
-    lendLoading: boolean;
-    lendRefetching: boolean;
+    accountLendData?: AccountLendSchema[];
+    accountLendLoading: boolean;
+    accountLendRefetching: boolean;
 }
 
-export const LendSection = ({ poolData, poolLoading, lendData, lendLoading, lendRefetching }: Props) => {
+export const LendSection = ({ poolData, poolLoading, accountLendData, accountLendLoading, accountLendRefetching }: Props) => {
     return (
         <Card className='w-full'>
             <CardContent className='p-5 space-y-5'>
@@ -24,7 +24,7 @@ export const LendSection = ({ poolData, poolLoading, lendData, lendLoading, lend
                         <ArrowDown className='w-8 h-8' />
                         <div className='flex flex-col gap-1 justify-center'>
                             <Label className='text-lg'>Lend</Label>
-                            <Label>{lendData?.length} Positions</Label>
+                            <Label>{accountLendData?.length} Positions</Label>
                         </div>
                     </div>
                     <div className='flex flex-row gap-2 items-center'>
@@ -33,13 +33,13 @@ export const LendSection = ({ poolData, poolLoading, lendData, lendLoading, lend
                     </div>
                 </div>
                 <Separator />
-                {lendData?.length && lendData?.length > 0 ?
+                {accountLendData?.length && accountLendData?.length > 0 ?
                     <TableLend
                         poolData={poolData}
                         poolLoading={poolLoading}
-                        lendData={lendData || []}
-                        lendLoading={lendLoading}
-                        lendRefetching={lendRefetching}
+                        accountLendData={accountLendData || []}
+                        accountLendLoading={accountLendLoading}
+                        accountLendRefetching={accountLendRefetching}
                     />
                     :
                     <div className='flex flex-col gap-5 items-center justify-center py-10'>
