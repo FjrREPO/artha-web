@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ADDRESS_ARTHA } from "@/constants/config";
-import { mockArthaABI } from "@/lib/abi/mockArthaABI";
+import { ADDRESS_ARTE } from "@/constants/config";
+import { mockArteABI } from "@/lib/abi/mockArteABI";
 
 export const useSupplyCollateralAndBorrow = () => {
     const { address } = useAccount()
@@ -22,8 +22,8 @@ export const useSupplyCollateralAndBorrow = () => {
     const handleSupplyCollateralAndBorrow = async (id: string, tokenId: string, amount: string) => {
         try {
             await writeSupplyCollateralAndBorrow({
-                abi: mockArthaABI,
-                address: ADDRESS_ARTHA,
+                abi: mockArteABI,
+                address: ADDRESS_ARTE,
                 functionName: 'supplyCollateralAndBorrow',
                 args: [
                     id,

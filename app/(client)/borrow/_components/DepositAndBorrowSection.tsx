@@ -12,6 +12,7 @@ import { CoinSymbol } from '@/components/coin/CoinSymbol';
 import { useCryptoToken } from '@/hooks/useCryptoToken';
 import { useOwnerNft } from '@/hooks/useOwnerNft';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 
 interface Props {
     form: UseFormReturn<SupplyCollateralAndBorrow>;
@@ -45,10 +46,10 @@ export const DepositAndBorrowSection = ({
 
     const handleBorrowTokenChange = (value: string) => {
         const normalizedValue = value.toLowerCase();
-        
+
         setSelectedTokenAddress(value);
 
-        const borrowToken = cryptoTokenData?.find(coin => 
+        const borrowToken = cryptoTokenData?.find(coin =>
             coin.contract_address[0].contract_address.toLowerCase() === normalizedValue
         );
 
@@ -106,74 +107,30 @@ export const DepositAndBorrowSection = ({
                 <div className='w-full flex flex-col xl:flex-row gap-2'>
                     <div className="w-full xl:w-1/2">
                         <Card className="flex w-full">
-                            <CardContent className="flex flex-col w-full gap-5">
-                                <FormField
-                                    control={form.control}
-                                    name="collateralToken"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full py-5 flex flex-col gap-3">
-                                            <FormLabel className="text-xl">Supply Collateral</FormLabel>
-                                            <SkeletonWrapper isLoading={poolLoading}>
-                                                <FormControl>
-                                                    <Select
-                                                        onValueChange={field.onChange}
-                                                        value={field.value}
-                                                    >
-                                                        <SelectTrigger className="w-full py-8">
-                                                            <SelectValue placeholder="Select collateral token" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <ScrollArea className="max-h-52">
-                                                                {uniqueCollateralTokens.map((token) => (
-                                                                    <SelectItem key={token} value={token} className="py-5">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <CoinImage address={token} />
-                                                                            <CoinSymbol address={token} />
-                                                                        </div>
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </ScrollArea>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </FormControl>
-                                            </SkeletonWrapper>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="w-full xl:w-1/2">
-                        <Card className="flex w-full">
-                            <CardContent className="flex flex-col w-full gap-5">
-                                <FormField
-                                    control={form.control}
-                                    name="tokenId"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full py-5 flex flex-col gap-3">
-                                            <FormLabel className="text-xl">Choose Token Id</FormLabel>
-                                            <SkeletonWrapper isLoading={poolLoading}>
-                                                <SkeletonWrapper isLoading={nftLoading}>
+                            <CardContent className="flex flex-col w-full gap-1 p-5">
+                                <Label className="text-lg font-semibold">Select Collateral & Token Id</Label>
+                                <div className="flex flex-col xl:flex-row gap-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="collateralToken"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full xl:w-1/2 py-5 flex flex-col gap-3">
+                                                <SkeletonWrapper isLoading={poolLoading}>
                                                     <FormControl>
                                                         <Select
                                                             onValueChange={field.onChange}
                                                             value={field.value}
-                                                            disabled={!collateralTokenSelected}
                                                         >
                                                             <SelectTrigger className="w-full py-8">
-                                                                <SelectValue placeholder="Select token id" />
+                                                                <SelectValue placeholder="Select collateral token" />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 <ScrollArea className="max-h-52 overflow-auto">
-                                                                    {uniqueNftData?.map((token: AlchemyNftSchema) => (
-                                                                        <SelectItem
-                                                                            key={token.tokenId}
-                                                                            value={token.tokenId.toString()}
-                                                                            className="py-5"
-                                                                        >
+                                                                    {uniqueCollateralTokens.map((token) => (
+                                                                        <SelectItem key={token} value={token} className="py-5">
                                                                             <div className="flex items-center gap-2">
-                                                                                {token.tokenId}
+                                                                                <CoinImage address={token} />
+                                                                                <CoinSymbol address={token} />
                                                                             </div>
                                                                         </SelectItem>
                                                                     ))}
@@ -182,20 +139,56 @@ export const DepositAndBorrowSection = ({
                                                         </Select>
                                                     </FormControl>
                                                 </SkeletonWrapper>
-                                            </SkeletonWrapper>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="tokenId"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full xl:w-1/2 py-5 flex flex-col gap-3">
+                                                <SkeletonWrapper isLoading={poolLoading}>
+                                                    <SkeletonWrapper isLoading={nftLoading}>
+                                                        <FormControl>
+                                                            <Select
+                                                                onValueChange={field.onChange}
+                                                                value={field.value}
+                                                                disabled={!collateralTokenSelected}
+                                                            >
+                                                                <SelectTrigger className="w-full py-8">
+                                                                    <SelectValue placeholder="Select token id" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <ScrollArea className="max-h-52 overflow-auto">
+                                                                        {uniqueNftData?.map((token: AlchemyNftSchema) => (
+                                                                            <SelectItem
+                                                                                key={token.tokenId}
+                                                                                value={token.tokenId.toString()}
+                                                                                className="py-5"
+                                                                            >
+                                                                                <div className="flex items-center gap-2">
+                                                                                    {token.tokenId}
+                                                                                </div>
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </ScrollArea>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </FormControl>
+                                                    </SkeletonWrapper>
+                                                </SkeletonWrapper>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
-                </div>
-
-                <div className='w-full flex flex-col xl:flex-row gap-2'>
                     <div className="w-full xl:w-1/2">
                         <Card className="flex w-full">
-                            <CardContent className="flex w-full">
+                            <CardContent className="flex flex-col w-full gap-5">
                                 <FormField
                                     control={form.control}
                                     name="borrowAmount"
@@ -259,7 +252,10 @@ export const DepositAndBorrowSection = ({
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="w-full xl:w-1/2">
+                </div>
+
+                <div className='w-full flex flex-col xl:flex-row gap-2'>
+                    <div className="w-full">
                         <Card className="flex w-full">
                             <CardContent className="flex flex-col w-full gap-5">
                                 <FormField

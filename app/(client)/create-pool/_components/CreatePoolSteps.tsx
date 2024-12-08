@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Percent } from 'lucide-react';
 import SelectCoinImage from '@/components/select/SelectCoinImage';
-import SelectOracleImage from '@/components/select/SelectOracleImage';
 import { UseFormReturn } from 'react-hook-form';
 import { CoinMarketCapSchema, IRMSchema, LTVSchema } from '@/lib/validation/types';
 import { poolSchema } from '@/lib/validation/schemas';
 import { z } from 'zod';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import ValidationError from '@/components/error/validation-error';
+import { listIRM, listOracle } from '@/constants/config';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -34,14 +34,10 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     validationError,
     activeStep,
     isAnimating,
-    oracleData,
-    isOracleLoading,
     cryptoTokenData,
     cryptoTokenLoading,
     ltvData,
-    ltvLoading,
-    irmData,
-    irmLoading
+    ltvLoading
 }) => {
     const collateralOptions = useMemo(() => ["AZUKI", "BAYC", "DAI"], []);
     const loanTokenOptions = useMemo(() => ["USDC", "USDT", "TUSD"], []);
@@ -55,10 +51,6 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
         cryptoTokenData?.filter((token) => loanTokenOptions.includes(token.symbol)) ?? [],
         [cryptoTokenData, loanTokenOptions]
     );
-
-    const handleOracleSelection = (value: string) => {
-        form.setValue('oracle', value, { shouldValidate: true });
-    };
 
     const handleCollateralSelection = (value: string) => {
         form.setValue('collateralAddress', value, { shouldValidate: true });
@@ -126,22 +118,20 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Interest Rate Model</FormLabel>
-                                <SkeletonWrapper isLoading={irmLoading}>
-                                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select rate model" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent className='cursor-pointer'>
-                                            {irmData?.map((option, index) => (
-                                                <SelectItem key={index} value={option.irm} className='cursor-pointer'>
-                                                    {option.irm}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </SkeletonWrapper>
+                                <Select onValueChange={field.onChange} value={field.value || ""}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select rate model" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className='cursor-pointer'>
+                                        {listIRM?.map((option, index) => (
+                                            <SelectItem key={index} value={option} className='cursor-pointer'>
+                                                {option}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormDescription>
                                     Choose the interest rate calculation model
                                 </FormDescription>
@@ -155,14 +145,20 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Oracle</FormLabel>
-                                <FormControl>
-                                    <SelectOracleImage
-                                        data={oracleData}
-                                        onChange={handleOracleSelection}
-                                        value={field.value || ""}
-                                        isLoading={isOracleLoading}
-                                    />
-                                </FormControl>
+                                <Select onValueChange={field.onChange} value={field.value || ""}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select rate model" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className='cursor-pointer'>
+                                        {listOracle?.map((option, index) => (
+                                            <SelectItem key={index} value={option} className='cursor-pointer'>
+                                                {option}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormDescription>
                                     Select an oracle you want to use
                                 </FormDescription>

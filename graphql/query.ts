@@ -28,6 +28,16 @@ export const queryPool = gql`{
     }
 }`
 
+export const querySupplyCollaterals = gql`{
+    supplyCollaterals(orderBy: blockTimestamp, orderDirection: desc) {
+        tokenId
+        poolId
+        onBehalOf
+        sender
+        id
+    }
+}`
+
 export const queryLTV = gql`{
     ltvs(orderBy: blockTimestamp, orderDirection: desc) {
         ltv
@@ -98,24 +108,95 @@ export const queryBorrow = gql`{
     }
 }`
 
+export const queryTokens = gql`{
+    tokens {
+        id
+        tokenId
+        pool {
+            id
+        }
+    }
+}`
+
 export const queryAccount = (address: HexAddress) => gql`{
     account(id: "${address.toLowerCase()}") {
         id
         lend {
-            id
+            amount
+            onBehalfOf
+            pool {
+                collateralAddress
+                borrowRate
+                collateralToken {
+                    collateralToken
+                    id
+                }
+                curator {
+                    name
+                    id
+                    curator
+                    asset
+                    allocations
+                    symbol
+                }
+                id
+                irm
+                lendingRate
+                loanAddress
+                loanToken {
+                    loanToken
+                    id
+                }
+                lth
+                ltv
+                oracle
+                totalBorrowAssets
+                totalBorrowShares
+                totalSupplyAssets
+                totalSupplyShares
+                utilizationRate
+            }
+            poolId
             shares
             sender
-            poolId
-            onBehalfOf
-            amount
+            id
         }
         positions {
             id
             bidder
-            borrowShares
             tokenId
+            borrowShares
             pool {
+                collateralAddress
+                borrowRate
+                collateralToken {
+                    collateralToken
+                    id
+                }
+                curator {
+                    name
+                    id
+                    curator
+                    asset
+                    allocations
+                    symbol
+                }
                 id
+                irm
+                lendingRate
+                loanAddress
+                loanToken {
+                    loanToken
+                    id
+                }
+                lth
+                ltv
+                oracle
+                totalBorrowAssets
+                totalBorrowShares
+                totalSupplyAssets
+                totalSupplyShares
+                utilizationRate
             }
             token {
                 id

@@ -18,10 +18,16 @@ import {
     positionSchema,
     supplyCollateralAndBorrow,
     accountPositionSchema,
-    accountCuratorSchema
+    accountCuratorSchema,
+    tokensSchema,
+    supplyCollateralsSchema
 } from './schemas';
 
 export type PoolSchema = z.infer<typeof poolSchema>;
+
+export type SupplyCollateralsSchema = z.infer<typeof supplyCollateralsSchema>;
+
+export type TokensSchema = z.infer<typeof tokensSchema>;
 
 export type AccountCuratorSchema = z.infer<typeof accountCuratorSchema>;
 

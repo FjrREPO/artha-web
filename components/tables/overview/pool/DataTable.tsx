@@ -21,6 +21,7 @@ import {
 import { useState } from "react";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
 import { PoolSchema } from "@/lib/validation/types";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -82,17 +83,18 @@ export function DataTable<TData extends PoolSchema, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => window.location.href = `/pools/${row.original.id}`}
                   className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      <SkeletonWrapper isLoading={isLoading}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </SkeletonWrapper>
+                      <Link href={`/pools/${row.original.id}`}>
+                        <SkeletonWrapper isLoading={isLoading}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </SkeletonWrapper>
+                      </Link>
                     </TableCell>
                   ))}
                 </TableRow>

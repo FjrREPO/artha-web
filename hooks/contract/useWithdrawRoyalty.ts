@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ADDRESS_ARTHA } from "@/constants/config";
-import { mockArthaABI } from "@/lib/abi/mockArthaABI";
+import { ADDRESS_ARTE } from "@/constants/config";
+import { mockArteABI } from "@/lib/abi/mockArteABI";
 
 export const useWithdrawRoyalty = () => {
     const { address } = useAccount()
@@ -22,8 +22,8 @@ export const useWithdrawRoyalty = () => {
     const handleWithdrawRoyalty = async (id: string, tokenId: string, onBehalfOf: string) => {
         try {
             await writeWithdrawRoyalty({
-                abi: mockArthaABI,
-                address: ADDRESS_ARTHA,
+                abi: mockArteABI,
+                address: ADDRESS_ARTE,
                 functionName: 'withdrawRoyalty',
                 args: [
                     id,

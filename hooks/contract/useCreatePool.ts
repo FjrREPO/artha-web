@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ADDRESS_ARTHA } from "@/constants/config";
-import { mockArthaABI } from "@/lib/abi/mockArthaABI";
+import { ADDRESS_ARTE } from "@/constants/config";
+import { mockArteABI } from "@/lib/abi/mockArteABI";
 
 export const useCreatePool = () => {
     const {
@@ -27,8 +27,8 @@ export const useCreatePool = () => {
     ) => {
         try {
             writeCreatePool({
-                abi: mockArthaABI,
-                address: ADDRESS_ARTHA,
+                abi: mockArteABI,
+                address: ADDRESS_ARTE,
                 functionName: 'createPool',
                 args: [{
                     collateralToken: collateralToken as HexAddress,

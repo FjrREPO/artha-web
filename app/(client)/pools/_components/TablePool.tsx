@@ -3,15 +3,7 @@
 import { columns } from "@/components/tables/pool/columns";
 import { DataTable } from "@/components/tables/pool/DataTable";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { PoolSchema } from "@/lib/validation/types";
-import { API_SUBGRAPH } from "@/constants/config";
-import { queryPool } from "@/graphql/query";
-import request from "graphql-request";
-
-type QueryData = {
-    pools: PoolSchema[];
-};
+import usePools from "@/hooks/graphql/usePools";
 
 export default function TablePool() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -20,13 +12,7 @@ export default function TablePool() {
         setHasMounted(true);
     }, []);
 
-    const { data, isLoading, isRefetching } = useQuery<QueryData>({
-        queryKey: ['pool'],
-        queryFn: async () => {
-            return await request(API_SUBGRAPH, queryPool);
-        },
-        refetchInterval: 600000000,
-    });
+    const { poolData, poolLoading } = usePools()
 
     if (!hasMounted) {
         return null;
@@ -35,9 +21,9 @@ export default function TablePool() {
     return (
         <div className="w-full space-y-4 h-auto z-10">
             <DataTable
-                data={data?.pools || []}
+                data={poolData || []}
                 columns={columns()}
-                isLoading={isLoading || isRefetching}
+                isLoading={poolLoading}
             />
         </div>
     );

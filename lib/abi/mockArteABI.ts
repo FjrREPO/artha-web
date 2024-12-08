@@ -1,4 +1,4 @@
-export const mockArthaABI = [
+export const mockArteABI = [
     {
         "inputs": [],
         "name": "AuctionAlreadyEnded",
@@ -17,6 +17,11 @@ export const mockArthaABI = [
     {
         "inputs": [],
         "name": "DebtNotZero",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "IPNotAvailable",
         "type": "error"
     },
     {
@@ -94,6 +99,11 @@ export const mockArthaABI = [
     {
         "inputs": [],
         "name": "PoolNotExist",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ReentrancyGuardReentrantCall",
         "type": "error"
     },
     {
@@ -853,6 +863,40 @@ export const mockArthaABI = [
     {
         "inputs": [
             {
+                "internalType": "contract IERC3156FlashBorrower",
+                "name": "receiver",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "flashLoanIP",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "Id",
                 "name": "id",
                 "type": "bytes32"
@@ -892,6 +936,30 @@ export const mockArthaABI = [
             {
                 "internalType": "bool",
                 "name": "enabled",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "Id",
+                "name": "id",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            }
+        ],
+        "name": "isLiquidated",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
                 "type": "bool"
             }
         ],
@@ -1476,34 +1544,6 @@ export const mockArthaABI = [
             }
         ],
         "name": "withdrawCollateral",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "Id",
-                "name": "id",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "onBehalfOf",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "receiver",
-                "type": "address"
-            }
-        ],
-        "name": "withdrawRoyalty",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

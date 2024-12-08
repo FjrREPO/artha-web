@@ -2,16 +2,30 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Info, DollarSign, Lock } from 'lucide-react'
 import Image from 'next/image'
-import { AlchemyNftSchema } from '@/lib/validation/types'
+import { AccountPositionSchema, AlchemyNftSchema, PoolSchema } from '@/lib/validation/types'
+import { useMemo } from 'react'
+import { usePriceOracle } from '@/hooks/contract/usePriceOracle'
+import { formatAddress } from '@/lib/utils'
 
 interface Props {
     nftData?: AlchemyNftSchema
+    filteredPosition?: AccountPositionSchema
+    filteredData?: PoolSchema
 }
 
-export const OverviewNFT = ({ nftData }: Props) => {
-    const totalBorrowed = 2
-    const maxBorrowLimit = 3
-    const borrowUtilization = totalBorrowed ? (totalBorrowed / maxBorrowLimit) * 100 : 0
+export const OverviewNFT = ({ nftData, filteredPosition, filteredData }: Props) => {
+    const { priceOracle } = usePriceOracle(filteredData?.oracle as HexAddress, filteredPosition?.tokenId as string)
+
+    const totalBorrowed = (filteredPosition?.borrowShares ?? 0)/1e6;
+    const maxBorrow = useMemo(() =>
+        parseInt(filteredData?.ltv as string) * (priceOracle as number) / 1e8!,
+        [filteredData, priceOracle]
+    );
+    const borrowUtilization = totalBorrowed ? (totalBorrowed / maxBorrow) * 100 : 0;
+
+    const collateralValue = parseInt(priceOracle?.toString() ?? '0')/1e8;
+    const liquidationValue = filteredData?.lth ?? 0;
+    const isCollateralSafe = collateralValue > (totalBorrowed * (1 + parseInt(liquidationValue || '0') / 100));
 
     return (
         <div className="space-y-4">
@@ -24,8 +38,8 @@ export const OverviewNFT = ({ nftData }: Props) => {
                     <div className="flex items-center">
                         {nftData?.contract.openSeaMetadata.imageUrl && (
                             <Image
-                                src={nftData?.contract.openSeaMetadata.imageUrl}
-                                alt={nftData.name}
+                                src={nftData.contract.openSeaMetadata.imageUrl}
+                                alt={nftData.name ?? 'NFT Image'}
                                 className="w-16 h-16 rounded-md mr-4 object-cover"
                                 width={96}
                                 height={96}
@@ -34,7 +48,10 @@ export const OverviewNFT = ({ nftData }: Props) => {
                         <div>
                             <p className="text-lg font-bold">{nftData?.name}</p>
                             <p className="text-xs text-muted-foreground">
-                                Collection: {nftData?.collection?.name}
+                                Collection: {nftData?.collection?.name ?? 'N/A'}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                                Pool: {formatAddress(filteredData?.id as string, 6) ?? 'N/A'}
                             </p>
                         </div>
                     </div>
@@ -57,7 +74,7 @@ export const OverviewNFT = ({ nftData }: Props) => {
                         <div>
                             <p className="text-xs text-muted-foreground">Max Borrow Limit</p>
                             <p className="font-bold">
-                                ${maxBorrowLimit.toLocaleString()}
+                                ${maxBorrow.toLocaleString()}
                             </p>
                         </div>
                         <div className="col-span-2 mt-2">
@@ -65,12 +82,13 @@ export const OverviewNFT = ({ nftData }: Props) => {
                             <div className="flex items-center">
                                 <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
                                     <div
-                                        className={`h-2.5 rounded-full ${borrowUtilization < 50
-                                            ? 'bg-green-500'
-                                            : borrowUtilization < 80
+                                        className={`h-2.5 rounded-full ${
+                                            borrowUtilization < 50
+                                                ? 'bg-green-500'
+                                                : borrowUtilization < 80
                                                 ? 'bg-yellow-500'
                                                 : 'bg-red-500'
-                                            }`}
+                                        }`}
                                         style={{ width: `${borrowUtilization}%` }}
                                     />
                                 </div>
@@ -83,7 +101,6 @@ export const OverviewNFT = ({ nftData }: Props) => {
                 </CardContent>
             </Card>
 
-            {/* Collateral Details */}
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Collateral Status</CardTitle>
@@ -94,25 +111,25 @@ export const OverviewNFT = ({ nftData }: Props) => {
                         <div>
                             <p className="text-xs text-muted-foreground">Collateral Value</p>
                             <p className="font-bold">
-                                $1
+                                ${collateralValue.toLocaleString()}
                             </p>
                         </div>
                         <div>
                             <p className="text-xs text-muted-foreground">Liquidation Threshold</p>
                             <p className="font-bold">
-                                1%
+                                {liquidationValue}%
                             </p>
                         </div>
                         <div className="col-span-2">
                             <Badge
-                                variant={"default"}
+                                variant={isCollateralSafe ? "default" : "destructive"}
                             >
-                                Collateral Safe
+                                {isCollateralSafe ? "Collateral Safe" : "At Risk"}
                             </Badge>
                         </div>
                     </div>
                 </CardContent>
             </Card>
         </div>
-    )
-}
+    );
+};

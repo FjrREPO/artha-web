@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers/providers";
-import Navbar from "@/components/bar/navbar";
-import { Inter } from "next/font/google";
-import { Footer } from "@/components/footer/footer";
+import { Poppins } from "next/font/google";
+import DefaultLayout from "@/components/layouts/default";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
-  title: "Artha Finance",
+  title: "Arte Finance",
   description: "Lending and borrowing.",
   icons: {
     icon: '/logo_white.ico',
@@ -30,11 +29,9 @@ export default function RootLayout({
               duration: 3000,
             }}
           />
-          <div className="relative flex flex-col min-h-screen w-full overflow-y-auto gap-5">
-            <Navbar />
+          <DefaultLayout>
             {children}
-            <Footer />
-          </div>
+          </DefaultLayout>
         </Providers>
       </body>
     </html>

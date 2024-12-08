@@ -30,7 +30,7 @@ export default function AuctionsIdComponent({ auctionsId }: { auctionsId: string
     const findDataById = data?.data.find((nft: AuctionsDataSchema) => nft.id === auctionsId);
 
     return (
-        <div className='flex flex-col lg:flex-row w-full gap-5'>
+        <div className='flex flex-col lg:flex-row w-full gap-5 container'>
             <SkeletonWrapper isLoading={isLoading}>
                 <Card className='w-full lg:w-2/6'>
                     <CardContent className='flex flex-col gap-5 px-5 py-10'>

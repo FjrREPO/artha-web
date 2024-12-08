@@ -7,7 +7,6 @@ import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
 import { formatAddress, formatNumberWithDots } from "@/lib/utils";
 import { NftImage } from "@/components/nft/NftImage";
 import { ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import PriceOracleCell from "./PriceOracleCell";
 
@@ -30,14 +29,14 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
       ),
       cell: ({ row }) => {
         return (
-          <Link href={`/pools/${row.original.poolId}`}>
+          <div onClick={() => window.location.href = `/pools/${row.original.poolId}`}>
             <Button variant={"ghost"} className="p-1 px-2 py-2">
               <div className="flex items-center gap-1">
                 <span>{formatAddress(row.original.poolId, 6)}</span>
                 <ExternalLink className="w-4 h-4" />
               </div>
             </Button>
-          </Link >
+          </div >
         )
       },
     },
@@ -95,22 +94,23 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
       cell: ({ row }) => {
         const findPoolById = poolData.find((pool) => pool.id === row.original.poolId)
 
-        const liquidationValue = parseInt(findPoolById?.lth as string) * (parseInt(row.original.amount || '0') / 1e6) / 100
+        const liquidationValue = (parseInt(findPoolById?.lth as string) * (parseInt(row.original.amount || '0'))) / 100
+
         return (
           <div className="flex items-center gap-2">
             <SkeletonWrapper isLoading={poolLoading}>
-              <span>{formatNumberWithDots(liquidationValue)}</span>
+              <span>{liquidationValue && formatNumberWithDots(liquidationValue || 0)}</span>
             </SkeletonWrapper>
           </div>
         )
       },
     },
     {
-      accessorKey: "liquidationValue",
+      accessorKey: "borrowRate",
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
-          title="Liquidation Value"
+          title="Borrow Rate"
         />
       ),
       cell: ({ row }) => {
@@ -118,7 +118,7 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
         return (
           <div className="flex items-center gap-2">
             <SkeletonWrapper isLoading={poolLoading}>
-              <span>{formatNumberWithDots(findPoolById?.borrowRate || 0)}</span>
+              <span>{formatNumberWithDots((parseInt(findPoolById?.borrowRate?.toString() || "0") / 1e16) || 0)}%</span>
             </SkeletonWrapper>
           </div>
         )
@@ -155,7 +155,7 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
         return (
           <div className="flex items-center gap-2 justify-end">
             <SkeletonWrapper isLoading={poolLoading}>
-              <span>{formatNumberWithDots(parseInt(row.original.amount || "0") / 1e6 || 0)}</span>
+              <span>{row.original.amount && formatNumberWithDots(parseInt(row.original.amount || "0") / 1e6 || 0)}</span>
             </SkeletonWrapper>
           </div>
         )

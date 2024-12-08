@@ -12,6 +12,7 @@ import { useAccount } from 'wagmi';
 import useEarn from '@/hooks/graphql/useEarn';
 import { LendSection } from './LendSection';
 import useAccountLend from '@/hooks/graphql/useAccountLend';
+import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
 
 export default function DashboardPage() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -33,38 +34,44 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className='w-full h-full flex flex-col gap-5'>
-            <div className='flex flex-col lg:flex-row w-full justify-between items-center gap-5'>
-                <CardPortfolio />
-                <CardRewards />
-            </div>
-            <div className='flex flex-col gap-5'>
-                <EarnSection
-                    earnData={earnData}
-                    earnLoading={earnLoading}
-                    earnRefetching={earnRefetching}
-                    // accountCuratorData={accountCuratorData}
-                    // accountCuratorLoading={accountCuratorLoading}
-                    // accountCuratorRefetching={accountCuratorRefetching}
-                />
-                <BorrowSection
-                    borrowData={borrowData}
-                    borrowLoading={borrowLoading}
-                    borrowRefetching={borrowRefetching}
-                    nftData={nftData}
-                    nftLoading={nftLoading}
-                    poolData={poolData}
-                    poolLoading={poolLoading}
-                    address={address as HexAddress}
-                />
-                <LendSection
-                    poolData={poolData}
-                    poolLoading={poolLoading}
-                    accountLendData={accountLendData || []}
-                    accountLendLoading={accountLendLoading}
-                    accountLendRefetching={accountLendRefetching}
-                />
-            </div>
+        <div className='w-full h-full container'>
+            {address ? (
+                <div className='w-ful h-full flex flex-col gap-5'>
+                    <div className='flex flex-col lg:flex-row w-full justify-between items-center gap-5'>
+                        <CardPortfolio />
+                        <CardRewards />
+                    </div>
+                    <div className='flex flex-col gap-5'>
+                        <EarnSection
+                            earnData={earnData}
+                            earnLoading={earnLoading}
+                            earnRefetching={earnRefetching}
+                        // accountCuratorData={accountCuratorData}
+                        // accountCuratorLoading={accountCuratorLoading}
+                        // accountCuratorRefetching={accountCuratorRefetching}
+                        />
+                        <BorrowSection
+                            borrowData={borrowData}
+                            borrowLoading={borrowLoading}
+                            borrowRefetching={borrowRefetching}
+                            nftData={nftData}
+                            nftLoading={nftLoading}
+                            poolData={poolData}
+                            poolLoading={poolLoading}
+                            address={address as HexAddress}
+                        />
+                        <LendSection
+                            poolData={poolData}
+                            poolLoading={poolLoading}
+                            accountLendData={accountLendData || []}
+                            accountLendLoading={accountLendLoading}
+                            accountLendRefetching={accountLendRefetching}
+                        />
+                    </div>
+                </div>
+            ) : (
+                <WarningConnectWallet />
+            )}
         </div>
     )
 }

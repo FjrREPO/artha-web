@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ADDRESS_ARTHA } from "@/constants/config";
-import { mockArthaABI } from "@/lib/abi/mockArthaABI";
+import { ADDRESS_ARTE } from "@/constants/config";
+import { mockArteABI } from "@/lib/abi/mockArteABI";
 
 export const useBid = () => {
     const {
@@ -20,8 +20,8 @@ export const useBid = () => {
     const handleBid = async (id: string, tokenId: string, amount: string) => {
         try {
             await writeBid({
-                abi: mockArthaABI,
-                address: ADDRESS_ARTHA,
+                abi: mockArteABI,
+                address: ADDRESS_ARTE,
                 functionName: 'bid',
                 args: [
                     id,

@@ -3,7 +3,7 @@ export const curatorABI = [
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_artha",
+                "name": "_Arte",
                 "type": "address"
             }
         ],
@@ -111,7 +111,7 @@ export const curatorABI = [
     },
     {
         "inputs": [],
-        "name": "artha",
+        "name": "Arte",
         "outputs": [
             {
                 "internalType": "address",

@@ -1,7 +1,7 @@
 import React from 'react'
-import CardOverview from './CardOverview'
 import TableEarn from './TableEarn'
 import TablePool from './TablePool'
+import CardOverview from './CardOverview'
 
 export default function OverviewPage() {
     return (

@@ -1,217 +1,286 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils";
-import { BellDot, Bookmark, FolderDot, Menu, Info, ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { useState, useMemo } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  ChevronDown,
+  Scale,
+  Code,
+  Menu,
+  Activity,
+  Wallet,
+  PieChart,
+  Handshake,
+  Zap,
+  PlusCircle
+} from "lucide-react";
+
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import Logo from "./logo";
-import { ThemeToggle } from "./theme-toggle";
-import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "../ui/sheet";
 import { ButtonConnectWallet } from "../web3/button-connect-wallet";
-import { VisuallyHidden } from '@/components/ui/visually-hidden';
-import { memo } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Label } from "../ui/label";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { VisuallyHidden } from "@react-aria/visually-hidden";
+import { cn } from "@/lib/utils";
 
-const NAVIGATION_ITEMS = [
-  { label: "Overview", link: "/overview", icon: <Info /> },
-  { label: "Earn", link: "/earn", icon: <Bookmark /> },
-  { label: "Borrow", link: "/borrow", icon: <Bookmark /> },
-  { label: "Pools", link: "/pools", icon: <BellDot /> },
-  { label: "Auctions", link: "/auctions", icon: <FolderDot /> },
-] as const;
-
-const NavbarItem = memo(function NavbarItem({
-  link,
-  label,
-  isActive,
-  onNavigate,
-}: {
-  link: string;
+interface NavLink {
+  href: string;
   label: string;
-  isActive: boolean;
-  onNavigate?: () => void;
-}) {
-  return (
-    <div className="relative flex items-center">
-      <Link
-        href={link}
-        className={cn(
-          "w-full gap-3 justify-start font-medium transition-colors duration-200 hover:text-blue-500 text-[14px] py-2",
-          isActive && "text-blue-600 text-[14px] border-r-2 border-blue-500 sm:border-none font-bold"
-        )}
-        aria-current={isActive ? "page" : undefined}
-        onClick={onNavigate}
-      >
-        {label}
-      </Link>
-    </div>
-  );
-});
+  icon: React.ReactNode;
+  color: string;
+  styling: {
+    shadow: string;
+    text: string;
+    hover: string;
+    border: string;
+    bg: string;
+    hoverShadow: string;
+  };
+}
 
-function MobileNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
+const NAV_LINKS: NavLink[] = [
+  {
+    href: "/overview",
+    label: "Overview",
+    color: "primary",
+    icon: <Activity className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-1",
+      text: "text-main-1",
+      hover: "hover:border-main-1",
+      border: "border-main-1",
+      bg: "hover:bg-main-1/10",
+      hoverShadow: "hover:shadow-main-1"
+    }
+  },
+  {
+    href: "/earn",
+    label: "Earn",
+    color: "success",
+    icon: <Zap className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-2",
+      text: "text-main-2",
+      hover: "hover:border-main-2",
+      border: "border-main-2",
+      bg: "hover:bg-main-2/10",
+      hoverShadow: "hover:shadow-main-2"
+    }
+  },
+  {
+    href: "/borrow",
+    label: "Borrow",
+    color: "warning",
+    icon: <Wallet className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-3",
+      text: "text-main-3",
+      hover: "hover:border-main-3",
+      border: "border-main-3",
+      bg: "hover:bg-main-3/10",
+      hoverShadow: "hover:shadow-main-3"
+    }
+  },
+  {
+    href: "/pools",
+    label: "Pools",
+    color: "secondary",
+    icon: <PieChart className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-4",
+      text: "text-main-4",
+      hover: "hover:border-main-4",
+      border: "border-main-4",
+      bg: "hover:bg-main-4/10",
+      hoverShadow: "hover:shadow-main-4"
+    }
+  },
+  {
+    href: "/auctions",
+    label: "Auctions",
+    color: "danger",
+    icon: <Handshake className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-5",
+      text: "text-main-5",
+      hover: "hover:border-main-5",
+      border: "border-main-5",
+      bg: "hover:bg-main-5/10",
+      hoverShadow: "hover:shadow-main-5"
+    }
+  },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    color: "primary",
+    icon: <Code className="mr-2" size={15} />,
+    styling: {
+      shadow: "shadow-main-1",
+      text: "text-main-1",
+      hover: "hover:border-main-1",
+      border: "border-main-1",
+      bg: "hover:bg-main-1/10",
+      hoverShadow: "hover:shadow-main-1"
+    }
+  }
+];
+
+const DesktopNavLinks: React.FC = () => {
   const pathname = usePathname();
 
-  const handleNavigate = () => {
-    setIsOpen(false);
+  return (
+    <>
+      {NAV_LINKS.map((link) => {
+        const isActive = pathname.startsWith(link.href);
+        return (
+          <Link href={link.href} key={link.href}>
+            <Button
+              variant="outline"
+              className={cn(
+                "p-0 rounded-xl shadow-sm group justify-start xl:justify-center",
+                "px-3 transition-all duration-300 text-xs font-bold",
+                "border-none xl:border hover:shadow-sm w-full",
+                isActive && link.styling.shadow,
+                link.styling.hover,
+                isActive && link.styling.bg,
+                link.styling.hoverShadow
+              )}
+            >
+              {link.icon}
+              {link.label}
+            </Button>
+          </Link>
+        );
+      })}
+    </>
+  );
+};
+
+const CreateDropdownMenu: React.FC = () => {
+  const pathname = usePathname();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const createIcons = {
+    createPool: <Scale className={`mr-2 ${pathname.startsWith("/create-pool") ? "text-main-2 text-sm" : "default"}`} size={20} />,
+    createCurator: <Code className={`mr-2 ${pathname.startsWith("/create-curator") ? "text-main-2 text-sm" : "default"}`} size={20} />,
   };
 
-  const navItems = useMemo(() =>
-    NAVIGATION_ITEMS.map((item) => ({
-      ...item,
-      isActive: pathname.startsWith(item.link)
-    })),
-    [pathname]
+  return (
+    <DropdownMenu
+      open={isDropdownOpen}
+      onOpenChange={setIsDropdownOpen}
+    >
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "p-0 rounded-xl shadow-sm group justify-start xl:justify-center",
+            "px-3 transition-all duration-300 text-xs font-bold",
+            "border-none xl:border hover:shadow-main-2",
+            (pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator")) && "shadow-main-2 shadow-sm",
+            isDropdownOpen && 'scale-105 shadow-lg'
+          )}
+        >
+          <PlusCircle width={15} className="mr-1" />
+          Create
+          <ChevronDown size={16} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[200px]">
+        <Link href="/create-pool">
+          <DropdownMenuItem className="flex items-center py-3 cursor-pointer">
+            {createIcons.createPool}
+            Create Pool
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/create-curator">
+          <DropdownMenuItem className="flex items-center py-3 cursor-pointer">
+            {createIcons.createCurator}
+            Create Curator
+          </DropdownMenuItem>
+        </Link>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
+};
+
+const MobileNavbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="z-40 h-auto w-full py-5 xl:py-0 px-5 sm:px-10 lg:px-20">
-      <div className="block xl:hidden xl:max-w-screen-xl lg:max-w-screen-lg mx-auto">
-        <nav className="flex items-center justify-between">
-          <Sheet
-            open={isOpen}
-            onOpenChange={setIsOpen}
-          >
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Open navigation menu"
-              >
-                <Menu className="w-8 h-8 shrink-0" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              className="w-3/4 sm:w-[500px]"
-              side="left"
+    <div className="block xl:hidden xl:max-w-screen-xl lg:max-w-screen-lg mx-auto overflow-hidden">
+      <nav className="flex items-center justify-between">
+        <Sheet
+          open={isOpen}
+          onOpenChange={setIsOpen}
+        >
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Open navigation menu"
+              className="w-12 bg-background/70 rounded-xl"
             >
-              <SheetTitle>
-                <VisuallyHidden>Navigation Menu</VisuallyHidden>
-              </SheetTitle>
-              <Logo />
-              <nav aria-label="Main navigation" className="flex flex-col gap-1 pt-4">
-                {navItems.map((item) => (
-                  <NavbarItem
-                    key={item.label}
-                    link={item.link}
-                    label={item.label}
-                    isActive={item.isActive}
-                    onNavigate={handleNavigate}
-                  />
-                ))}
-                <DropdownMenu>
-                  <DropdownMenuTrigger className={`pt-[2px] focus-visible:outline-none cursor-pointer hover:text-blue-500 ${pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator") ? "text-blue-600 font-bold border-r-2 border-blue-500" : ""}`}>
-                    <div className="flex flex-row gap-1 py-2">
-                      <Label className="cursor-pointer">Create</Label>
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <Link href={"/create-pool"} className="cursor-pointer" onClick={handleNavigate}>
-                      <DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
-                        Create Pool
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link href={"/create-curator"} className="cursor-pointer" onClick={handleNavigate}>
-                      <DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
-                        Create Curator
-                      </DropdownMenuItem>
-                    </Link>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <NavbarItem
-                  link="/dashboard"
-                  label="Dashboard"
-                  isActive={pathname.startsWith('/dashboard')}
-                  onNavigate={handleNavigate}
-                />
-              </nav>
-              <div className="pt-5">
-                <ButtonConnectWallet />
-              </div>
-            </SheetContent>
-          </Sheet>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-          </div>
-        </nav>
-      </div>
-    </div>
-  );
-}
-
-function DesktopNavbar() {
-  const pathname = usePathname();
-
-  const navItems = useMemo(() =>
-    NAVIGATION_ITEMS.map((item) => ({
-      ...item,
-      isActive: pathname.startsWith(item.link)
-    })),
-    [pathname]
-  );
-
-  return (
-    <div className="z-40 h-fit w-full px-20 shadow-lg shadow-b-textSecondary dark:border-b">
-      <div className="hidden xl:block w-full xl:max-w-screen-xl lg:max-w-screen-lg mx-auto">
-        <nav className="flex items-center justify-between gap-x-4" aria-label="Main navigation">
-          <div className="flex h-[80px] min-h-[60px] items-center gap-x-8">
+              <Menu className="w-8 h-8 shrink-0" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            className="w-3/4 sm:w-[500px]"
+            side="left"
+          >
+            <SheetTitle>
+              <VisuallyHidden>Navigation Menu</VisuallyHidden>
+            </SheetTitle>
             <Logo />
-            <div className="flex items-center h-full gap-x-5">
-              {navItems.map((item) => (
-                <NavbarItem
-                  key={item.label}
-                  link={item.link}
-                  label={item.label}
-                  isActive={item.isActive}
-                />
-              ))}
-              <DropdownMenu>
-                <DropdownMenuTrigger className={`pt-[2px] focus-visible:outline-none cursor-pointer hover:text-blue-500 ${pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator") ? "text-blue-600 font-bold" : ""}`}>
-                  <div className="flex flex-row gap-1">
-                    <Label className="cursor-pointer">Create</Label>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <Link href={"/create-pool"} className="cursor-pointer">
-                    <DropdownMenuItem className={pathname.startsWith("/create-pool") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
-                      Create Pool
-                    </DropdownMenuItem>
-                  </Link>
-                  <Link href={"/create-curator"} className="cursor-pointer">
-                    <DropdownMenuItem className={pathname.startsWith("/create-curator") ? "text-blue-600 cursor-pointer font-bold" : "cursor-pointer"}>
-                      Create Curator
-                    </DropdownMenuItem>
-                  </Link>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <NavbarItem
-                link="/dashboard"
-                label="Dashboard"
-                isActive={pathname.startsWith('/dashboard')}
-              />
+            <nav aria-label="Main navigation" className="flex flex-col gap-1 pt-4">
+              <DesktopNavLinks />
+              <CreateDropdownMenu />
+            </nav>
+            <div className="pt-5">
+              <ButtonConnectWallet />
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <ButtonConnectWallet />
-          </div>
-        </nav>
-      </div>
+          </SheetContent>
+        </Sheet>
+      </nav>
     </div>
   );
-}
+};
 
-export default function Navbar() {
+export const Navbar: React.FC = () => {
   return (
-    <div className="">
-      <DesktopNavbar />
-      <MobileNavbar />
-    </div>
+    <nav className="w-full flex px-5 sm:px-10 lg:px-20 justify-between pt-7">
+      <div className="xl:max-w-screen-xl lg:max-w-screen-lg container flex justify-between items-center gap-3 w-full mx-auto">
+        <div className="bg-foreground/10 h-16 px-3 flex items-center rounded-2xl w-fit">
+          <Link href="/" className="flex justify-start items-center gap-1 w-fit">
+            <Logo />
+          </Link>
+        </div>
+
+        <div className="hidden 3/2xl:flex items-center gap-4">
+          <div className="flex gap-2 items-center bg-foreground/10 py-3 px-3 rounded-2xl">
+            <DesktopNavLinks />
+            <CreateDropdownMenu />
+          </div>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-2 bg-foreground/10 py-3 px-3 rounded-2xl w-auto">
+          <ThemeToggle />
+          <ButtonConnectWallet />
+          <MobileNavbar />
+        </div>
+
+        <div className="sm:hidden flex items-center gap-2 bg-foreground/10 py-3 px-3 rounded-2xl">
+          <ThemeToggle />
+          <MobileNavbar />
+        </div>
+      </div>
+    </nav>
   );
-}
+};

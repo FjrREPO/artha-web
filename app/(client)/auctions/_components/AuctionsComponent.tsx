@@ -233,7 +233,7 @@ const AuctionsComponent: React.FC = () => {
     });
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen w-full">
+        <div className="flex flex-col lg:flex-row w-full container">
             <Sidebar onFilterChange={setFilters} data={data?.data}/>
             <div className="flex-1 px-6 py-4">
                 <div className="mb-6">

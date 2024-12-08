@@ -43,7 +43,7 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
     });
 
     const handleSubmit = async (data: RepayFormValues) => {
-        await handleRepay(filteredData?.id ?? "", data.repayAmount, nftData?.tokenId ?? "", address ?? "");
+        await handleRepay(filteredData?.id ?? "", nftData?.tokenId ?? "", data.repayAmount, address ?? "");
     };
 
     useEffect(() => {

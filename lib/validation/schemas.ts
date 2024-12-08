@@ -26,6 +26,14 @@ export const poolSchema = z.object({
     }),
 });
 
+export const supplyCollateralsSchema = z.object({
+    tokenId: z.string().optional(),
+    poolId: z.string().optional(),
+    onBehalOf: z.string().optional(),
+    sender: z.string().optional(),
+    id: z.string().optional(),
+});
+
 export const accountSchema = z.object({
     id: z.string().optional(),
     lend: z.array(
@@ -36,6 +44,9 @@ export const accountSchema = z.object({
             poolId: z.string().optional(),
             onBehalfOf: z.string().optional(),
             amount: z.number().optional(),
+            pool: z.object({
+                poolSchema
+            }),
         })
     ),
     positions: z.array(
@@ -45,7 +56,7 @@ export const accountSchema = z.object({
             borrowShares: z.number().optional(),
             tokenId: z.string().optional(),
             pool: z.object({
-                id: z.string().optional(),
+                poolSchema
             }),
             token: z.object({
                 id: z.string().optional(),
@@ -62,6 +73,14 @@ export const accountSchema = z.object({
     ),
 });
 
+export const tokensSchema = z.object({
+    id: z.string().optional(),
+    tokenId: z.string().optional(),
+    pool: z.object({
+        id: z.string().optional(),
+    }),
+});
+
 export const accountCuratorSchema = z.object({
     id: z.string().optional(),
     balance: z.number().optional(),
@@ -74,7 +93,7 @@ export const accountPositionSchema = z.object({
     borrowShares: z.number().optional(),
     tokenId: z.string().optional(),
     pool: z.object({
-        id: z.string().optional(),
+        poolSchema
     }),
     token: z.object({
         id: z.string().optional(),
@@ -87,6 +106,9 @@ export const accountLendSchema = z.object({
     shares: z.number().optional(),
     sender: z.string().optional(),
     poolId: z.string().optional(),
+    pool: z.object({
+        poolSchema
+    }),
     onBehalfOf: z.string().optional(),
     amount: z.number().optional(),
 })

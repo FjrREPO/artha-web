@@ -53,11 +53,12 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
     } = useSupplyCollateral();
 
     const handleSubmit = async (data: FormData) => {
+        console.log(filteredData?.id ?? "", data.tokenId, address ?? "")
         await handleSupplyCollateral(filteredData?.id ?? "", data.tokenId, address ?? "");
     };
 
     useEffect(() => {
-        if (supplyCollateralHash && isSupplyCollateralConfirmed) {
+        if (supplyCollateralHash || isSupplyCollateralConfirmed) {
             setShowSuccessDialog(true);
             form.reset();
         }

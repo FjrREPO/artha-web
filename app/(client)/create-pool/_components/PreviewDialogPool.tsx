@@ -14,7 +14,6 @@ import { CoinMarketCapSchema } from '@/lib/validation/types';
 import { formatAddress } from '@/lib/utils';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
 import { CoinImage } from '@/components/coin/CoinImage';
-import { OracleImageCustom } from '@/components/oracle/OracleImageCustom';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -33,15 +32,9 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
     onClose,
     onConfirm,
     formData,
-    oracleData,
     isCreatePoolPending,
     isCreatePoolConfirming,
 }) => {
-    const getTokenName = (address: string, data?: CoinMarketCapSchema[]) => {
-        const token = data?.find(t => t.platform?.token_address === address);
-        return token?.symbol || address;
-    };
-
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
@@ -69,9 +62,7 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Oracle:</span>
                                     <div className="flex flex-row gap-1 items-center">
-                                        {getTokenName(formData.oracle || "", oracleData)}
-                                        <CoinSymbol address={formData.oracle || ""} />
-                                        <OracleImageCustom address={formData.oracle || ""} className='w-6 h-6'/>
+                                        {formData && formatAddress(formData.oracle || "", 4)}
                                     </div>
                                 </div>
                                 <div className="flex justify-between">

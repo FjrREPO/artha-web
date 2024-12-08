@@ -89,7 +89,8 @@ export const toUSDCAmount = (amount: string): bigint => {
   return BigInt(whole + paddedFraction);
 };
 
-export const formatNumberWithDots = (value: number): string => {
+export const formatNumberWithDots = (value?: number): string => {
+  if (value === undefined || value === null || value === 0) return '0';
   const isDecimal = !Number.isInteger(value);
   const formattedValue = isDecimal ? value.toFixed(2) : value.toString();
   return formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");

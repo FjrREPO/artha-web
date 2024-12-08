@@ -3,15 +3,7 @@
 import { columns } from "@/components/tables/overview/earn/columns";
 import { DataTable } from "@/components/tables/overview/earn/DataTable";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { EarnSchema } from "@/lib/validation/types";
-import { API_SUBGRAPH } from "@/constants/config";
-import { queryCurator } from "@/graphql/query";
-import request from "graphql-request";
-
-type QueryData = {
-    curators: EarnSchema[];
-};
+import useEarn from "@/hooks/graphql/useEarn";
 
 export default function TableEarn() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -20,13 +12,7 @@ export default function TableEarn() {
         setHasMounted(true);
     }, []);
 
-    const { data, isLoading, isRefetching } = useQuery<QueryData>({
-        queryKey: ['earn'],
-        queryFn: async () => {
-            return await request(API_SUBGRAPH, queryCurator);
-        },
-        refetchInterval: 600000000,
-    });
+    const { earnData, earnLoading } = useEarn()
 
     if (!hasMounted) {
         return null;
@@ -35,9 +21,9 @@ export default function TableEarn() {
     return (
         <div className="w-full space-y-4 h-auto z-10">
             <DataTable
-                data={data?.curators || []}
+                data={earnData || []}
                 columns={columns()}
-                isLoading={isLoading || isRefetching}
+                isLoading={earnLoading}
             />
         </div>
     );

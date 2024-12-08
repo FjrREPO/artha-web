@@ -19,6 +19,8 @@ import { useCryptoToken } from '@/hooks/useCryptoToken';
 import { useLTV } from '@/hooks/graphql/useLTV';
 import PreviewDialogPool from './PreviewDialogPool';
 import { useIRM } from '@/hooks/graphql/useIRM';
+import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
+import { useAccount } from 'wagmi';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -28,6 +30,8 @@ const CreatePoolComponent = () => {
     const [validationError, setValidationError] = useState<string | null>(null);
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+
+    const { address } = useAccount()
 
     const steps = [
         { title: 'Token Selection', fields: ['collateralAddress', 'loanAddress'] },
@@ -101,18 +105,15 @@ const CreatePoolComponent = () => {
     const handleConfirmCreatePool = async () => {
         try {
             const formData = form.getValues();
-            
+
             const findCollateralAddress = cryptoTokenData?.find(
                 (token) => token.platform?.token_address === formData.collateralAddress
             );
             const findLoanAddress = cryptoTokenData?.find(
                 (token) => token.platform?.token_address === formData.loanAddress
             );
-            const findOracle = oracleData?.find(
-                (token) => token.platform?.token_address === formData.oracle
-            );
 
-            if (!findCollateralAddress || !findLoanAddress || !findOracle) {
+            if (!findCollateralAddress || !findLoanAddress) {
                 console.error('Missing token data');
                 return;
             }
@@ -125,12 +126,12 @@ const CreatePoolComponent = () => {
             handleCreatePool(
                 findCollateralAddress.platform?.token_address,
                 findLoanAddress.platform?.token_address,
-                findOracle.platform?.token_address,
+                formData.oracle || "",
                 formData.irm || "",
                 formData.ltv || "",
                 formData.lth || ""
             );
-            
+
             setShowPreviewDialog(false);
         } catch (error) {
             setValidationError("An error occurred while creating the pool.");
@@ -161,93 +162,99 @@ const CreatePoolComponent = () => {
 
     return (
         <>
-            {(isCreatePoolConfirming || isCreatePoolPending) && !isCreatePoolConfirmed && (
-                <LoadingTransaction
-                    message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
-                />
-            )}
-            <PreviewDialogPool
-                isOpen={showPreviewDialog}
-                onClose={() => setShowPreviewDialog(false)}
-                onConfirm={handleConfirmCreatePool}
-                formData={form.getValues()}
-                oracleData={oracleData}
-                isCreatePoolPending={isCreatePoolPending}
-                isCreatePoolConfirming={isCreatePoolConfirming}
-            />
-            <SuccessDialog
-                isOpen={showSuccessDialog}
-                onClose={() => setShowSuccessDialog(false)}
-                txHash={createPoolHash as HexAddress || ""}
-                processName="Create Pool"
-            />
-            <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
-                <CardHeader className='flex flex-col gap-3'>
-                    <div className='flex flex-col gap-1'>
-                        <CardTitle>Create Pool</CardTitle>
-                        <CardDescription>
-                            Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
-                        </CardDescription>
-                    </div>
-                    <Progress value={(activeStep + 1) * 100 / steps.length} />
-                </CardHeader>
-
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="space-y-6">
-                            <CreatePoolSteps
-                                form={form}
-                                validationError={validationError}
-                                activeStep={activeStep}
-                                isAnimating={isAnimating}
-                                oracleData={oracleData}
-                                isOracleLoading={oracleLoading}
-                                cryptoTokenData={cryptoTokenData}
-                                cryptoTokenLoading={cryptoTokenLoading}
-                                ltvData={ltvData}
-                                ltvLoading={ltvLoading}
-                                irmData={irmData}
-                                irmLoading={irmLoading}
-                            />
-
-                            <div className="flex justify-between mt-8">
-                                <Button
-                                    type="button"
-                                    onClick={prevStep}
-                                    disabled={activeStep === 0}
-                                    variant="outline"
-                                >
-                                    <ChevronLeft className="h-4 w-4" /> Back
-                                </Button>
-                                {activeStep === steps.length - 1 ? (
-                                    <Button
-                                        type="submit"
-                                        disabled={
-                                            isCreatePoolPending || 
-                                            isCreatePoolConfirming || 
-                                            !form.getValues().collateralAddress || 
-                                            !form.getValues().loanAddress || 
-                                            !form.getValues().oracle || 
-                                            !form.getValues().irm || 
-                                            !form.getValues().ltv || 
-                                            !form.getValues().lth
-                                        }
-                                    >
-                                        Preview Pool
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        type="button"
-                                        onClick={nextStep}
-                                    >
-                                        Next <ChevronRight className="h-4 w-4" />
-                                    </Button>
-                                )}
+            {address ? (
+                <>
+                    {(isCreatePoolConfirming || isCreatePoolPending) && !isCreatePoolConfirmed && (
+                        <LoadingTransaction
+                            message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
+                        />
+                    )}
+                    <PreviewDialogPool
+                        isOpen={showPreviewDialog}
+                        onClose={() => setShowPreviewDialog(false)}
+                        onConfirm={handleConfirmCreatePool}
+                        formData={form.getValues()}
+                        oracleData={oracleData}
+                        isCreatePoolPending={isCreatePoolPending}
+                        isCreatePoolConfirming={isCreatePoolConfirming}
+                    />
+                    <SuccessDialog
+                        isOpen={showSuccessDialog}
+                        onClose={() => setShowSuccessDialog(false)}
+                        txHash={createPoolHash as HexAddress || ""}
+                        processName="Create Pool"
+                    />
+                    <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
+                        <CardHeader className='flex flex-col gap-3'>
+                            <div className='flex flex-col gap-1'>
+                                <CardTitle>Create Pool</CardTitle>
+                                <CardDescription>
+                                    Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
+                                </CardDescription>
                             </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
+                            <Progress value={(activeStep + 1) * 100 / steps.length} />
+                        </CardHeader>
+
+                        <CardContent>
+                            <Form {...form}>
+                                <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="space-y-6">
+                                    <CreatePoolSteps
+                                        form={form}
+                                        validationError={validationError}
+                                        activeStep={activeStep}
+                                        isAnimating={isAnimating}
+                                        oracleData={oracleData}
+                                        isOracleLoading={oracleLoading}
+                                        cryptoTokenData={cryptoTokenData}
+                                        cryptoTokenLoading={cryptoTokenLoading}
+                                        ltvData={ltvData}
+                                        ltvLoading={ltvLoading}
+                                        irmData={irmData}
+                                        irmLoading={irmLoading}
+                                    />
+
+                                    <div className="flex justify-between mt-8">
+                                        <Button
+                                            type="button"
+                                            onClick={prevStep}
+                                            disabled={activeStep === 0}
+                                            variant="outline"
+                                        >
+                                            <ChevronLeft className="h-4 w-4" /> Back
+                                        </Button>
+                                        {activeStep === steps.length - 1 ? (
+                                            <Button
+                                                type="submit"
+                                                disabled={
+                                                    isCreatePoolPending ||
+                                                    isCreatePoolConfirming ||
+                                                    !form.getValues().collateralAddress ||
+                                                    !form.getValues().loanAddress ||
+                                                    !form.getValues().oracle ||
+                                                    !form.getValues().irm ||
+                                                    !form.getValues().ltv ||
+                                                    !form.getValues().lth
+                                                }
+                                            >
+                                                Preview Pool
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                type="button"
+                                                onClick={nextStep}
+                                            >
+                                                Next <ChevronRight className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                </form>
+                            </Form>
+                        </CardContent>
+                    </Card>
+                </>
+            ) : (
+                <WarningConnectWallet />
+            )}
         </>
     );
 };

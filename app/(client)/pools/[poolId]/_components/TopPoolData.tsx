@@ -7,13 +7,12 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
+import { AccountPositionSchema, AlchemyNftSchema, PoolSchema, SupplyCollateralsSchema } from '@/lib/validation/types';
 import { CoinSymbol } from '@/components/coin/CoinSymbol';
 import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
 import { NftImage } from '@/components/nft/NftImage';
-// import { usePosition } from '@/hooks/graphql/usePosition';
 import { useDecimal } from '@/hooks/contract/useDecimal';
 
 interface Props {
@@ -21,13 +20,18 @@ interface Props {
     isLoading: boolean;
     nftData: AlchemyNftSchema[];
     nftLoading: boolean;
-    // poolId: string;
+    accountPositionData: AccountPositionSchema[];
+    accountPositionLoading: boolean;
+    supplyCollateralsData: SupplyCollateralsSchema[];
+    supplyCollateralsLoading: boolean;
 }
 
-export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading }: Props) {
-    // const { positionData, positionLoading } = usePosition(poolId)
-
+export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading, accountPositionData, accountPositionLoading }: Props) {
     const { decimal } = useDecimal(filteredData?.loanAddress as HexAddress || '')
+
+    const filteredNftData = nftData.filter((nft) => 
+        accountPositionData?.some((position) => position.token.tokenId === nft.tokenId)
+    );
 
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
@@ -96,18 +100,21 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
             </div>
 
             <div className='w-full lg:w-[480px] self-stretch'>
-                <SkeletonWrapper isLoading={isLoading || nftLoading}>
+                <SkeletonWrapper isLoading={isLoading || nftLoading || accountPositionLoading}>
                     <Card className='w-full h-full'>
                         <CardContent className='p-5 space-y-5'>
                             <Label className='text-lg'>Your Position</Label>
                             <Separator className='w-full' />
                             <ScrollArea>
                                 <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
-                                    {nftData.map((nft, index) => (
+                                    {filteredNftData.map((nft, index) => {
+                                        const filteredPosition = accountPositionData?.find((position) => position.tokenId === nft.tokenId)
+                                        return (
                                         <DialogSupplyBorrowRepay
                                             key={index}
                                             filteredData={filteredData}
                                             nftData={nft}
+                                            filteredPosition={filteredPosition}
                                             trigger={
                                                 <div
                                                     className="w-full h-auto flex justify-start items-center gap-4 py-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg px-4"
@@ -120,7 +127,7 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                                                 </div>
                                             }
                                         />
-                                    ))}
+                                    )})}
                                 </div>
                             </ScrollArea>
                         </CardContent>

@@ -68,7 +68,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<AccountLend
 
         return (
           <div className="flex items-center gap-2">
-            <span>{(lendAPR / 1e16).toFixed(2) || 0}%</span>
+            <span>{(lendAPR / 1e16)?.toFixed(2) || 0}%</span>
           </div>
         )
       }

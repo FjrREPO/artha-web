@@ -1,6 +1,5 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Logo() {
@@ -16,13 +15,12 @@ export default function Logo() {
   }
 
   return (
-    <Link href={"/"} className="flex items-center gap-2">
-      <Image
-        src={theme === "dark" ? "/logo_white.png" : "/logo_black.png"}
-        width={40}
-        height={40}
-        alt="logo"
-      />
-    </Link>
+    <Image
+      src={theme === "dark" ? "/logo_white.png" : "/logo_black.png"}
+      width={17}
+      height={17}
+      className="p-2 w-fit"
+      alt="logo"
+    />
   );
 }

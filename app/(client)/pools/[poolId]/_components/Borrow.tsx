@@ -43,7 +43,7 @@ export default function Borrow({
     });
 
     const handleSubmit = async (data: BorrowValues) => {
-        await handleBorrow(filteredData?.id ?? "", data.borrowAmount, nftData?.tokenId ?? "");
+        await handleBorrow(filteredData?.id ?? "", nftData?.tokenId ?? "", data.borrowAmount);
     };
 
     useEffect(() => {

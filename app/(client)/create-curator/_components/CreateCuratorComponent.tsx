@@ -14,18 +14,12 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
 import { CreateCuratorSteps } from './CreateCuratorSteps';
-import { useQuery } from '@tanstack/react-query';
-import { API_SUBGRAPH } from '@/constants/config';
-import { queryPool } from '@/graphql/query';
-import { PoolSchema } from '@/lib/validation/types';
-import request from 'graphql-request';
 import { PreviewDialogCurator } from './PreviewDialogCurator';
+import { useAccount } from 'wagmi';
+import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
+import usePools from '@/hooks/graphql/usePools';
 
 type FormData = z.infer<typeof curatorSchema>;
-
-interface QueryData {
-    pools: PoolSchema[];
-}
 
 interface PoolAllocation {
     poolId: string;
@@ -41,19 +35,15 @@ const CreateCuratorComponent = () => {
     const [totalAllocation, setTotalAllocation] = useState(0);
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
+    const { address } = useAccount()
+
     const steps = [
         { title: 'Basic Information', fields: ['_name', '_symbol'] },
         { title: 'Asset Configuration', fields: ['_asset'] },
         { title: 'Pool Selection & Allocation', fields: ['allocations'] },
     ];
 
-    const { data: poolData, isLoading: isPoolsLoading } = useQuery<QueryData>({
-        queryKey: ['pool'],
-        queryFn: async () => {
-            return await request(API_SUBGRAPH, queryPool);
-        },
-        refetchInterval: 600000000,
-    });
+    const { poolData, poolLoading } = usePools()
 
     const form: UseFormReturn<FieldValues> = useForm<FieldValues>({
         resolver: zodResolver(curatorSchema),
@@ -146,87 +136,93 @@ const CreateCuratorComponent = () => {
     }, [createCuratorHash, isCreateCuratorConfirmed, form]);
 
     return (
-        <div className='relative w-full'>
-            {(isCreateCuratorConfirming || isCreateCuratorPending) && !isCreateCuratorConfirmed && (
-                <LoadingTransaction
-                    message={isCreateCuratorConfirming ? "Creating..." : "Confirming create..."}
-                />
-            )}
-            <SuccessDialog
-                isOpen={showSuccessDialog}
-                onClose={() => setShowSuccessDialog(false)}
-                txHash={createCuratorHash as HexAddress || ""}
-                processName="Create Curator"
-                enabledLogs={true}
-                logs={dataCurator?.logs?.[0]}
-            />
-            <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
-                <CardHeader className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1">
-                        <CardTitle>Create Curator</CardTitle>
-                        <CardDescription>
-                            Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
-                        </CardDescription>
-                    </div>
-                    <Progress value={(activeStep + 1) * 100 / steps.length} />
-                </CardHeader>
-
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <CreateCuratorSteps
-                                form={form}
-                                validationError={validationError}
-                                activeStep={activeStep}
-                                isAnimating={isAnimating}
-                                selectedPools={selectedPools}
-                                setSelectedPools={setSelectedPools}
-                                totalAllocation={totalAllocation}
-                                setTotalAllocation={setTotalAllocation}
-                                poolData={poolData}
-                                isPoolsLoading={isPoolsLoading}
-                            />
-
-                            <div className="flex justify-between mt-8">
-                                <Button
-                                    type="button"
-                                    onClick={prevStep}
-                                    disabled={activeStep === 0}
-                                    variant="outline"
-                                >
-                                    <ChevronLeft className="h-4 w-4" /> Back
-                                </Button>
-
-                                {activeStep === steps.length - 1 ? (
-                                    <Button
-                                        type="submit"
-                                        disabled={form.getValues('pools').length === 0 && form.getValues('allocations').length === 0}
-                                    >
-                                        Preview Curator
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        type="button"
-                                        onClick={nextStep}
-                                    >
-                                        Next <ChevronRight className="h-4 w-4" />
-                                    </Button>
-                                )}
+        <>
+            {address ? (
+                <div className='relative w-full'>
+                    {(isCreateCuratorConfirming || isCreateCuratorPending) && !isCreateCuratorConfirmed && (
+                        <LoadingTransaction
+                            message={isCreateCuratorConfirming ? "Creating..." : "Confirming create..."}
+                        />
+                    )}
+                    <SuccessDialog
+                        isOpen={showSuccessDialog}
+                        onClose={() => setShowSuccessDialog(false)}
+                        txHash={createCuratorHash as HexAddress || ""}
+                        processName="Create Curator"
+                        enabledLogs={true}
+                        logs={dataCurator?.logs?.[0]}
+                    />
+                    <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
+                        <CardHeader className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
+                                <CardTitle>Create Curator</CardTitle>
+                                <CardDescription>
+                                    Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
+                                </CardDescription>
                             </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
-            <PreviewDialogCurator
-                isOpen={showPreviewDialog}
-                onClose={() => setShowPreviewDialog(false)}
-                formData={form.getValues()}
-                selectedPools={selectedPools}
-                poolData={poolData}
-                isLoading={isCreateCuratorPending || isCreateCuratorConfirming}
-                onCreateCurator={handleCreateCuratorSubmit}
-            />
-        </div>
+                            <Progress value={(activeStep + 1) * 100 / steps.length} />
+                        </CardHeader>
+
+                        <CardContent>
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                    <CreateCuratorSteps
+                                        form={form}
+                                        validationError={validationError}
+                                        activeStep={activeStep}
+                                        isAnimating={isAnimating}
+                                        selectedPools={selectedPools}
+                                        setSelectedPools={setSelectedPools}
+                                        totalAllocation={totalAllocation}
+                                        setTotalAllocation={setTotalAllocation}
+                                        poolData={{ pools: poolData || [] }}
+                                        isPoolsLoading={poolLoading}
+                                    />
+
+                                    <div className="flex justify-between mt-8">
+                                        <Button
+                                            type="button"
+                                            onClick={prevStep}
+                                            disabled={activeStep === 0}
+                                            variant="outline"
+                                        >
+                                            <ChevronLeft className="h-4 w-4" /> Back
+                                        </Button>
+
+                                        {activeStep === steps.length - 1 ? (
+                                            <Button
+                                                type="submit"
+                                                disabled={form.getValues('pools').length === 0 && form.getValues('allocations').length === 0}
+                                            >
+                                                Preview Curator
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                type="button"
+                                                onClick={nextStep}
+                                            >
+                                                Next <ChevronRight className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                </form>
+                            </Form>
+                        </CardContent>
+                    </Card>
+                    <PreviewDialogCurator
+                        isOpen={showPreviewDialog}
+                        onClose={() => setShowPreviewDialog(false)}
+                        formData={form.getValues()}
+                        selectedPools={selectedPools}
+                        poolData={{ pools: poolData || [] }}
+                        isLoading={isCreateCuratorPending || isCreateCuratorConfirming}
+                        onCreateCurator={handleCreateCuratorSubmit}
+                    />
+                </div>
+            ) : (
+                <WarningConnectWallet />
+            )}
+        </>
     );
 };
 

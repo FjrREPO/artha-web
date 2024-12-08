@@ -71,7 +71,7 @@ export const ConnectButtonWalletComponents = () => {
 
                 if (!connected) {
                     return (
-                        <Button onClick={openConnectModal} variant="outline">
+                        <Button onClick={openConnectModal} variant="outline" className="text-sm sm:text-xs font-bold rounded-lg">
                             Connect Wallet
                         </Button>
                     );
@@ -79,15 +79,15 @@ export const ConnectButtonWalletComponents = () => {
 
                 if (chain?.unsupported) {
                     return (
-                        <Button onClick={openChainModal}>
+                        <Button onClick={openChainModal} className="text-sm sm:text-xs font-bold rounded-lg">
                             Wrong network
                         </Button>
                     );
                 }
 
                 return (
-                    <div className="w-fit flex-wrap flex gap-3 z-50">
-                        <Button onClick={openChainModal} variant={"outline"}>
+                    <div className="w-fit flex-col sm:flex-row flex gap-2 z-50">
+                        <Button onClick={openChainModal} variant={"outline"} className="text-sm sm:text-xs font-bold rounded-xl">
                             {chain.hasIcon && (
                                 <ChainIcon
                                     iconUrl={chain.iconUrl}
@@ -98,7 +98,7 @@ export const ConnectButtonWalletComponents = () => {
                             {chain.name}
                         </Button>
 
-                        <Button onClick={openAccountModal} variant={"outline"}>
+                        <Button onClick={openAccountModal} variant={"outline"} className="text-sm sm:text-xs font-bold rounded-xl">
                             {CustomAvatar && (
                                 <CustomAvatar
                                     address={account.address}
