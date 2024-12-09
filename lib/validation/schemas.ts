@@ -100,9 +100,7 @@ export const accountLendSchema = z.object({
     shares: z.number().optional(),
     sender: z.string().optional(),
     poolId: z.string().optional(),
-    pool: z.object({
-        poolSchema
-    }),
+    pool: poolSchema,
     onBehalfOf: z.string().optional(),
     amount: z.number().optional(),
 })
