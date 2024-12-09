@@ -147,8 +147,7 @@ const DesktopNavLinks: React.FC = () => {
                 "p-0 rounded-xl shadow-sm group justify-start xl:justify-center",
                 "px-3 transition-all duration-300 text-xs font-bold",
                 "border-none xl:border hover:shadow-sm w-full",
-                "shadow-[0_0_2px_1.5px_rgba(0,0,0,0.3)]",
-                isActive && link.styling.shadow,
+                isActive && `${link.styling.shadow} shadow-[0_0_2px_1.5px_rgba(0,0,0,0.3)]`,
                 link.styling.hover,
                 isActive && link.styling.bg,
                 link.styling.hoverShadow
@@ -185,8 +184,7 @@ const CreateDropdownMenu: React.FC = () => {
             "p-0 rounded-xl shadow-sm group justify-start xl:justify-center",
             "px-3 transition-all duration-300 text-xs font-bold",
             "border-none xl:border hover:shadow-main-2",
-            "shadow-[0_0_2px_1.5px_rgba(0,0,0,0.3)]",
-            (pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator")) && "shadow-main-2 shadow-sm",
+            (pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator")) && "shadow-main-2 shadow-[0_0_2px_1.5px_rgba(0,0,0,0.3)]",
             isDropdownOpen && 'scale-105 shadow-lg'
           )}
         >
