@@ -60,7 +60,7 @@ export function DataTable<TData extends EarnSchema, TValue>({
   return (
     <div className="z-10">
       <div className="rounded-md border">
-        <Table>
+        <Table className="bg-background rounded-lg">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

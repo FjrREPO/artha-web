@@ -215,7 +215,7 @@ const MobileNavbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="block xl:hidden xl:max-w-screen-xl lg:max-w-screen-lg mx-auto overflow-hidden">
+    <div className="block 3/2xl:hidden xl:max-w-screen-xl lg:max-w-screen-lg mx-auto overflow-hidden">
       <nav className="flex items-center justify-between">
         <Sheet
           open={isOpen}
@@ -226,7 +226,7 @@ const MobileNavbar: React.FC = () => {
               variant="outline"
               size="icon"
               aria-label="Open navigation menu"
-              className="w-12 bg-background/70 rounded-xl"
+              className="w-12 bg-background rounded-xl"
             >
               <Menu className="w-8 h-8 shrink-0" />
             </Button>

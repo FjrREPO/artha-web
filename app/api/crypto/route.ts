@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'X-CMC_PRO_API_KEY': process.env.CMC_API_KEY || '40ca06ad-e462-4bf4-8e59-09a5b5a16f09',
+            'X-CMC_PRO_API_KEY': process.env.NEXT_PUBLIC_CMC_API_KEY || '40ca06ad-e462-4bf4-8e59-09a5b5a16f09',
         },
     });
 

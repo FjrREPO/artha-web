@@ -10,7 +10,7 @@ import { poolSchema } from '@/lib/validation/schemas';
 import { z } from 'zod';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import ValidationError from '@/components/error/validation-error';
-import { listIRM, listOracle } from '@/constants/config';
+import { listIRM, listLoanToken, listOracle } from '@/constants/config';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -39,8 +39,13 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     ltvData,
     ltvLoading
 }) => {
-    const collateralOptions = useMemo(() => ["AZUKI", "BAYC", "DAI"], []);
-    const loanTokenOptions = useMemo(() => ["USDC", "USDT", "TUSD"], []);
+    const loanTokenOptions = useMemo(() => listLoanToken, []);
+    const collateralOptions = useMemo(() => {
+        if (!cryptoTokenData) return [];
+        return cryptoTokenData
+            .map(token => token.symbol)
+            .filter(symbol => !loanTokenOptions.includes(symbol));
+    }, [cryptoTokenData, loanTokenOptions]);
 
     const findCollateralOptions = React.useMemo(() =>
         cryptoTokenData?.filter((token) => collateralOptions.includes(token.symbol)) ?? [],

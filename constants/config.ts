@@ -10,6 +10,8 @@ export const API_CRYPTOTOKEN = "https://gist.githubusercontent.com/FjrREPO/09638
 
 export const USDC_DECIMALS = 18;
 
+export const listLoanToken = ["USDC", "USDT", "TUSD", "BUSD"]
+
 export const listIRM = [
     "0x27Fa158a755512b5883060480eb1DaB620417802",
     "0x7E7352f19a3161be8841dC0EeD00636E0EA74884",

@@ -116,7 +116,7 @@ export function DataTable<TData extends AuctionActivitySchema, TValue>({
         </div>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="bg-background rounded-lg">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
