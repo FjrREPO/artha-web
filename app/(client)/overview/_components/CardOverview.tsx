@@ -112,7 +112,7 @@ export default function CardOverview() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, staggerChildren: 0.2 }}
-                className='grid sm:grid-cols-2 xl:grid-cols-4 gap-6'
+                className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6"
             >
                 {features.map((feature, index) => (
                     <motion.a
