@@ -109,25 +109,25 @@ export const DepositAndBorrowSection = ({
                         <Card className="flex w-full">
                             <CardContent className="flex flex-col w-full gap-1 p-5">
                                 <Label className="text-lg font-semibold">Select Collateral & Token Id</Label>
-                                <div className="flex flex-col xl:flex-row gap-2">
+                                <div className="flex flex-col sm:flex-row sm:gap-2">
                                     <FormField
                                         control={form.control}
                                         name="collateralToken"
                                         render={({ field }) => (
-                                            <FormItem className="w-full xl:w-1/2 py-5 flex flex-col gap-3">
+                                            <FormItem className="w-full xl:w-1/2 pt-5 sm:py-5 flex flex-col gap-3">
                                                 <SkeletonWrapper isLoading={poolLoading}>
                                                     <FormControl>
                                                         <Select
                                                             onValueChange={field.onChange}
                                                             value={field.value}
                                                         >
-                                                            <SelectTrigger className="w-full py-8">
+                                                            <SelectTrigger className="w-full py-8 rounded-2xl">
                                                                 <SelectValue placeholder="Select collateral token" />
                                                             </SelectTrigger>
-                                                            <SelectContent>
-                                                                <ScrollArea className="max-h-52 overflow-auto">
+                                                            <SelectContent className='rounded-2xl'>
+                                                                <ScrollArea className="max-h-52 overflow-auto rounded-2xl">
                                                                     {uniqueCollateralTokens.map((token) => (
-                                                                        <SelectItem key={token} value={token} className="py-5">
+                                                                        <SelectItem key={token} value={token} className="py-5 cursor-pointer">
                                                                             <div className="flex items-center gap-2">
                                                                                 <CoinImage address={token} />
                                                                                 <CoinSymbol address={token} />
@@ -156,16 +156,16 @@ export const DepositAndBorrowSection = ({
                                                                 value={field.value}
                                                                 disabled={!collateralTokenSelected}
                                                             >
-                                                                <SelectTrigger className="w-full py-8">
+                                                                <SelectTrigger className="w-full py-8 rounded-2xl">
                                                                     <SelectValue placeholder="Select token id" />
                                                                 </SelectTrigger>
-                                                                <SelectContent>
-                                                                    <ScrollArea className="max-h-52 overflow-auto">
+                                                                <SelectContent className='rounded-2xl'>
+                                                                    <ScrollArea className="max-h-52 overflow-auto rounded-2xl">
                                                                         {uniqueNftData?.map((token: AlchemyNftSchema) => (
                                                                             <SelectItem
                                                                                 key={token.tokenId}
                                                                                 value={token.tokenId.toString()}
-                                                                                className="py-5"
+                                                                                className="py-5 cursor-pointer"
                                                                             >
                                                                                 <div className="flex items-center gap-2">
                                                                                     {token.tokenId}
@@ -201,7 +201,7 @@ export const DepositAndBorrowSection = ({
                                                         <div className="relative">
                                                             <Input
                                                                 {...field}
-                                                                className="w-full pl-32 py-8 rounded-lg"
+                                                                className="w-full pl-[135px] py-8 rounded-2xl"
                                                                 type="number"
                                                                 min={0}
                                                                 placeholder="Enter borrow amount"
@@ -213,7 +213,7 @@ export const DepositAndBorrowSection = ({
                                                                     value={selectedTokenAddress}
                                                                     disabled={!tokenIdSelected}
                                                                 >
-                                                                    <SelectTrigger className="w-28 py-6">
+                                                                    <SelectTrigger className="w-28 py-6 rounded-2xl">
                                                                         <SelectValue placeholder="Select token">
                                                                             {selectedTokenAddress && (
                                                                                 <div className="flex items-center gap-2">
@@ -223,13 +223,13 @@ export const DepositAndBorrowSection = ({
                                                                             )}
                                                                         </SelectValue>
                                                                     </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        <ScrollArea className="max-h-52">
+                                                                    <SelectContent className='rounded-2xl'>
+                                                                        <ScrollArea className="max-h-52 rounded-2xl">
                                                                             {availableBorrowTokens.map((token) => (
                                                                                 <SelectItem
                                                                                     key={token}
                                                                                     value={token}
-                                                                                    className="py-5 cursor-pointer"
+                                                                                    className="py-3 cursor-pointer"
                                                                                 >
                                                                                     <div className="flex items-center gap-2 cursor-pointer">
                                                                                         <CoinImage address={token} />
@@ -271,12 +271,12 @@ export const DepositAndBorrowSection = ({
                                                     disabled={isSupplyPoolDisabled}
                                                 >
                                                     <FormControl>
-                                                        <SelectTrigger className="w-full py-8">
+                                                        <SelectTrigger className="w-full py-8 rounded-2xl">
                                                             <SelectValue placeholder="Select supply pool" />
                                                         </SelectTrigger>
                                                     </FormControl>
-                                                    <SelectContent>
-                                                        <ScrollArea className="max-h-52">
+                                                    <SelectContent className='rounded-2xl'>
+                                                        <ScrollArea className="max-h-52 rounded-2xl">
                                                             {filteredPools?.map((pool) => (
                                                                 <SelectItem key={pool.id} value={pool.id!} className="py-3">
                                                                     <div className="flex items-center gap-2">

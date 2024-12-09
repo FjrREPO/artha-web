@@ -87,10 +87,44 @@ export const queryLoanTokens = gql`{
 export const queryPosition = (account: HexAddress, poolId: string) => gql`{
     positions(where: {account: "${account.toLowerCase()}", pool_: {id: "${poolId}"}}) {
         id
+        bidder
         tokenId
         borrowShares
         pool {
+            collateralAddress
+            borrowRate
+            collateralToken {
+                collateralToken
+                id
+            }
+            curator {
+                name
+                id
+                curator
+                asset
+                allocations
+                symbol
+            }
             id
+            irm
+            lendingRate
+            loanAddress
+            loanToken {
+                loanToken
+                id
+            }
+            lth
+            ltv
+            oracle
+            totalBorrowAssets
+            totalBorrowShares
+            totalSupplyAssets
+            totalSupplyShares
+            utilizationRate
+        }
+        token {
+            id
+            tokenId
         }
     }
 }`

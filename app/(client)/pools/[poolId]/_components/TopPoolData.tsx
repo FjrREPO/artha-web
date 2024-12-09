@@ -29,9 +29,11 @@ interface Props {
 export default function TopPoolData({ filteredData, isLoading, nftData, nftLoading, accountPositionData, accountPositionLoading }: Props) {
     const { decimal } = useDecimal(filteredData?.loanAddress as HexAddress || '')
 
-    const filteredNftData = nftData.filter((nft) => 
+    const filteredNftData = nftData.filter((nft) =>
         accountPositionData?.some((position) => position.token.tokenId === nft.tokenId)
     );
+
+    const isPositionData = filteredData && filteredData.id && accountPositionData?.some((position) => position?.pool?.id?.includes(filteredData.id as string));
 
     return (
         <div className='flex flex-col lg:flex-row w-full gap-5'>
@@ -105,31 +107,40 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                         <CardContent className='p-5 space-y-5'>
                             <Label className='text-lg'>Your Position</Label>
                             <Separator className='w-full' />
-                            <ScrollArea>
-                                <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
-                                    {filteredNftData.map((nft, index) => {
-                                        const filteredPosition = accountPositionData?.find((position) => position.tokenId === nft.tokenId)
-                                        return (
-                                        <DialogSupplyBorrowRepay
-                                            key={index}
-                                            filteredData={filteredData}
-                                            nftData={nft}
-                                            filteredPosition={filteredPosition}
-                                            trigger={
-                                                <div
-                                                    className="w-full h-auto flex justify-start items-center gap-4 py-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg px-4"
-                                                >
-                                                    <NftImage path={nft?.contract.openSeaMetadata.imageUrl || ""} />
-                                                    <div className="flex flex-col items-start justify-center gap-1">
-                                                        <Label className="cursor-pointer">{nft.contract.symbol}</Label>
-                                                        <Label className="cursor-pointer text-gray-500 text-xs">Token id: {nft.tokenId}</Label>
-                                                    </div>
-                                                </div>
-                                            }
-                                        />
-                                    )})}
-                                </div>
-                            </ScrollArea>
+                            {isPositionData ?
+                                (
+                                    <ScrollArea>
+                                        <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
+                                            {filteredNftData.map((nft, index) => {
+                                                const filteredPosition = accountPositionData?.find((position) => position.tokenId === nft.tokenId)
+                                                return (
+                                                    <DialogSupplyBorrowRepay
+                                                        key={index}
+                                                        filteredData={filteredData}
+                                                        nftData={nft}
+                                                        filteredPosition={filteredPosition}
+                                                        trigger={
+                                                            <div
+                                                                className="w-full h-auto flex justify-start items-center gap-4 py-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-lg px-4"
+                                                            >
+                                                                <NftImage path={nft?.contract.openSeaMetadata.imageUrl || ""} />
+                                                                <div className="flex flex-col items-start justify-center gap-1">
+                                                                    <Label className="cursor-pointer">{nft.contract.symbol}</Label>
+                                                                    <Label className="cursor-pointer text-gray-500 text-xs">Token id: {nft.tokenId}</Label>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    />
+                                                )
+                                            })}
+                                        </div>
+                                    </ScrollArea>
+                                ) : (
+                                    <div className='flex flex-col w-full gap-2 h-auto max-h-48 overflow-auto'>
+                                        <Label className='text-sm'>No position found</Label>
+                                    </div>
+                                )
+                            }
                         </CardContent>
                     </Card>
                 </SkeletonWrapper>

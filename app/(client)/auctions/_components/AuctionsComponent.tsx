@@ -1,10 +1,9 @@
 "use client"
 
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useMemo } from 'react';
 import {
     Card,
-    CardContent,
+    CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,177 +11,175 @@ import {
     Accordion,
     AccordionContent,
     AccordionItem,
-    AccordionTrigger,
+    AccordionTrigger
 } from "@/components/ui/accordion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { Filter, X } from "lucide-react";
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import Image from 'next/image';
-import { AuctionsDataSchema } from '@/lib/validation/types';
+import { AuctionApiSchema } from '@/lib/validation/types';
 import Link from 'next/link';
+import { getAllAuction } from '@/actions/get-all-auction';
 
-type CollectionOption = string;
-type OrderDirection = 'asc' | 'desc';
+const COLLECTIONS = ['All Collections', 'Collection A', 'Collection B', 'Collection C'];
+const SORT_OPTIONS = [
+    { label: 'Potential Profit (Highest)', value: 'profit_desc' },
+    { label: 'Potential Profit (Lowest)', value: 'profit_asc' },
+    { label: 'Floor Price (Highest)', value: 'floor_desc' },
+    { label: 'Floor Price (Lowest)', value: 'floor_asc' },
+];
 
-const Sidebar: React.FC<{ onFilterChange: (filters: { search: string; selectedCollections: CollectionOption[]; orderBy: 'healthFactor' | 'bidPrice' | 'debt'; orderDirection: OrderDirection }) => void, data?: AuctionsDataSchema[] }> = ({ onFilterChange, data }) => {
-    const [searchText, setSearchText] = useState('');
-    const [selectedCollections, setSelectedCollections] = useState<CollectionOption[]>([]);
-    const [orderBy, setOrderBy] = useState<'healthFactor' | 'bidPrice' | 'debt'>('healthFactor');
-    const [orderDirection, setOrderDirection] = useState<OrderDirection>('desc');
+const Sidebar: React.FC<{
+    searchText: string;
+    setSearchText: (text: string) => void;
+    collection: string;
+    setCollection: (collection: string) => void;
+    sortBy: string;
+    setSortBy: (sort: string) => void;
+    onClearFilters: () => void;
+}> = ({
+    searchText,
+    setSearchText,
+    collection,
+    setCollection,
+    sortBy,
+    setSortBy,
+    onClearFilters
+}) => {
+        return (
+            <div className="w-full lg:w-64 p-4 border-r shadow-sm">
+                <div className="flex items-center mb-4">
+                    <Filter className="mr-2 text-gray-500" size={20} />
+                    <h2 className="text-lg font-semibold">Filters</h2>
+                </div>
 
-    const handleFilterChange = () => {
-        onFilterChange({
-            search: searchText,
-            selectedCollections,
-            orderBy,
-            orderDirection,
-        });
+                <div className="relative mb-4">
+                    <Input
+                        type="text"
+                        placeholder="Search by Token ID"
+                        className="pr-8"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+                    {searchText && (
+                        <X
+                            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+                            size={16}
+                            onClick={() => setSearchText('')}
+                        />
+                    )}
+                </div>
+
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="collection">
+                        <AccordionTrigger className='hover:no-underline'>
+                            Collection
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            <RadioGroup
+                                value={collection}
+                                onValueChange={setCollection}
+                                className="space-y-2"
+                            >
+                                {COLLECTIONS.map(col => (
+                                    <div key={col} className="flex items-center space-x-2">
+                                        <RadioGroupItem value={col} id={col} />
+                                        <Label htmlFor={col}>{col}</Label>
+                                    </div>
+                                ))}
+                            </RadioGroup>
+                        </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="order-by">
+                        <AccordionTrigger className='hover:no-underline'>
+                            Sort By
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            <RadioGroup
+                                value={sortBy}
+                                onValueChange={setSortBy}
+                                className="space-y-2"
+                            >
+                                {SORT_OPTIONS.map(option => (
+                                    <div key={option.value} className="flex items-center space-x-2">
+                                        <RadioGroupItem value={option.value} id={option.value} />
+                                        <Label htmlFor={option.value}>{option.label}</Label>
+                                    </div>
+                                ))}
+                            </RadioGroup>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+
+                <Button
+                    variant="outline"
+                    className="w-full mt-4 text-red-500 hover:text-red-600"
+                    onClick={onClearFilters}
+                >
+                    <X className="mr-2" size={16} /> Clear all filters
+                </Button>
+            </div>
+        );
     };
 
-    return (
-        <div className="w-full lg:w-64 p-4 border-r">
-            <Input
-                type="text"
-                placeholder="Token ID"
-                className="mb-4"
-                value={searchText}
-                onChange={(e) => {
-                    setSearchText(e.target.value);
-                    handleFilterChange();
-                }}
-            />
-
-            <Accordion type="single" collapsible>
-                <AccordionItem value="collection">
-                    <AccordionTrigger className='hover:no-underline'>Collection</AccordionTrigger>
-                    <AccordionContent>
-                        <div className="space-y-2">
-                            {[...new Set(data?.map(item => item.collectionName))].map(collection => (
-                                <div key={collection} className="flex items-center space-x-2 cursor-pointer">
-                                    <Checkbox
-                                        id={collection}
-                                        checked={selectedCollections.includes(collection)}
-                                        onChange={(checked) => {
-                                            if (checked) {
-                                                setSelectedCollections([...selectedCollections, collection]);
-                                            } else {
-                                                setSelectedCollections(selectedCollections.filter(c => c !== collection));
-                                            }
-                                            handleFilterChange();
-                                        }}
-                                    />
-                                    <Label htmlFor={collection} className='cursor-pointer'>{collection}</Label>
-                                </div>
-                            ))}
-                        </div>
-                    </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="order-by">
-                    <AccordionTrigger className='hover:no-underline'>Order by</AccordionTrigger>
-                    <AccordionContent>
-                        <RadioGroup
-                            value={orderBy}
-                            onValueChange={(value) => {
-                                setOrderBy(value as 'healthFactor' | 'bidPrice' | 'debt');
-                                handleFilterChange();
-                            }}
-                        >
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="healthFactor" id="healthFactor" />
-                                <Label htmlFor="healthFactor">Health factor</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="bidPrice" id="bidPrice" />
-                                <Label htmlFor="bidPrice">Bid price</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="debt" id="debt" />
-                                <Label htmlFor="debt">Debt</Label>
-                            </div>
-                        </RadioGroup>
-                        
-                        <div className="flex items-center space-x-2 mt-4">
-                            <Button
-                                variant={orderDirection === 'asc' ? 'secondary' : 'ghost'}
-                                onClick={() => {
-                                    setOrderDirection('asc');
-                                    handleFilterChange();
-                                }}
-                            >
-                                ASC <ChevronUp size={16} />
-                            </Button>
-                            <Button
-                                variant={orderDirection === 'desc' ? 'secondary' : 'ghost'}
-                                onClick={() => {
-                                    setOrderDirection('desc');
-                                    handleFilterChange();
-                                }}
-                            >
-                                DESC <ChevronDown size={16} />
-                            </Button>
-                        </div>
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-
-            <Button
-                variant="outline"
-                className="w-full mt-4"
-                onClick={() => {
-                    setSearchText('');
-                    setSelectedCollections([]);
-                    setOrderBy('healthFactor');
-                    setOrderDirection('desc');
-                    handleFilterChange();
-                }}
-            >
-                Clear all filters
-            </Button>
-        </div>
-    );
-};
-
 interface NFTCardProps {
-    nft: AuctionsDataSchema;
+    nft: AuctionApiSchema;
     isLoading: boolean;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
+    const potentialProfit = useMemo(() => {
+        const debt = parseFloat(nft.debt)/1e6;
+        const floorPrice = parseFloat(nft.floorPrice)/1e6;
+        return (floorPrice - debt).toFixed(2);
+    }, [nft.debt, nft.floorPrice]);
+
     return (
         <SkeletonWrapper isLoading={isLoading}>
-            <Card className="w-full max-w-sm">
+            <Card className="w-full max-w-sm hover:shadow-lg transition-shadow duration-300">
                 <CardContent className="p-4">
-                    <Image
-                        src={nft.image}
-                        alt='NFT'
-                        width={300}
-                        height={300}
-                        className="rounded-lg mb-4 w-full aspect-square object-cover"
-                    />
-                    <div className="space-y-2">
-                        <Label className='text-sm'>WKODA # {nft.loanId}</Label>
-                        <div className="flex justify-between">
-                            <span className="text-sm font-medium">Floor Price</span>
-                            <span className="text-sm">{parseFloat(nft.floorPrice).toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-sm font-medium">Debt</span>
-                            <span className="text-sm">{parseFloat((Number(nft.borrowed)/1_000_000_000_000_000_000).toString()).toFixed(4)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-sm font-medium">First bid bonus</span>
-                            <span className="text-sm">{parseFloat(nft.bidFine).toFixed(1)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-sm font-medium">Potential Profit</span>
-                            <span className="text-sm">1.1213</span>
+                    <div className="relative mb-4">
+                        <Image
+                            src={nft.nftData.contract.openSeaMetadata.imageUrl || '/img/placeholder-nft.jpg'}
+                            alt={`NFT ${nft.nftData.name} #${nft.position.tokenId}`}
+                            width={300}
+                            height={300}
+                            className="rounded-lg w-full aspect-square object-cover"
+                            priority
+                        />
+                        <div className="absolute top-2 right-2 bg-background/80 px-2 py-1 rounded-full text-xs font-medium">
+                            #{nft.position.tokenId}
                         </div>
                     </div>
-                    <Link href={`/auctions/${nft.id}`}><Button className="w-full mt-4">Place a bid</Button></Link>
+
+                    <div className="space-y-2">
+                        <h3 className="text-sm font-semibold truncate">
+                            {nft.nftData.name}
+                        </h3>
+
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="text-xs text-textGraycustom">Floor Price</div>
+                            <div className="text-xs font-medium text-right">{parseInt(nft.floorPrice)/1e6}</div>
+
+                            <div className="text-xs text-textGraycustom">Debt</div>
+                            <div className="text-xs font-medium text-right">{parseInt(nft.debt)/1e6}</div>
+
+                            <div className="text-xs text-textGraycustom">Potential Profit</div>
+                            <div className={`text-xs font-medium text-right ${parseFloat(potentialProfit) > 0 ? 'text-green-500' : 'text-red-500'
+                                }`}>
+                                {potentialProfit}
+                            </div>
+                        </div>
+                    </div>
+
+                    <Link href={`/auctions/${nft.position.id}`} className="block mt-4">
+                        <Button className="w-full" variant="default">
+                            Place a Bid
+                        </Button>
+                    </Link>
                 </CardContent>
             </Card>
         </SkeletonWrapper>
@@ -190,65 +187,81 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
 };
 
 const AuctionsComponent: React.FC = () => {
-    const [filters, setFilters] = useState<{
-        search: string;
-        selectedCollections: CollectionOption[];
-        orderBy: 'healthFactor' | 'bidPrice' | 'debt';
-        orderDirection: OrderDirection;
-    }>({
-        search: '',
-        selectedCollections: [],
-        orderBy: 'healthFactor',
-        orderDirection: 'desc',
-    });
+    const [searchText, setSearchText] = useState('');
+    const [collection, setCollection] = useState('All Collections');
+    const [sortBy, setSortBy] = useState('profit_desc');
 
-    const { data, isLoading } = useQuery<{ data: AuctionsDataSchema[] }>({
-        queryKey: ["auctions", filters],
-        queryFn: async () => {
-            const response = await fetch('https://gist.githubusercontent.com/FjrREPO/2aa775ebc0f289f660457d5c0607218d/raw/b5b83d948c291e9650ac4953109991730c88b532/auctions.json');
-            return response.json();
-        },
-        refetchInterval: 600000000,
-    });
+    const { auctionData, auctionLoading } = getAllAuction();
 
-    const filteredData = data?.data.filter((nft) => {
-        if (filters.search && !nft.loanId.includes(filters.search)) {
-            return false;
-        }
-        if (filters.selectedCollections.length > 0 && !filters.selectedCollections.includes(nft.collectionName)) {
-            return false;
-        }
-        return true;
-    }).sort((a, b) => {
-        switch (filters.orderBy) {
-            case 'healthFactor':
-                return filters.orderDirection === 'asc' ? a.healthFactor - b.healthFactor : b.healthFactor - a.healthFactor;
-            case 'bidPrice':
-                return filters.orderDirection === 'asc' ? parseFloat(a.bidPrice) - parseFloat(b.bidPrice) : parseFloat(b.bidPrice) - parseFloat(a.bidPrice);
-            case 'debt':
-                return filters.orderDirection === 'asc' ? parseFloat(a.borrowed) - parseFloat(b.borrowed) : parseFloat(b.borrowed) - parseFloat(a.borrowed);
-            default:
-                return 0;
-        }
-    });
+    const filteredAndSortedAuctions = useMemo(() => {
+        if (!auctionData) return [];
+
+        return auctionData
+            .filter(nft =>
+                nft.position.tokenId.toString().includes(searchText) &&
+                (collection === 'All Collections' ||
+                    nft.nftData.contract.name === collection)
+            )
+            .sort((a, b) => {
+                switch (sortBy) {
+                    case 'profit_desc':
+                        return (parseInt(b.debt) - parseInt(b.floorPrice)) -
+                            (parseInt(a.debt) - parseInt(a.floorPrice));
+                    case 'profit_asc':
+                        return (parseInt(a.debt) - parseInt(a.floorPrice)) -
+                            (parseInt(b.debt) - parseInt(b.floorPrice));
+                    case 'floor_desc':
+                        return parseInt(b.floorPrice) - parseInt(a.floorPrice);
+                    case 'floor_asc':
+                        return parseInt(a.floorPrice) - parseInt(b.floorPrice);
+                    default:
+                        return 0;
+                }
+            });
+    }, [auctionData, searchText, collection, sortBy]);
+
+    const handleClearFilters = () => {
+        setSearchText('');
+        setCollection('All Collections');
+        setSortBy('profit_desc');
+    };
 
     return (
         <div className="flex flex-col lg:flex-row w-full container">
-            <Sidebar onFilterChange={setFilters} data={data?.data}/>
+            <Sidebar
+                searchText={searchText}
+                setSearchText={setSearchText}
+                collection={collection}
+                setCollection={setCollection}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                onClearFilters={handleClearFilters}
+            />
+
             <div className="flex-1 px-6 py-4">
                 <div className="mb-6">
-                    <Alert>
-                        <AlertDescription>
-                            The first bidder will receive the first bid bonus if the borrower redeems his debt before the auction ends.
+                    <Alert variant="default">
+                        <AlertDescription className="text-sm">
+                            💡 Tip: The first bidder will receive a bonus if the borrower redeems their debt before the auction ends.
                         </AlertDescription>
                     </Alert>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredData?.map((nft, index) => (
-                        <NFTCard key={index} nft={nft} isLoading={isLoading} />
-                    ))}
-                </div>
+                {filteredAndSortedAuctions.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500">
+                        No auctions found. Try adjusting your filters.
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {filteredAndSortedAuctions.map((nft) => (
+                            <NFTCard
+                                key={nft.position.id}
+                                nft={nft}
+                                isLoading={auctionLoading}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

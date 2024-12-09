@@ -20,8 +20,11 @@ import {
     accountPositionSchema,
     accountCuratorSchema,
     tokensSchema,
-    supplyCollateralsSchema
+    supplyCollateralsSchema,
+    auctionApiSchema
 } from './schemas';
+
+export type AuctionApiSchema = z.infer<typeof auctionApiSchema>;
 
 export type PoolSchema = z.infer<typeof poolSchema>;
 

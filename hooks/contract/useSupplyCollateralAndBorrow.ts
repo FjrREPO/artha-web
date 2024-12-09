@@ -14,7 +14,9 @@ export const useSupplyCollateralAndBorrow = () => {
 
     const {
         isLoading: isSupplyCollateralAndBorrowConfirming,
-        isSuccess: isSupplyCollateralAndBorrowConfirmed
+        isSuccess: isSupplyCollateralAndBorrowConfirmed,
+        isError: isSupplyCollateralAndBorrowError,
+        status: isSupplyCollateralAndBorrowStatus
     } = useWaitForTransactionReceipt({
         hash: supplyCollateralAndBorrowHash,
     });
@@ -50,6 +52,8 @@ export const useSupplyCollateralAndBorrow = () => {
         isSupplyCollateralAndBorrowPending,
         isSupplyCollateralAndBorrowConfirming,
         isSupplyCollateralAndBorrowConfirmed,
+        isSupplyCollateralAndBorrowError,
+        isSupplyCollateralAndBorrowStatus,
         handleSupplyCollateralAndBorrow
     }
 }

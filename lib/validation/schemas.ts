@@ -44,9 +44,7 @@ export const accountSchema = z.object({
             poolId: z.string().optional(),
             onBehalfOf: z.string().optional(),
             amount: z.number().optional(),
-            pool: z.object({
-                poolSchema
-            }),
+            pool: poolSchema
         })
     ),
     positions: z.array(
@@ -55,9 +53,7 @@ export const accountSchema = z.object({
             bidder: z.string().optional(),
             borrowShares: z.number().optional(),
             tokenId: z.string().optional(),
-            pool: z.object({
-                poolSchema
-            }),
+            pool: poolSchema,
             token: z.object({
                 id: z.string().optional(),
                 tokenId: z.string().optional(),
@@ -92,9 +88,7 @@ export const accountPositionSchema = z.object({
     bidder: z.string().optional(),
     borrowShares: z.number().optional(),
     tokenId: z.string().optional(),
-    pool: z.object({
-        poolSchema
-    }),
+    pool: poolSchema,
     token: z.object({
         id: z.string().optional(),
         tokenId: z.string().optional(),
@@ -125,13 +119,46 @@ export const borrowSchema = z.object({
 });
 
 export const positionSchema = z.object({
-    id: z.string().optional(),
-    tokenId: z.string(),
-    borrowShares: z.string(),
-    pool: z.object({
+    account: z.object({
         id: z.string(),
     }),
-})
+    pool: z.object({
+        utilizationRate: z.number(),
+        transactionHash: z.string(),
+        totalSupplyShares: z.number(),
+        totalSupplyAssets: z.number(),
+        totalBorrowShares: z.number(),
+        totalBorrowAssets: z.number(),
+        oracle: z.string(),
+        ltv: z.number(),
+        lth: z.number(),
+        loanToken: z.object({
+            id: z.string(),
+            loanToken: z.string(),
+        }),
+        loanAddress: z.string(),
+        lendingRate: z.number(),
+        irm: z.string(),
+        id: z.string(),
+        curator: z.object({
+            id: z.string(),
+        }),
+        collateralToken: z.object({
+            collateralToken: z.string(),
+            id: z.string(),
+        }),
+        collateralAddress: z.string(),
+        borrowRate: z.number(),
+    }),
+    token: z.object({
+        id: z.string(),
+        tokenId: z.string(),
+    }),
+    tokenId: z.string(),
+    bidder: z.string(),
+    borrowShares: z.number(),
+    id: z.string(),
+});
 
 export const collateralTokenSchema = z.object({
     id: z.string(),
@@ -457,4 +484,12 @@ export const AuctionsDataSchema = z.object({
     order: z.null(),
     image: z.string().url(),
     nftAsset: NFTItemSchema,
+});
+
+export const auctionApiSchema = z.object({
+    nftData: alchemyNftSchema,
+    isLiquidatableStatus: z.boolean(),
+    position: positionSchema,
+    floorPrice: z.string(),
+    debt: z.string(),
 });

@@ -7,7 +7,7 @@ import { CoinSymbol } from "@/components/coin/CoinSymbol";
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
     {
-      accessorKey: "collateral",
+      accessorKey: "collateralToken",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Collateral" />
       ),
@@ -19,7 +19,7 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
     },
     {
-      accessorKey: "borrow",
+      accessorKey: "loanToken",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Borrow" />
       ),

@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { FormField, FormItem, FormLabel, FormDescription, FormControl } from '@/components/ui/form';
 import { Slider } from '@/components/ui/slider';
@@ -18,13 +17,6 @@ interface Props {
 export const LTVSection = ({ form, poolLoading, selectedPool, priceOracle, decimal }: Props) => {
     const maxLTV = selectedPool?.ltv ? Number(selectedPool.ltv) : 0;
     const currentLTV = form.watch('ltv');
-
-    useEffect(() => {
-        if (selectedPool) {
-            const ltvValue = Number(selectedPool.ltv);
-            form.setValue('ltv', ltvValue);
-        }
-    }, [selectedPool, form]);
 
     const getLTVStatusColor = () => {
         if (!currentLTV) return 'text-gray-500';
