@@ -50,7 +50,7 @@ export default function Deposit({ filteredData }: DepositProps) {
     const {
         balance,
         balanceLoading
-    } = useBalance(address as HexAddress)
+    } = useBalance(address as HexAddress, filteredData?.asset as HexAddress)
 
 
     const form = useForm<DepositFormData>({

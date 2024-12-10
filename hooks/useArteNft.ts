@@ -8,7 +8,7 @@ interface QueryData {
 
 export const useArteNft = () => {
     const address = ADDRESS_ARTE
-    const contractAdresses = ["0xd856695F2789a2b7a7B3f6BfFB1a829516bAEfeE", "0x9639F2dFc37B24D472Ca5b8CDe5e663d30ff872b", "0xC8d171F5AF4598b7a29c87B9341ec95025D252b8"]
+    const contractAdresses = ["0xC9653e8916ac9818A40fDEbB4d6D9cD39Bcd0f20", "0x46591ad4dCA64032D2a1218974977Ad36200EC24", "0xF82026Bf3088a237d4B9727f0993dC0d3B171a9C"]
     const { data: ownedNfts, isLoading: nftArteLoading } = useQuery<QueryData>({
         queryKey: ["ArteNft", address, contractAdresses],
         queryFn: async () => {

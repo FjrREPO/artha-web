@@ -244,3 +244,14 @@ export const queryAccount = (address: HexAddress) => gql`{
         }
     }
 }`
+
+export const queryBids = gql`{
+    bids(orderBy: blockTimestamp, orderDirection: desc) {
+        id
+        poolId
+        tokenId
+        bidder
+        amount
+        blockTimestamp
+    }
+}`

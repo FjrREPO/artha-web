@@ -26,6 +26,15 @@ export const poolSchema = z.object({
     }),
 });
 
+export const bidsSchema = z.object({
+    id: z.string().optional(),
+    poolId: z.string().optional(),
+    tokenId: z.string().optional(),
+    bidder: z.string().optional(),
+    amount: z.string().optional(),
+    blockTimestamp: z.string().optional(),
+});
+
 export const supplyCollateralsSchema = z.object({
     tokenId: z.string().optional(),
     poolId: z.string().optional(),
@@ -485,9 +494,19 @@ export const AuctionsDataSchema = z.object({
 });
 
 export const auctionApiSchema = z.object({
-    nftData: alchemyNftSchema,
+    id: z.string().uuid().optional(),
+    addressIP: z.string().optional().nullable(),
+    nftName: z.string().optional().nullable(),
+    nftSymbol: z.string().optional().nullable(),
+    nftImageUrl: z.string().optional().nullable(),
+    poolId: z.string().optional().nullable(),
+    tokenId: z.string(), 
     isLiquidatableStatus: z.boolean(),
-    position: positionSchema,
+    positionAccount: z.string(),
+    loanAddress: z.string(),
     floorPrice: z.string(),
     debt: z.string(),
+    bidder: z.string().optional().nullable(),
+    updatedAt: z.date().optional(),
+    createdAt: z.date().optional(),
 });

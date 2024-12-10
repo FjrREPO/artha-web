@@ -23,7 +23,7 @@ import { AuctionApiSchema } from '@/lib/validation/types';
 import Link from 'next/link';
 import { getAllAuction } from '@/actions/get-all-auction';
 
-const COLLECTIONS = ['All Collections', 'Collection A', 'Collection B', 'Collection C'];
+const COLLECTIONS = ['All Collections', 'IP1', 'IP2', 'IP3'];
 const SORT_OPTIONS = [
     { label: 'Potential Profit (Highest)', value: 'profit_desc' },
     { label: 'Potential Profit (Lowest)', value: 'profit_asc' },
@@ -132,57 +132,96 @@ interface NFTCardProps {
 
 const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
     const potentialProfit = useMemo(() => {
-        const debt = parseFloat(nft.debt)/1e6;
-        const floorPrice = parseFloat(nft.floorPrice)/1e6;
+        const debt = parseFloat(nft.debt) / 1e6;
+        const floorPrice = parseFloat(nft.floorPrice) / 1e6;
         return (floorPrice - debt).toFixed(2);
     }, [nft.debt, nft.floorPrice]);
 
     return (
-        <SkeletonWrapper isLoading={isLoading}>
-            <Card className="w-full max-w-sm hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-4">
-                    <div className="relative mb-4">
+        <Card className="w-full max-w-sm hover:shadow-lg transition-shadow duration-300">
+            <CardContent className="p-4">
+                <div className="relative mb-4">
+                    <SkeletonWrapper isLoading={isLoading}>
                         <Image
-                            src={nft.nftData.contract.openSeaMetadata.imageUrl || '/img/placeholder-nft.jpg'}
-                            alt={`NFT ${nft.nftData.name} #${nft.position.tokenId}`}
+                            src={nft.nftImageUrl || '/img/placeholder-nft.jpg'}
+                            alt={`NFT ${nft.nftSymbol} #${nft.tokenId}`}
                             width={300}
                             height={300}
                             className="rounded-lg w-full aspect-square object-cover"
                             priority
                         />
                         <div className="absolute top-2 right-2 bg-background/80 px-2 py-1 rounded-full text-xs font-medium">
-                            #{nft.position.tokenId}
+                            #{nft.tokenId}
                         </div>
-                    </div>
+                    </SkeletonWrapper>
+                </div>
 
-                    <div className="space-y-2">
-                        <h3 className="text-sm font-semibold truncate">
-                            {nft.nftData.name}
-                        </h3>
+                <div className="space-y-2">
+                    <SkeletonWrapper isLoading={isLoading}>
+                        <div className="flex flex-row gap-2 text-sm font-semibold truncate">
+                            <Label>{nft.nftSymbol}</Label>
+                            <Label>#{nft.tokenId}</Label>
+                        </div>
+                    </SkeletonWrapper>
 
-                        <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
+                        <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Floor Price</div>
-                            <div className="text-xs font-medium text-right">{parseInt(nft.floorPrice)/1e6}</div>
-
+                            <div className="text-xs font-medium text-right">{parseInt(nft.floorPrice) / 1e6}</div>
+                        </SkeletonWrapper>
+                        <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Debt</div>
-                            <div className="text-xs font-medium text-right">{parseInt(nft.debt)/1e6}</div>
-
+                            <div className="text-xs font-medium text-right">{nft.debt && (parseInt(nft.debt) / 1e6).toFixed(2)}</div>
+                        </SkeletonWrapper>
+                        <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Potential Profit</div>
                             <div className={`text-xs font-medium text-right ${parseFloat(potentialProfit) > 0 ? 'text-green-500' : 'text-red-500'
                                 }`}>
                                 {potentialProfit}
                             </div>
-                        </div>
+                        </SkeletonWrapper>
                     </div>
+                </div>
 
-                    <Link href={`/auctions/${nft.position.id}`} className="block mt-4">
+                <SkeletonWrapper isLoading={isLoading}>
+                    <Link href={`/auctions/${nft.id}`} className="block mt-4">
                         <Button className="w-full" variant="default">
                             Place a Bid
                         </Button>
                     </Link>
-                </CardContent>
-            </Card>
-        </SkeletonWrapper>
+                </SkeletonWrapper>
+            </CardContent>
+        </Card>
+    );
+};
+
+import { Skeleton } from "@/components/ui/skeleton";
+
+const NFTCardSkeleton: React.FC = () => {
+    return (
+        <Card className="w-full max-w-sm">
+            <CardContent className="p-4">
+                <div className="relative mb-4">
+                    <Skeleton className="w-full aspect-square rounded-lg" />
+                    <Skeleton className="absolute top-2 right-2 w-12 h-6 rounded-full" />
+                </div>
+
+                <div className="space-y-2 mb-4">
+                    <Skeleton className="h-5 w-3/4" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                    <Skeleton className="h-3 w-2/3" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-2/3" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-2/3" />
+                    <Skeleton className="h-4 w-full" />
+                </div>
+
+                <Skeleton className="mt-4 h-10 w-full" />
+            </CardContent>
+        </Card>
     );
 };
 
@@ -198,9 +237,9 @@ const AuctionsComponent: React.FC = () => {
 
         return auctionData
             .filter(nft =>
-                nft.position.tokenId.toString().includes(searchText) &&
+                nft.tokenId.toString().includes(searchText) &&
                 (collection === 'All Collections' ||
-                    nft.nftData.contract.name === collection)
+                    nft.nftSymbol === collection)
             )
             .sort((a, b) => {
                 switch (sortBy) {
@@ -247,21 +286,20 @@ const AuctionsComponent: React.FC = () => {
                     </Alert>
                 </div>
 
-                {filteredAndSortedAuctions.length === 0 ? (
-                    <div className="text-center py-12 text-gray-500">
-                        No auctions found. Try adjusting your filters.
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {filteredAndSortedAuctions.map((nft) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {auctionLoading
+                        ? Array(4).fill(0).map((_, index) => (
+                            <NFTCardSkeleton key={index} />
+                        ))
+                        : filteredAndSortedAuctions.map((nft) => (
                             <NFTCard
-                                key={nft.position.id}
+                                key={nft.id}
                                 nft={nft}
-                                isLoading={auctionLoading}
+                                isLoading={false}
                             />
-                        ))}
-                    </div>
-                )}
+                        ))
+                    }
+                </div>
             </div>
         </div>
     );

@@ -1,8 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./ColumnHeader";
-import { AuctionHistorySchema } from "@/lib/validation/types";
+import { AuctionApiSchema, BidsSchema } from "@/lib/validation/types";
+import { CoinImage } from "@/components/coin/CoinImage";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import { formatAddress } from "@/lib/utils";
 
-export function columns(): ColumnDef<AuctionHistorySchema>[] {
+export function columns(auctionDetails: AuctionApiSchema): ColumnDef<BidsSchema>[] {
   return [
     {
       accessorKey: "event",
@@ -12,9 +15,9 @@ export function columns(): ColumnDef<AuctionHistorySchema>[] {
           title="Event"
         />
       ),
-      cell: ({ row }) => (
+      cell: () => (
         <div className="flex items-center gap-2">
-          <span className="capitalize">{row.original.event}</span>
+          <span className="capitalize">Bid</span>
         </div>
       ),
     },
@@ -42,7 +45,7 @@ export function columns(): ColumnDef<AuctionHistorySchema>[] {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <span className="font-medium">{row.original.address}</span>
+            <span className="font-medium whitespace-nowrap">{row.original.bidder ? formatAddress(row.original.bidder, 6) : "N/A"}</span>
         </div>
       ),
     },
@@ -54,11 +57,19 @@ export function columns(): ColumnDef<AuctionHistorySchema>[] {
           title="Loan ID"
         />
       ),
-      cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{row.original.loanId}</span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const findAuctionDetails = auctionDetails?.tokenId === row.original.tokenId && auctionDetails?.poolId === row.original.poolId;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{findAuctionDetails ? (
+              <div className="flex flex-row gap-2 items-center">
+                <CoinImage address={auctionDetails.loanAddress} />
+                <CoinSymbol address={auctionDetails.loanAddress} />
+              </div>
+            ) : ''}</span>
+          </div>
+        )
+      },
     },
     {
       accessorKey: "date",
@@ -69,9 +80,10 @@ export function columns(): ColumnDef<AuctionHistorySchema>[] {
           className="justify-end"
         />
       ),
-      cell: ({ row }) => (
+      cell: ({ row }) =>
+      (
         <div className="text-right">
-          <span>{row.original.date}</span>
+          <span className="whitespace-nowrap">{row.original.blockTimestamp ? new Date(Number(row.original.blockTimestamp) * 1000).toLocaleString() : "N/A"}</span>
         </div>
       ),
     }

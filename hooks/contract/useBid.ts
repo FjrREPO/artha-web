@@ -12,7 +12,8 @@ export const useBid = () => {
 
     const {
         isLoading: isBidConfirming,
-        isSuccess: isBidConfirmed
+        isSuccess: isBidConfirmed,
+        error: bidError
     } = useWaitForTransactionReceipt({
         hash: bidHash,
     });
@@ -46,6 +47,7 @@ export const useBid = () => {
         isBidPending,
         isBidConfirming,
         isBidConfirmed,
+        bidError,
         handleBid
     }
 }

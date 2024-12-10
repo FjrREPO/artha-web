@@ -1,13 +1,16 @@
-import { ADDRESS_MOCK_USDC } from "@/constants/config";
-import { mockUSDCABI } from "@/lib/abi/mockUSDCABI";
+import { ADDRESS_MOCK_USDC, ADDRESS_MOCK_USDT } from "@/constants/config";
+import { erc20Abi } from "viem";
 import { useReadContract } from "wagmi";
 
 export const useBalance = (
-    address: HexAddress
+    address: HexAddress,
+    tokenAddress: HexAddress
 ) => {
-    const { data, isLoading: balanceLoading } = useReadContract({
-        abi: mockUSDCABI,
-        address: ADDRESS_MOCK_USDC,
+    const findTokenAddress = tokenAddress.toLowerCase() === ADDRESS_MOCK_USDC.toLowerCase() ? ADDRESS_MOCK_USDC : ADDRESS_MOCK_USDT
+
+    const { data, isLoading: balanceLoading, error: balanceError } = useReadContract({
+        abi: erc20Abi,
+        address: findTokenAddress,
         functionName: 'balanceOf',
         args: [
             address as HexAddress
@@ -18,6 +21,7 @@ export const useBalance = (
 
     return {
         balance,
-        balanceLoading
+        balanceLoading,
+        balanceError
     };
 };
