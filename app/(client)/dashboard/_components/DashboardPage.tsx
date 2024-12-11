@@ -13,6 +13,7 @@ import useEarn from '@/hooks/graphql/useEarn';
 import { LendSection } from './LendSection';
 import useAccountLend from '@/hooks/graphql/useAccountLend';
 import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
+import { listIP } from '@/constants/config';
 
 export default function DashboardPage() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -24,7 +25,7 @@ export default function DashboardPage() {
     const { address } = useAccount()
     const { borrowData, borrowLoading, borrowRefetching } = useBorrows()
     const { poolData, poolLoading } = usePools();
-    const { nftData, nftLoading } = useOwnerNft();
+    const { nftData, nftLoading } = useOwnerNft({ contractAdresses: listIP });
     const { earnData, earnLoading, earnRefetching } = useEarn()
     const { accountLendData, accountLendLoading, accountLendRefetching } = useAccountLend()
     // const { accountCuratorData, accountCuratorLoading, accountCuratorRefetching } = useAccountCurator()

@@ -49,7 +49,7 @@ export const AuctionTimer = ({
     }
 
     return (
-        <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-lg p-4 flex flex-col sm:flex-row flex-wrap gap-5 items-center justify-center lg:justify-center sm:justify-between shadow-sm">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-lg p-4 flex flex-row xl:flex-col flex-wrap gap-5 items-center justify-center lg:justify-center sm:justify-between shadow-sm">
             <div className="flex items-center space-x-2">
                 <Clock className="text-primary w-6 h-6 animate-pulse" />
                 <span className="font-semibold text-lg">Auction Ending In</span>

@@ -14,7 +14,7 @@ export default function useBids() {
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryBids);
         },
-        refetchInterval: 600000000,
+        refetchInterval: 5000
     });
 
     const bidsData: BidsSchema[] = data?.bids || [];

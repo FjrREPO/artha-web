@@ -314,10 +314,12 @@ export default function AuctionDetailComponent({
                                 <CardContent className="p-6">
                                     <SkeletonWrapper isLoading={auctionLoading || bidsLoading || balanceLoading}>
                                         <BidInput
-                                            minBid={parseInt(auctionDetails?.debt || "0") / 1e6}
+                                            minBid={findHighestBid?.amount ? Number(findHighestBid.amount) + 1 : parseInt(auctionDetails?.debt || "0") / 1e6}
                                             balance={balance ? (Number(balance || 0) / 1e18) : 0}
                                             onBidChange={handleBidChange}
                                             onMaxBid={handleMaxBid}
+                                            setBidAmount={setBidAmount}
+                                            bidAmount={bidAmount}
                                             auctionDetails={auctionDetails}
                                             isAuctionEnded={isAuctionEnded}
                                         />

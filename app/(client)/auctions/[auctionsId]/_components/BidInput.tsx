@@ -2,14 +2,16 @@ import { CoinSymbol } from "@/components/coin/CoinSymbol";
 import { Button } from "@/components/ui/button";
 import { AuctionApiSchema } from "@/lib/validation/types";
 import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip } from "@/components/ui/tooltip";
-import { Coins } from "lucide-react";
 import { useState } from "react";
+import { CoinImage } from "@/components/coin/CoinImage";
 
 export const BidInput = ({
     minBid,
     balance,
     onBidChange,
     onMaxBid,
+    bidAmount,
+    setBidAmount,
     auctionDetails,
     isAuctionEnded
 }: {
@@ -17,6 +19,8 @@ export const BidInput = ({
     balance: number,
     onBidChange: (value: string) => void,
     onMaxBid: () => void,
+    bidAmount: string,
+    setBidAmount(value: string): void,
     auctionDetails: AuctionApiSchema | undefined,
     isAuctionEnded: boolean
 }) => {
@@ -53,6 +57,7 @@ export const BidInput = ({
         const value = e.target.value;
         validateBid(value);
         onBidChange(value);
+        setBidAmount(e.target.value);
     };
 
     return (
@@ -75,12 +80,13 @@ export const BidInput = ({
                 <div className="relative flex-grow">
                     <input
                         type="number"
+                        value={bidAmount}
                         placeholder={`Min. ${(minBid.toFixed(2))} USDC`}
                         onChange={handleInputChange}
-                        className="w-full p-2 border rounded-2xl px-2 focus:ring-2 focus:ring-primary pl-8"
+                        className="w-full p-2 border rounded-2xl px-2 focus:ring-2 focus:ring-primary pl-10"
                         disabled={isAuctionEnded}
                     />
-                    <Coins className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                    <CoinImage className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" address={auctionDetails?.loanAddress} />
                 </div>
                 <Button
                     variant="outline"
