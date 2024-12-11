@@ -17,10 +17,11 @@ import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
 import useAccountPosition from '@/hooks/graphql/useAccountPosition';
 import useSupplyCollaterals from '@/hooks/graphql/useSupplyCollaterals';
 import { useArteNft } from '@/hooks/useArteNft';
+import { listIP } from '@/constants/config';
 
 export default function PoolIdPage({ PoolId }: { PoolId: string }) {
     const { poolData, poolLoading: isLoading } = usePools();
-    const { nftData, nftLoading } = useOwnerNft()
+    const { nftData, nftLoading } = useOwnerNft({ contractAdresses: listIP })
     const { nftArteData, nftArteLoading } = useArteNft()
     const { accountPositionData, accountPositionLoading } = useAccountPosition();
     const { supplyCollateralsData, supplyCollateralsLoading } = useSupplyCollaterals();
