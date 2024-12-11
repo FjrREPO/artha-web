@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { normalize } from "@/lib/helper/bignumber";
 
 type Props = {
   poolData: PoolSchema[];
@@ -68,7 +69,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<AccountLend
 
         return (
           <div className="flex items-center gap-2">
-            <span>{(lendAPR / 1e16)?.toFixed(2) || 0}%</span>
+            <span>{Number(normalize(lendAPR, 16))?.toFixed(2) || 0}%</span>
           </div>
         )
       }
@@ -105,7 +106,7 @@ export function columns({ poolData, poolLoading }: Props): ColumnDef<AccountLend
 
         return (
         <div className="flex items-center gap-2">
-          <span>{formatNumberWithDots((totalSupplyShares ?? 0) / 1e6) || ""}</span>
+          <span>{formatNumberWithDots(Number(normalize(totalSupplyShares ?? 0, 6))) || ""}</span>
         </div>
       )}
     },

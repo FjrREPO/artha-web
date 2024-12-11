@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { poolSchema } from '@/lib/validation/schemas';
-import { useCreatePool } from '@/hooks/contract/useCreatePool';
+import { useCreatePool } from '@/hooks/contract/write/useCreatePool';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
@@ -21,6 +21,7 @@ import PreviewDialogPool from './PreviewDialogPool';
 import { useIRM } from '@/hooks/graphql/useIRM';
 import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
 import { useAccount } from 'wagmi';
+import { toast } from 'sonner';
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -57,11 +58,8 @@ const CreatePoolComponent = () => {
     });
 
     const {
-        createPoolHash,
-        isCreatePoolPending,
-        isCreatePoolConfirming,
-        isCreatePoolConfirmed,
-        handleCreatePool,
+        mutation,
+        txHash
     } = useCreatePool();
 
     const validateCurrentStep = async () => {
@@ -123,13 +121,25 @@ const CreatePoolComponent = () => {
                 return;
             }
 
-            handleCreatePool(
-                findCollateralAddress.platform?.token_address,
-                findLoanAddress.platform?.token_address,
-                formData.oracle || "",
-                formData.irm || "",
-                formData.ltv || "",
-                formData.lth || ""
+            mutation.mutate(
+                {
+                    collateralToken: formData.collateralAddress as HexAddress,
+                    loanToken: formData.loanAddress as HexAddress,
+                    oracle: formData.oracle as HexAddress,
+                    irm: formData.irm as HexAddress,
+                    ltv: formData.ltv as string,
+                    lth: formData.lth as string,
+                },
+                {
+                    onSuccess: () => {
+                        setShowSuccessDialog(true);
+                        form.reset();
+                    },
+                    onError: (error) => {
+                        toast.error(`Error borrowing: ${error}`);
+                        console.error("Error borrowing:", error);
+                    },
+                }
             );
 
             setShowPreviewDialog(false);
@@ -153,35 +163,28 @@ const CreatePoolComponent = () => {
     };
 
     useEffect(() => {
-        if (createPoolHash && isCreatePoolConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+        if (mutation.isSuccess) {
             setActiveStep(0);
         }
-    }, [createPoolHash, isCreatePoolConfirmed, form]);
+    }, [form]);
 
     return (
         <>
             {address ? (
                 <>
-                    {(isCreatePoolConfirming || isCreatePoolPending) && !isCreatePoolConfirmed && (
-                        <LoadingTransaction
-                            message={isCreatePoolConfirming ? "Creating..." : "Confirming create..."}
-                        />
-                    )}
+                    {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
                     <PreviewDialogPool
                         isOpen={showPreviewDialog}
                         onClose={() => setShowPreviewDialog(false)}
                         onConfirm={handleConfirmCreatePool}
                         formData={form.getValues()}
                         oracleData={oracleData}
-                        isCreatePoolPending={isCreatePoolPending}
-                        isCreatePoolConfirming={isCreatePoolConfirming}
+                        isLoading={mutation.isPending}
                     />
                     <SuccessDialog
                         isOpen={showSuccessDialog}
                         onClose={() => setShowSuccessDialog(false)}
-                        txHash={createPoolHash as HexAddress || ""}
+                        txHash={txHash as HexAddress || ""}
                         processName="Create Pool"
                     />
                     <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
@@ -225,16 +228,7 @@ const CreatePoolComponent = () => {
                                         {activeStep === steps.length - 1 ? (
                                             <Button
                                                 type="submit"
-                                                disabled={
-                                                    isCreatePoolPending ||
-                                                    isCreatePoolConfirming ||
-                                                    !form.getValues().collateralAddress ||
-                                                    !form.getValues().loanAddress ||
-                                                    !form.getValues().oracle ||
-                                                    !form.getValues().irm ||
-                                                    !form.getValues().ltv ||
-                                                    !form.getValues().lth
-                                                }
+                                                disabled={mutation.isPending || !form.formState.isValid}
                                             >
                                                 Preview Pool
                                             </Button>

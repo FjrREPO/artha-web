@@ -134,15 +134,13 @@ export function DataTable<TData extends EarnSchema, TValue>({
                   className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      <Link href={`/earn/${row.original.id}`}>
-                        <SkeletonWrapper isLoading={isLoading}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </SkeletonWrapper>
-                      </Link>
+                    <TableCell key={cell.id} onClick={() => window.location.href = `/earn/${row.original.id}`}>
+                      <SkeletonWrapper isLoading={isLoading}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </SkeletonWrapper>
                     </TableCell>
                   ))}
                 </TableRow>

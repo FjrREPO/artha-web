@@ -7,6 +7,7 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/comp
 import { CoinMarketCapSchema, PoolSchema, SupplyCollateralAndBorrow } from '@/lib/validation/types';
 import { UseFormReturn } from 'react-hook-form';
 import { formatNumberWithDots } from '@/lib/utils';
+import { normalize } from '@/lib/helper/bignumber';
 
 interface BorrowDetailsStepperProps {
     form: UseFormReturn<SupplyCollateralAndBorrow>;
@@ -63,7 +64,7 @@ const BorrowDetailsStepper: React.FC<BorrowDetailsStepperProps> = ({
                         </TooltipProvider>
                     </Label>
                     <div className='text-4xl font-bold mt-2 flex items-center gap-2'>
-                        {(selectedPool?.borrowRate || 0) / 1e16}% <TrendingUp className='text-blue-500' />
+                        {normalize(selectedPool?.borrowRate || 0, 16)}% <TrendingUp className='text-blue-500' />
                     </div>
                     <Label className='font-normal text-muted-foreground mt-2'>
                         Borrowing {selectedBorrowToken?.name} rate
@@ -109,7 +110,7 @@ const BorrowDetailsStepper: React.FC<BorrowDetailsStepperProps> = ({
                         <div>
                             <Label>Collateral Value</Label>
                             <div className='font-bold'>
-                                {formatNumberWithDots(((priceOracle as number) / 1e6) || 0) || '0'}
+                                {formatNumberWithDots(Number(normalize(priceOracle?.toString() || "0", 6))) || '0'}
                             </div>
                         </div>
                     </div>

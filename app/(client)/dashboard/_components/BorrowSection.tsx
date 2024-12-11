@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
 import { AlchemyNftSchema, BorrowSchema, PoolSchema } from '@/lib/validation/types'
+import { normalize } from '@/lib/helper/bignumber'
 
 type Props = {
     borrowData: BorrowSchema[];
@@ -47,7 +48,7 @@ export const BorrowSection = ({
                         </div>
                     </div>
                     <div className='flex flex-row gap-2 items-center'>
-                        <Label className='text-lg'>{formatCurrency(totalBorrowAmount / 1e6)}</Label>
+                        <Label className='text-lg'>{formatCurrency(Number(normalize(totalBorrowAmount.toString(), 6)))}</Label>
                         <ChevronUp className='w-5 h-5 cursor-pointer' />
                     </div>
                 </div>

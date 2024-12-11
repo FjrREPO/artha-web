@@ -6,6 +6,7 @@ import { AccountPositionSchema, AlchemyNftSchema, PoolSchema } from '@/lib/valid
 import { useMemo } from 'react'
 import { usePriceOracle } from '@/hooks/contract/usePriceOracle'
 import { formatAddress } from '@/lib/utils'
+import { normalize } from '@/lib/helper/bignumber'
 
 interface Props {
     nftData?: AlchemyNftSchema
@@ -16,16 +17,16 @@ interface Props {
 export const OverviewNFT = ({ nftData, filteredPosition, filteredData }: Props) => {
     const { priceOracle } = usePriceOracle(filteredData?.oracle as HexAddress, filteredPosition?.tokenId as string)
 
-    const totalBorrowed = (filteredPosition?.borrowShares ?? 0)/1e6;
+    const totalBorrowed = normalize(filteredPosition?.borrowShares ?? 0, 6);
     const maxBorrow = useMemo(() =>
-        parseInt(filteredData?.ltv as string) * (priceOracle as number) / 1e8!,
+        normalize(parseInt(filteredData?.ltv as string) * (priceOracle as number), 8),
         [filteredData, priceOracle]
     );
-    const borrowUtilization = totalBorrowed ? (totalBorrowed / maxBorrow) * 100 : 0;
+    const borrowUtilization = totalBorrowed ? (Number(totalBorrowed) / Number(maxBorrow)) * 100 : 0;
 
-    const collateralValue = parseInt(priceOracle?.toString() ?? '0')/1e8;
+    const collateralValue = normalize(parseInt(priceOracle?.toString() ?? '0'), 8);
     const liquidationValue = filteredData?.lth ?? 0;
-    const isCollateralSafe = collateralValue > (totalBorrowed * (1 + parseInt(liquidationValue || '0') / 100));
+    const isCollateralSafe = Number(collateralValue) > (Number(totalBorrowed) * (1 + parseInt(liquidationValue || '0') / 100));
 
     return (
         <div className="space-y-4">

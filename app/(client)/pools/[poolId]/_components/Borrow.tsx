@@ -10,8 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { useBorrow } from '@/hooks/contract/useBorrow';
+import { useBorrow } from '@/hooks/contract/write/useBorrow';
 import { CoinImage } from '@/components/coin/CoinImage';
+import { toast } from 'sonner';
 
 interface BorrowProps {
     filteredData?: PoolSchema;
@@ -29,11 +30,9 @@ export default function Borrow({
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const {
-        borrowHash,
-        handleBorrow,
-        isBorrowConfirmed,
-        isBorrowConfirming,
-        isBorrowPending
+        steps,
+        mutation,
+        txHash
     } = useBorrow();
 
     const form = useForm<BorrowValues>({
@@ -43,15 +42,28 @@ export default function Borrow({
     });
 
     const handleSubmit = async (data: BorrowValues) => {
-        await handleBorrow(filteredData?.id ?? "", nftData?.tokenId ?? "", data.borrowAmount);
-    };
-
-    useEffect(() => {
-        if (borrowHash && isBorrowConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+        if (!filteredData && !nftData) { 
+            return; 
         }
-    }, [borrowHash, isBorrowConfirmed, form]);
+
+        mutation.mutate(
+            {
+                poolId: filteredData?.id as string,
+                amount: data.borrowAmount,
+                tokenId: nftData?.tokenId as string
+            },
+            {
+                onSuccess: (data) => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
+    };
 
     if (!filteredData) {
         return (
@@ -65,15 +77,11 @@ export default function Borrow({
 
     return (
         <>
-            {(isBorrowConfirming || isBorrowPending) && !isBorrowConfirmed && (
-                <LoadingTransaction
-                    message={isBorrowConfirming ? "Borrowing..." : "Confirming borrow..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={borrowHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Borrow"
             />
             <Form {...form}>
@@ -110,9 +118,9 @@ export default function Borrow({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isBorrowConfirming || isBorrowPending}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isBorrowConfirming ? 'Confirming...' : isBorrowPending ? 'Pending...' : 'Borrow'}
+                                Borrow
                             </Button>
                         </CardContent>
                     </Card>

@@ -6,11 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useAccount } from 'wagmi';
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useWithdrawCollateral } from '@/hooks/contract/useWithdrawCollateral';
+import { useWithdrawCollateral } from '@/hooks/contract/write/useWithdrawCollateral';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
+import { toast } from 'sonner';
 
 interface WithdrawCollateralProps {
     nftData?: AlchemyNftSchema;
@@ -33,23 +34,34 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
     });
 
     const {
-        handleWithdrawCollateral,
-        isWithdrawCollateralPending,
-        isWithdrawCollateralConfirming,
-        isWithdrawCollateralConfirmed,
-        withdrawCollateralHash
+        mutation,
+        txHash
     } = useWithdrawCollateral();
 
-    const handleSubmit = async () => {
-        await handleWithdrawCollateral(filteredData?.id ?? "", nftData?.tokenId ?? "", address ?? "");
-    };
-
-    useEffect(() => {
-        if (withdrawCollateralHash && isWithdrawCollateralConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+    const handleSubmit = async (data: FormData) => {
+        if (!address || !filteredData || !nftData) {
+            return;
         }
-    }, [withdrawCollateralHash, isWithdrawCollateralConfirmed, form]);
+
+        mutation.mutate(
+            {
+                id: filteredData?.id as string,
+                tokenId: data.tokenId,
+                onBehalfOf: address as HexAddress,
+                userAddress: address as HexAddress,
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
+    };
 
     if (!filteredData) {
         return (
@@ -63,15 +75,11 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
 
     return (
         <>
-            {(isWithdrawCollateralConfirming || isWithdrawCollateralPending) && (
-                <LoadingTransaction
-                    message={isWithdrawCollateralConfirming ? "Withdrawing..." : "Confirming withdraw..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={withdrawCollateralHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Withdraw Collateral"
             />
             <Form {...form}>
@@ -116,14 +124,9 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isWithdrawCollateralPending || isWithdrawCollateralConfirming}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isWithdrawCollateralPending
-                                    ? 'Withdrawing Collateral...'
-                                    : isWithdrawCollateralConfirming
-                                        ? 'Confirming Transaction...'
-                                        : 'Withdraw Collateral'
-                                }
+                                Withdraw Collateral
                             </Button>
                         </CardContent>
                     </Card>

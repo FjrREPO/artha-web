@@ -14,6 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogSupplyBorrowRepay } from './DialogSupplyBorrowRepay';
 import { NftImage } from '@/components/nft/NftImage';
 import { useDecimal } from '@/hooks/contract/useDecimal';
+import { normalize } from '@/lib/helper/bignumber';
 
 interface Props {
     filteredData?: PoolSchema;
@@ -76,11 +77,11 @@ export default function TopPoolData({ filteredData, isLoading, nftData, nftLoadi
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Borrow APR</Label>
-                                        <Label className='text-lg font-medium'>{(filteredData?.borrowRate ?? 0) / 1e16}%</Label>
+                                        <Label className='text-lg font-medium'>{(normalize(filteredData?.borrowRate ?? 0, 16))}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Lend APR</Label>
-                                        <Label className='text-lg font-medium'>{((filteredData?.borrowRate ?? 0) * (filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0) / 1e16).toFixed(2)}%</Label>
+                                        <Label className='text-lg font-medium'>{Number(normalize((filteredData?.borrowRate ?? 0) * (filteredData?.totalBorrowAssets ?? 0) / (filteredData?.totalSupplyAssets ?? 0), 16)).toFixed(2)}%</Label>
                                     </div>
                                     <div className='flex flex-col gap-1'>
                                         <Label className='text-textSecondary'>Utitlization Rate</Label>

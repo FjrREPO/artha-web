@@ -2,6 +2,7 @@ import React from 'react';
 import { usePriceOracle } from "@/hooks/contract/usePriceOracle";
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
 import { formatNumberWithDots } from '@/lib/utils';
+import { normalize } from '@/lib/helper/bignumber';
 
 type PriceOracleCellProps = {
     oracleAddress: HexAddress;
@@ -14,7 +15,7 @@ const PriceOracleCell: React.FC<PriceOracleCellProps> = ({ oracleAddress, loanTo
     return (
         <div className="flex items-center gap-2">
             <SkeletonWrapper isLoading={priceOracleLoading}>
-                <span>{formatNumberWithDots((priceOracle as number)/1e6)}</span>
+                <span>{formatNumberWithDots(Number(normalize(priceOracle?.toString() || "0", 6)))}</span>
             </SkeletonWrapper>
         </div>
     );

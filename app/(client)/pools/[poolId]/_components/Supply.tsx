@@ -14,7 +14,8 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
 import { useERC721Balance } from '@/hooks/contract/useERC721Balance';
-import { useSupply } from '@/hooks/contract/useSupply';
+import { useSupply } from '@/hooks/contract/write/useSupply';
+import { toast } from 'sonner';
 
 interface SupplyProps {
     filteredData?: PoolSchema;
@@ -32,11 +33,8 @@ export default function Supply({
     const { balance } = useERC721Balance(address as HexAddress, filteredData?.collateralToken as HexAddress);
 
     const {
-        supplyHash,
-        handleSupply,
-        isSupplyConfirmed,
-        isSupplyConfirming,
-        isSupplyPending
+        mutation,
+        txHash
     } = useSupply();
 
     const form = useForm<SupplyValues>({
@@ -46,19 +44,32 @@ export default function Supply({
     });
 
     const handleSubmit = async (data: SupplyValues) => {
-        await handleSupply(filteredData?.id ?? "", data.supplyAmount, address ?? "");
+        if (!address || !filteredData || !data.supplyAmount) {
+            return;
+        }
+
+        mutation.mutate(
+            {
+                id: filteredData?.id as string,
+                amount: data.supplyAmount,
+                onBehalfOf: address as HexAddress
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
     };
 
     const handleMaxSupply = () => {
         form.setValue('supplyAmount', balance?.toString() ?? "0");
     };
-
-    useEffect(() => {
-        if (supplyHash && isSupplyConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
-        }
-    }, [supplyHash, isSupplyConfirmed, form]);
 
     if (!filteredData) {
         return (
@@ -72,15 +83,11 @@ export default function Supply({
 
     return (
         <>
-            {(isSupplyConfirming || isSupplyPending) && !isSupplyConfirmed && (
-                <LoadingTransaction
-                    message={isSupplyConfirming ? "Supplying..." : "Confirming supply..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={supplyHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Supply"
             />
             <Form {...form}>
@@ -129,9 +136,9 @@ export default function Supply({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isSupplyConfirming || isSupplyPending}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isSupplyConfirming ? 'Confirming...' : isSupplyPending ? 'Pending...' : 'Supply'}
+                                Supply
                             </Button>
                         </CardContent>
                     </Card>

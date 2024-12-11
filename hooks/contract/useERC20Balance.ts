@@ -1,8 +1,9 @@
 import { ADDRESS_MOCK_USDC, ADDRESS_MOCK_USDT } from "@/constants/config";
+import { normalize } from "@/lib/helper/bignumber";
 import { erc20Abi } from "viem";
 import { useReadContract } from "wagmi";
 
-export const useBalance = (
+export const useERC20Balance = (
     address: HexAddress,
     tokenAddress: HexAddress
 ) => {

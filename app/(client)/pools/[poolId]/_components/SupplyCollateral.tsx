@@ -7,12 +7,13 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useAccount } from 'wagmi';
 import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useSupplyCollateral } from '@/hooks/contract/useSupplyCollateral';
+import { useSupplyCollateral } from '@/hooks/contract/write/useSupplyCollateral';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import SuccessDialog from '@/components/dialog/SuccessDialog';
 import { useEffect, useState } from 'react';
 import { NftImage } from '@/components/nft/NftImage';
 import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
+import { toast } from 'sonner';
 
 interface SupplyCollateralProps {
     nftData?: AlchemyNftSchema[];
@@ -45,24 +46,33 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
     }, [nftData, selectedNft, form]);
 
     const {
-        handleSupplyCollateral,
-        isSupplyCollateralPending,
-        isSupplyCollateralConfirming,
-        isSupplyCollateralConfirmed,
-        supplyCollateralHash
+        mutation,
+        txHash
     } = useSupplyCollateral();
 
     const handleSubmit = async (data: FormData) => {
-        console.log(filteredData?.id ?? "", data.tokenId, address ?? "")
-        await handleSupplyCollateral(filteredData?.id ?? "", data.tokenId, address ?? "");
-    };
-
-    useEffect(() => {
-        if (supplyCollateralHash || isSupplyCollateralConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+        if (!filteredData?.id || !data.tokenId || !address) {
+            return;
         }
-    }, [supplyCollateralHash, isSupplyCollateralConfirmed, form]);
+
+        mutation.mutate(
+            {
+                id: filteredData?.id,
+                tokenId: data.tokenId,
+                onBehalfOf: address,
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
+    };
 
     const handleSelectNft = (nft: AlchemyNftSchema) => {
         setSelectedNft(nft);
@@ -82,15 +92,11 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
 
     return (
         <>
-            {(isSupplyCollateralConfirming || isSupplyCollateralPending) && !isSupplyCollateralConfirmed && (
-                <LoadingTransaction
-                    message={isSupplyCollateralConfirming ? "Supplying..." : "Confirming supply..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={supplyCollateralHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Supply Collateral"
             />
             <Form {...form}>
@@ -145,14 +151,9 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isSupplyCollateralPending || isSupplyCollateralConfirming}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isSupplyCollateralPending
-                                    ? 'Supplying Collateral...'
-                                    : isSupplyCollateralConfirming
-                                        ? 'Confirming Transaction...'
-                                        : 'Add Collateral'
-                                }
+                                Add Collateral
                             </Button>
                         </CardContent>
                     </Card>

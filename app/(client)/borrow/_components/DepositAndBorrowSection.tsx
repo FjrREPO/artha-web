@@ -30,9 +30,6 @@ import { useCryptoToken } from "@/hooks/useCryptoToken";
 import { useOwnerNft } from "@/hooks/useOwnerNft";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { mockArteABI } from "@/lib/abi/mockArteABI";
-import { useReadContract } from "wagmi";
-import { ADDRESS_ARTE } from "@/constants/config";
 import { usePriceOracle } from "@/hooks/contract/usePriceOracle";
 import { normalizeBN } from "@/lib/helper/bignumber";
 
@@ -317,7 +314,6 @@ export const DepositAndBorrowSection = ({
                                 </Select>
                               </div>
                             </div>
-                            <p>Max Borrow : {maxBorrow.toFixed(4)}</p>
                           </div>
                         </SkeletonWrapper>
                       </FormControl>

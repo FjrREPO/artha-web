@@ -132,8 +132,8 @@ interface NFTCardProps {
 
 const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
     const potentialProfit = useMemo(() => {
-        const debt = parseFloat(nft.debt) / 1e6;
-        const floorPrice = parseFloat(nft.floorPrice) / 1e6;
+        const debt = parseFloat(normalize(nft.debt, 6));
+        const floorPrice = parseFloat(normalize(nft.floorPrice, 6));
         return (floorPrice - debt).toFixed(2);
     }, [nft.debt, nft.floorPrice]);
 
@@ -167,11 +167,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
                     <div className="grid grid-cols-2 gap-2">
                         <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Floor Price</div>
-                            <div className="text-xs font-medium text-right">{parseInt(nft.floorPrice) / 1e6}</div>
+                            <div className="text-xs font-medium text-right">{parseInt(normalize(nft.floorPrice, 6))}</div>
                         </SkeletonWrapper>
                         <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Debt</div>
-                            <div className="text-xs font-medium text-right">{nft.debt && (parseInt(nft.debt) / 1e6).toFixed(2)}</div>
+                            <div className="text-xs font-medium text-right">{nft.debt && (parseInt(normalize(nft.debt, 6))).toFixed(2)}</div>
                         </SkeletonWrapper>
                         <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Potential Profit</div>
@@ -196,6 +196,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
 };
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { normalize } from '@/lib/helper/bignumber';
 
 const NFTCardSkeleton: React.FC = () => {
     return (

@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { curatorSchema } from '@/lib/validation/schemas';
-import { useCreateCurator } from '@/hooks/contract/useCreateCurator';
+import { useCreateCurator } from '@/hooks/contract/write/useCreateCurator';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { Progress } from '@/components/ui/progress';
@@ -18,6 +18,7 @@ import { PreviewDialogCurator } from './PreviewDialogCurator';
 import { useAccount } from 'wagmi';
 import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
 import usePools from '@/hooks/graphql/usePools';
+import { toast } from 'sonner';
 
 type FormData = z.infer<typeof curatorSchema>;
 
@@ -57,12 +58,9 @@ const CreateCuratorComponent = () => {
     });
 
     const {
+        mutation,
         dataCurator,
-        createCuratorHash,
-        isCreateCuratorPending,
-        handleCreateCurator,
-        isCreateCuratorConfirmed,
-        isCreateCuratorConfirming
+        txHash
     } = useCreateCurator();
 
     const validateCurrentStep = async () => {
@@ -115,39 +113,44 @@ const CreateCuratorComponent = () => {
     };
 
     const handleCreateCuratorSubmit = (data: FieldValues) => {
-        handleCreateCurator(
-            data._name,
-            data._symbol,
-            data._asset,
-            data.pools,
-            data.allocations
+        mutation.mutate(
+            {
+                _name: data._name,
+                _symbol: data._symbol,
+                _asset: data._asset,
+                pools: data.pools,
+                allocations: data.allocations
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
         );
     };
 
     useEffect(() => {
-        if (createCuratorHash && isCreateCuratorConfirmed) {
-            setShowSuccessDialog(true);
-            setShowPreviewDialog(false);
-            form.reset();
+        if (mutation.isSuccess) {
             setSelectedPools([]);
             setActiveStep(0);
             setTotalAllocation(0);
         }
-    }, [createCuratorHash, isCreateCuratorConfirmed, form]);
+    }, [form]);
 
     return (
         <>
             {address ? (
                 <div className='relative w-full'>
-                    {(isCreateCuratorConfirming || isCreateCuratorPending) && !isCreateCuratorConfirmed && (
-                        <LoadingTransaction
-                            message={isCreateCuratorConfirming ? "Creating..." : "Confirming create..."}
-                        />
-                    )}
+                    {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
                     <SuccessDialog
                         isOpen={showSuccessDialog}
                         onClose={() => setShowSuccessDialog(false)}
-                        txHash={createCuratorHash as HexAddress || ""}
+                        txHash={txHash as HexAddress || ""}
                         processName="Create Curator"
                         enabledLogs={true}
                         logs={dataCurator?.logs?.[0]}
@@ -215,7 +218,7 @@ const CreateCuratorComponent = () => {
                         formData={form.getValues()}
                         selectedPools={selectedPools}
                         poolData={{ pools: poolData || [] }}
-                        isLoading={isCreateCuratorPending || isCreateCuratorConfirming}
+                        isLoading={mutation.isPending}
                         onCreateCurator={handleCreateCuratorSubmit}
                     />
                 </div>

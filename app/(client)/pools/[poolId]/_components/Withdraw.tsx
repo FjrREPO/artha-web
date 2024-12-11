@@ -14,7 +14,8 @@ import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
 import { useERC721Balance } from '@/hooks/contract/useERC721Balance';
-import { useWithdraw } from '@/hooks/contract/useWithdraw';
+import { useWithdraw } from '@/hooks/contract/write/useWithdraw';
+import { toast } from 'sonner';
 
 interface WithdrawProps {
     filteredData?: PoolSchema;
@@ -32,11 +33,8 @@ export default function Withdraw({
     const { balance } = useERC721Balance(address as HexAddress, filteredData?.collateralToken as HexAddress);
 
     const {
-        withdrawHash,
-        handleWithdraw,
-        isWithdrawConfirmed,
-        isWithdrawConfirming,
-        isWithdrawPending
+        mutation,
+        txHash
     } = useWithdraw();
 
     const form = useForm<WithdrawValues>({
@@ -46,19 +44,33 @@ export default function Withdraw({
     });
 
     const handleSubmit = async (data: WithdrawValues) => {
-        await handleWithdraw(filteredData?.id ?? "", data.withdrawAmount, address ?? "");
+        if (!address || !filteredData || !data.withdrawAmount) {
+            return;
+        }
+
+        mutation.mutate(
+            {
+                id: filteredData?.id || "",
+                shares: data.withdrawAmount,
+                onBehalfOf: address as HexAddress,
+                userAddress: address as HexAddress
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
     };
 
     const handleMaxWithdraw = () => {
         form.setValue('withdrawAmount', balance?.toString() ?? "0");
     };
-
-    useEffect(() => {
-        if (withdrawHash && isWithdrawConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
-        }
-    }, [withdrawHash, isWithdrawConfirmed, form]);
 
     if (!filteredData) {
         return (
@@ -72,15 +84,11 @@ export default function Withdraw({
 
     return (
         <>
-            {(isWithdrawConfirming || isWithdrawPending) && !isWithdrawConfirmed && (
-                <LoadingTransaction
-                    message={isWithdrawConfirming ? "Withdrawing..." : "Confirming withdraw..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={withdrawHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Withdraw"
             />
             <Form {...form}>
@@ -129,9 +137,9 @@ export default function Withdraw({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isWithdrawConfirming || isWithdrawPending}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isWithdrawConfirming ? 'Confirming...' : isWithdrawPending ? 'Pending...' : 'Withdraw'}
+                                Withdraw
                             </Button>
                         </CardContent>
                     </Card>

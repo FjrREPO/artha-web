@@ -9,6 +9,7 @@ import { NftImage } from "@/components/nft/NftImage";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PriceOracleCell from "./PriceOracleCell";
+import { normalize } from "@/lib/helper/bignumber";
 
 type Props = {
   poolData: PoolSchema[];
@@ -118,7 +119,7 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
         return (
           <div className="flex items-center gap-2">
             <SkeletonWrapper isLoading={poolLoading}>
-              <span>{formatNumberWithDots((parseInt(findPoolById?.borrowRate?.toString() || "0") / 1e16) || 0)}%</span>
+              <span>{formatNumberWithDots((parseInt(normalize(findPoolById?.borrowRate?.toString() || "0", 16))) || 0)}%</span>
             </SkeletonWrapper>
           </div>
         )
@@ -155,7 +156,7 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
         return (
           <div className="flex items-center gap-2 justify-end">
             <SkeletonWrapper isLoading={poolLoading}>
-              <span>{row.original.amount && formatNumberWithDots(parseInt(row.original.amount || "0") / 1e6 || 0)}</span>
+              <span>{row.original.amount && formatNumberWithDots(parseInt(normalize(row.original.amount || "0", 6)) || 0)}</span>
             </SkeletonWrapper>
           </div>
         )

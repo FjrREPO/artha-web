@@ -35,14 +35,16 @@ import { CoinImage } from '@/components/coin/CoinImage'
 import { CoinSymbol } from '@/components/coin/CoinSymbol'
 import { TableAuctionHistory } from './TableAuctionHistory'
 import useBids from '@/hooks/graphql/useBids'
-import { useBid } from '@/hooks/contract/useBid'
-import { useBalance } from '@/hooks/contract/useBalance'
+import { useBid } from '@/hooks/contract/write/useBid'
+import { useERC20Balance } from '@/hooks/contract/useERC20Balance'
 import { useAccount } from 'wagmi'
 import SuccessDialog from '@/components/dialog/SuccessDialog'
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
 import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet'
 import { BidInput } from './BidInput'
 import { AuctionTimer } from './AuctionTimer'
+import { toast } from 'sonner'
+import { normalize } from '@/lib/helper/bignumber'
 
 export default function AuctionDetailComponent({
     auctionsId
@@ -65,7 +67,7 @@ export default function AuctionDetailComponent({
         balance,
         balanceLoading,
         balanceError
-    } = useBalance(
+    } = useERC20Balance(
         address as HexAddress || '',
         auctionDetails?.loanAddress as HexAddress || ''
     );
@@ -84,14 +86,9 @@ export default function AuctionDetailComponent({
         }, { amount: '0' });
     }, [filterBids]);
 
-    const {
-        bidHash,
-        isBidPending,
-        isBidConfirming,
-        isBidConfirmed,
-        bidError: bidSubmissionError,
-        handleBid
-    } = useBid()
+
+
+    const { mutation, steps, txHash } = useBid();
 
     const startTime = auctionDetails && auctionDetails.createdAt
     const endTime = startTime
@@ -113,8 +110,8 @@ export default function AuctionDetailComponent({
 
     const handleBidChange = (value: string) => {
         const numericValue = parseFloat(value);
-        const minBid = parseInt(auctionDetails?.debt || "0") / 1e6;
-        const maxBalance = balance ? (Number(balance || 0) / 1e18) : 0;
+        const minBid = parseInt(normalize(auctionDetails?.debt || "0", 6));
+        const maxBalance = balance ? (Number(normalize(balance || 0, 18))) : 0;
 
         if (isNaN(numericValue)) {
             setBidError("Please enter a valid number");
@@ -134,15 +131,17 @@ export default function AuctionDetailComponent({
     }
 
     const handleMaxBid = () => {
-        const maxBalance = balance ? (Number(balance || 0) / 1e18) : 0;
+        const maxBalance = balance ? (Number(normalize(balance || 0, 18))) : 0;
         setBidAmount(maxBalance.toString());
         setBidError(null);
     }
 
     const handlePlaceBid = () => {
+        if (!auctionDetails && !auctionDetails) return;
+
         const numericBid = parseFloat(bidAmount);
-        const minBid = parseInt(auctionDetails?.debt || "0") / 1e6;
-        const maxBalance = balance ? (Number(balance || 0) / 1e18) : 0;
+        const minBid = parseInt(normalize(auctionDetails?.debt || "0", 6))
+        const maxBalance = balance ? (Number(normalize(balance || 0, 18))) : 0;
 
         if (isAuctionEnded) {
             setBidError("Auction has ended");
@@ -164,16 +163,23 @@ export default function AuctionDetailComponent({
             return;
         }
 
-        handleBid(auctionDetails?.poolId || '', auctionDetails?.tokenId || '', bidAmount);
+        mutation.mutate(
+            {
+                poolId: auctionDetails.poolId as string,
+                tokenId: auctionDetails.tokenId,
+                amount: bidAmount,
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                },
+                onError: (error: unknown) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
     }
-
-    useEffect(() => {
-        if (bidHash && isBidConfirmed) {
-            setShowSuccessDialog(true);
-            setBidAmount('');
-            setBidError(null);
-        }
-    }, [bidHash, isBidConfirmed]);
 
     if (balanceError) {
         return (
@@ -187,31 +193,15 @@ export default function AuctionDetailComponent({
         );
     }
 
-    if (bidSubmissionError) {
-        return (
-            <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Bid Submission Error</AlertTitle>
-                <AlertDescription>
-                    {bidSubmissionError.message}
-                </AlertDescription>
-            </Alert>
-        );
-    }
-
     return (
         <>
             {address ? (
                 <>
-                    {(isBidConfirming || isBidPending) && !isBidConfirmed && (
-                        <LoadingTransaction
-                            message={isBidConfirming ? "Submitting Bid..." : "Confirming Bid..."}
-                        />
-                    )}
+                    {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
                     <SuccessDialog
                         isOpen={showSuccessDialog}
                         onClose={() => setShowSuccessDialog(false)}
-                        txHash={bidHash as HexAddress || ""}
+                        txHash={txHash as HexAddress || ""}
                         processName="Auction Bid"
                     />
 
@@ -252,7 +242,7 @@ export default function AuctionDetailComponent({
                                                     <CoinSymbol address={auctionDetails?.loanAddress || ""} />
                                                 </span>
                                                 <span className="font-bold text-primary">
-                                                    {(parseInt(auctionDetails?.floorPrice || "0") / 1e6)}
+                                                    {(parseInt(normalize(auctionDetails?.floorPrice || "0", 6)))}
                                                 </span>
                                             </div>
                                         </div>
@@ -314,8 +304,8 @@ export default function AuctionDetailComponent({
                                 <CardContent className="p-6">
                                     <SkeletonWrapper isLoading={auctionLoading || bidsLoading || balanceLoading}>
                                         <BidInput
-                                            minBid={findHighestBid?.amount ? Number(findHighestBid.amount) + 1 : parseInt(auctionDetails?.debt || "0") / 1e6}
-                                            balance={balance ? (Number(balance || 0) / 1e18) : 0}
+                                            minBid={findHighestBid?.amount ? Number(findHighestBid.amount) + 1 : parseInt(normalize(auctionDetails?.debt || "0", 6))}
+                                            balance={balance ? (Number(normalize(balance || 0, 18))) : 0}
                                             onBidChange={handleBidChange}
                                             onMaxBid={handleMaxBid}
                                             setBidAmount={setBidAmount}

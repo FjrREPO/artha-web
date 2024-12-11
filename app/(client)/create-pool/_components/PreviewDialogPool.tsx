@@ -23,8 +23,7 @@ interface PreviewDialogPoolProps {
     onConfirm: () => void;
     formData: FormData;
     oracleData?: CoinMarketCapSchema[];
-    isCreatePoolPending: boolean;
-    isCreatePoolConfirming: boolean;
+    isLoading: boolean;
 }
 
 const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
@@ -32,8 +31,7 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
     onClose,
     onConfirm,
     formData,
-    isCreatePoolPending,
-    isCreatePoolConfirming,
+    isLoading
 }) => {
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -87,13 +85,13 @@ const PreviewDialogPool: React.FC<PreviewDialogPoolProps> = ({
                     <Button
                         variant="outline"
                         onClick={onClose}
-                        disabled={isCreatePoolPending || isCreatePoolConfirming}
+                        disabled={isLoading}
                     >
                         Back
                     </Button>
                     <Button
                         onClick={onConfirm}
-                        disabled={isCreatePoolPending || isCreatePoolConfirming}
+                        disabled={isLoading}
                     >
                         Create Pool
                     </Button>

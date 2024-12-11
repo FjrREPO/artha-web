@@ -14,9 +14,11 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form"
-import { useWithdrawCurator } from '@/hooks/contract/useWithdrawCurator'
+import { useWithdrawCurator } from '@/hooks/contract/write/useWithdrawCurator'
 import SuccessDialog from '@/components/dialog/SuccessDialog'
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
+import { toast } from 'sonner'
+import { useAccount } from 'wagmi'
 
 interface WithdrawProps {
     filteredData?: EarnSchema;
@@ -27,6 +29,7 @@ interface WithdrawFormValues {
 }
 
 export default function Withdraw({ filteredData }: WithdrawProps) {
+    const { address } = useAccount();
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const form = useForm<WithdrawFormValues>({
@@ -40,35 +43,40 @@ export default function Withdraw({ filteredData }: WithdrawProps) {
     };
 
     const {
-        handleWithdrawCurator,
-        isWithdrawCuratorConfirmed,
-        isWithdrawCuratorConfirming,
-        isWithdrawCuratorPending,
-        withdrawCuratorHash
+        mutation,
+        txHash
     } = useWithdrawCurator(filteredData?.curator as HexAddress)
 
     const onSubmit = async (data: WithdrawFormValues) => {
-        await handleWithdrawCurator(data.amount.toString());
-    };
-
-    useEffect(() => {
-        if (withdrawCuratorHash && isWithdrawCuratorConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+        if (!address || !filteredData) {
+            return;
         }
-    }, [withdrawCuratorHash, isWithdrawCuratorConfirmed, form]);
+
+        mutation.mutate(
+            {
+                amount: data.amount.toString(),
+                userAddress: address as HexAddress,
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
+    };
 
     return (
         <>
-            {(isWithdrawCuratorConfirming || isWithdrawCuratorPending) && !isWithdrawCuratorConfirmed && (
-                <LoadingTransaction
-                    message={isWithdrawCuratorConfirming ? "Withdrawing..." : "Confirming withdraw..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={withdrawCuratorHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Withdraw"
             />
             <Form {...form}>

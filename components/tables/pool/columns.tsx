@@ -4,6 +4,7 @@ import { CoinImage } from "@/components/coin/CoinImage";
 import { PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
 import { formatNumberWithDots } from "@/lib/utils";
+import { normalize } from "@/lib/helper/bignumber";
 
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
@@ -48,7 +49,7 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <span>{formatNumberWithDots((row.original.totalSupplyAssets ?? 0)/1e6)}</span>
+          <span>{formatNumberWithDots(Number(normalize(row.original.totalSupplyAssets ?? 0, 6)))}</span>
         </div>
       )
     },
@@ -64,7 +65,7 @@ export function columns(): ColumnDef<PoolSchema>[] {
         const lendAPR = (row.original.borrowRate! ?? 0) * (row.original.totalBorrowAssets! ?? 0) / (row.original.totalSupplyAssets! ?? 0)
         return (
           <div className="flex items-center gap-2">
-            <span>{(lendAPR/1e16).toFixed(2)}%</span>
+            <span>{Number(normalize(lendAPR, 16)).toFixed(2)}%</span>
           </div>
         )
       }
@@ -81,7 +82,7 @@ export function columns(): ColumnDef<PoolSchema>[] {
       cell: ({ row }) => {
         return (
           <div className="flex items-center gap-2 justify-center">
-            <span>{row.original.borrowRate!/1e16}%</span>
+            <span>{normalize(row.original.borrowRate ?? 0, 16)}%</span>
           </div>
         )
       }

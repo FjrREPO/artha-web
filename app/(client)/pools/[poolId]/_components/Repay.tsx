@@ -8,10 +8,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useRepay } from '@/hooks/contract/useRepay'
+import { useRepay } from '@/hooks/contract/write/useRepay'
 import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { useAccount } from 'wagmi'
 
 interface RepayProps {
@@ -29,11 +30,8 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const {
-        repayHash,
-        handleRepay,
-        isRepayConfirmed,
-        isRepayConfirming,
-        isRepayPending
+        mutation,
+        txHash
     } = useRepay();
 
     const form = useForm<RepayFormValues>({
@@ -43,15 +41,29 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
     });
 
     const handleSubmit = async (data: RepayFormValues) => {
-        await handleRepay(filteredData?.id ?? "", nftData?.tokenId ?? "", data.repayAmount, address ?? "");
-    };
-
-    useEffect(() => {
-        if (repayHash && isRepayConfirmed) {
-            setShowSuccessDialog(true);
-            form.reset();
+        if (!filteredData?.id || !nftData?.tokenId || !address || !data.repayAmount) {
+            return;
         }
-    }, [repayHash, isRepayConfirmed, form]);
+
+        mutation.mutate(
+            {
+                id: filteredData?.id as string,
+                onBehalfOf: address as HexAddress,
+                shares: data.repayAmount,
+                tokenId: nftData?.tokenId as string
+            },
+            {
+                onSuccess: () => {
+                    setShowSuccessDialog(true);
+                    form.reset();
+                },
+                onError: (error) => {
+                    toast.error(`Error borrowing: ${error}`);
+                    console.error("Error borrowing:", error);
+                },
+            }
+        );
+    };
 
     if (!filteredData) {
         return (
@@ -65,15 +77,11 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
 
     return (
         <>
-            {(isRepayConfirming || isRepayPending) && !isRepayConfirmed && (
-                <LoadingTransaction
-                    message={isRepayConfirming ? "Repaying..." : "Confirming repay..."}
-                />
-            )}
+            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
-                txHash={repayHash as HexAddress || ""}
+                txHash={txHash as HexAddress || ""}
                 processName="Repay"
             />
             <Form {...form}>
@@ -110,9 +118,9 @@ export default function Repay({ filteredData, nftData }: RepayProps) {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={isRepayConfirming || isRepayPending}
+                                disabled={mutation.isPending || !form.formState.isValid}
                             >
-                                {isRepayConfirming ? 'Confirming...' : isRepayPending ? 'Pending...' : 'Repay'}
+                                Repay
                             </Button>
                         </CardContent>
                     </Card>
