@@ -14,6 +14,7 @@ import { LendSection } from './LendSection';
 import useAccountLend from '@/hooks/graphql/useAccountLend';
 import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
 import { listIP } from '@/constants/config';
+import useCurrentAccount from '@/hooks/graphql/useCurrentAccount';
 
 export default function DashboardPage() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -28,7 +29,9 @@ export default function DashboardPage() {
     const { nftData, nftLoading } = useOwnerNft({ contractAdresses: listIP });
     const { earnData, earnLoading, earnRefetching } = useEarn()
     const { accountLendData, accountLendLoading, accountLendRefetching } = useAccountLend()
-    // const { accountCuratorData, accountCuratorLoading, accountCuratorRefetching } = useAccountCurator()
+    const { accountData, accountLoading } = useCurrentAccount()
+
+    const filteredEarnData = earnData.filter((data) => accountData.earn.map((earn) => earn.id).includes(data.id))
 
     if (!hasMounted) {
         return null;
@@ -44,12 +47,9 @@ export default function DashboardPage() {
                     </div>
                     <div className='flex flex-col gap-5'>
                         <EarnSection
-                            earnData={earnData}
+                            earnData={filteredEarnData}
                             earnLoading={earnLoading}
                             earnRefetching={earnRefetching}
-                        // accountCuratorData={accountCuratorData}
-                        // accountCuratorLoading={accountCuratorLoading}
-                        // accountCuratorRefetching={accountCuratorRefetching}
                         />
                         <BorrowSection
                             borrowData={borrowData}

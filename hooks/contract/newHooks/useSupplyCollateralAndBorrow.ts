@@ -13,9 +13,7 @@ import {
   writeContract,
 } from "wagmi/actions";
 
-type Status = "idle" | "loading" | "success" | "error";
-
-export const useSupplyCollateralAndBorrowV2 = () => {
+export const useSupplyCollateralAndBorrow = () => {
   const { address: userAddress } = useAccount();
 
   const [steps, setSteps] = useState<

@@ -11,18 +11,12 @@ type Props = {
     earnData: EarnSchema[];
     earnLoading: boolean;
     earnRefetching: boolean;
-    // accountCuratorData: AccountCuratorSchema[];
-    // accountCuratorLoading: boolean;
-    // accountCuratorRefetching: boolean;
 }
 
 export const EarnSection = ({
     earnData,
     earnLoading,
     earnRefetching,
-    // accountCuratorData,
-    // accountCuratorLoading,
-    // accountCuratorRefetching
 }: Props) => {
     return (
         <Card className='w-full'>

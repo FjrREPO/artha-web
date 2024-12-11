@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet";
-import { useSupplyCollateralAndBorrowV2 } from "@/hooks/contract/newHooks/useSpuplyCollateralAndBorrow";
+import { useSupplyCollateralAndBorrow } from "@/hooks/contract/newHooks/useSupplyCollateralAndBorrow";
 import { useDecimal } from "@/hooks/contract/useDecimal";
 import { usePriceOracle } from "@/hooks/contract/usePriceOracle";
 import usePools from "@/hooks/graphql/usePools";
@@ -63,7 +63,7 @@ const BorrowComponent: React.FC = () => {
     form.watch("tokenId")
   );
 
-  const { mutation, steps, txHash } = useSupplyCollateralAndBorrowV2();
+  const { mutation, steps, txHash } = useSupplyCollateralAndBorrow();
 
   const onSubmit = (data: SupplyCollateralAndBorrow) => {
     if (!data.supplyPool || !data.tokenId || !data.borrowAmount) {
