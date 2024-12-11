@@ -57,7 +57,7 @@ export default function AuctionDetailComponent({
     const [bidError, setBidError] = useState<string | null>(null);
 
     const auctionDetails = useMemo(() =>
-        auctionData?.find((nft: AuctionApiSchema) => nft.id === auctionsId),
+        auctionData?.find((nft: AuctionApiSchema) => `${nft.poolId}-${nft.tokenId}` === auctionsId),
         [auctionData, auctionsId]
     );
 

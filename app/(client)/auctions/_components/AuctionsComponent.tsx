@@ -184,7 +184,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
                 </div>
 
                 <SkeletonWrapper isLoading={isLoading}>
-                    <Link href={`/auctions/${nft.id}`} className="block mt-4">
+                    <Link href={`/auctions/${nft.poolId}-${nft.tokenId}`} className="block mt-4">
                         <Button className="w-full" variant="default">
                             Place a Bid
                         </Button>
