@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Wallet } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { CoinImage } from '@/components/coin/CoinImage';
@@ -13,9 +13,10 @@ import { PoolSchema } from '@/lib/validation/types';
 import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
 import { SuccessDialog } from '@/components/dialog/SuccessDialog';
 import { useAccount } from 'wagmi';
-import { useERC721Balance } from '@/hooks/contract/useERC721Balance';
 import { useSupply } from '@/hooks/contract/write/useSupply';
 import { toast } from 'sonner';
+import { useERC20Balance } from '@/hooks/contract/useERC20Balance';
+import { normalize } from '@/lib/helper/bignumber';
 
 interface SupplyProps {
     filteredData?: PoolSchema;
@@ -30,7 +31,9 @@ export default function Supply({
 }: SupplyProps) {
     const { address } = useAccount();
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const { balance } = useERC721Balance(address as HexAddress, filteredData?.collateralToken as HexAddress);
+    const loanTokenAddress = filteredData?.loanToken.loanToken?.startsWith('0x') ? filteredData.loanToken.loanToken as HexAddress : "" as HexAddress;
+    const { balance } = useERC20Balance(address as HexAddress, loanTokenAddress);
+    const normalizeBalance = normalize(balance?.toString() ?? "0", 18);
 
     const {
         mutation,
@@ -68,7 +71,7 @@ export default function Supply({
     };
 
     const handleMaxSupply = () => {
-        form.setValue('supplyAmount', balance?.toString() ?? "0");
+        form.setValue('supplyAmount', normalizeBalance?.toString() ?? "0");
     };
 
     if (!filteredData) {
@@ -98,7 +101,7 @@ export default function Supply({
                                 <Label>Supply</Label>
                                 <div className="flex flex-row gap-2 items-center">
                                     <Wallet />
-                                    <Label>0</Label>
+                                    <Label>{parseFloat(normalizeBalance).toFixed(2)}</Label>
                                     <Button
                                         type="button"
                                         variant="outline"
@@ -121,6 +124,7 @@ export default function Supply({
                                                     className="w-full pr-10 py-7 rounded-xl"
                                                     type="number"
                                                     min={0}
+                                                    value={parseFloat(field.value).toFixed(2)}
                                                     placeholder="Enter supply amount"
                                                 />
                                                 <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>

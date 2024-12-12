@@ -74,7 +74,6 @@ export default function CardOverview() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             whileHover={{
-                                type: "spring",
                                 scale: 1.01
                             }}
                             transition={{
@@ -144,7 +143,6 @@ export default function CardOverview() {
                                     <div className='flex'>
                                         <motion.div
                                             whileHover={{
-                                                type: "spring",
                                                 scale: 1.2
                                             }}
                                             transition={{
