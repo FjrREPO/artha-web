@@ -45,6 +45,7 @@ import { BidInput } from './BidInput'
 import { AuctionTimer } from './AuctionTimer'
 import { toast } from 'sonner'
 import { normalize } from '@/lib/helper/bignumber'
+import { useCryptoToken } from '@/hooks/useCryptoToken'
 
 export default function AuctionDetailComponent({
     auctionsId
@@ -86,9 +87,7 @@ export default function AuctionDetailComponent({
         }, { amount: '0' });
     }, [filterBids]);
 
-
-
-    const { mutation, steps, txHash } = useBid();
+    const { mutation, txHash } = useBid();
 
     const startTime = auctionDetails && auctionDetails.createdAt
     const endTime = startTime
@@ -193,6 +192,12 @@ export default function AuctionDetailComponent({
         );
     }
 
+    const { cryptoTokenData } = useCryptoToken();
+
+    const coinSymbolByAddress = cryptoTokenData && cryptoTokenData.find(
+        (coin) => coin.contract_address[0].contract_address.toLowerCase() === auctionDetails?.loanAddress.toLowerCase()
+    )?.symbol;
+
     return (
         <>
             {address ? (
@@ -268,7 +273,7 @@ export default function AuctionDetailComponent({
                                                 <h3 className="text-muted-foreground mb-2">Current Highest Bid</h3>
                                                 <div className="flex items-center space-x-2">
                                                     <span className="text-2xl font-bold text-primary">
-                                                        {findHighestBid?.amount || 0} USDC
+                                                        {findHighestBid?.amount || 0} {coinSymbolByAddress}
                                                     </span>
                                                     <TooltipProvider>
                                                         <Tooltip>
@@ -312,6 +317,7 @@ export default function AuctionDetailComponent({
                                             bidAmount={bidAmount}
                                             auctionDetails={auctionDetails}
                                             isAuctionEnded={isAuctionEnded}
+                                            coinSymbolByAddress={coinSymbolByAddress || ""}
                                         />
                                     </SkeletonWrapper>
 

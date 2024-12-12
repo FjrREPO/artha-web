@@ -13,7 +13,8 @@ export const BidInput = ({
     bidAmount,
     setBidAmount,
     auctionDetails,
-    isAuctionEnded
+    isAuctionEnded,
+    coinSymbolByAddress
 }: {
     minBid: number,
     balance: number,
@@ -22,7 +23,8 @@ export const BidInput = ({
     bidAmount: string,
     setBidAmount(value: string): void,
     auctionDetails: AuctionApiSchema | undefined,
-    isAuctionEnded: boolean
+    isAuctionEnded: boolean,
+    coinSymbolByAddress: string
 }) => {
     const [bidError, setBidError] = useState<string | null>(null);
 
@@ -81,7 +83,7 @@ export const BidInput = ({
                     <input
                         type="number"
                         value={bidAmount}
-                        placeholder={`Min. ${(minBid.toFixed(2))} USDC`}
+                        placeholder={`Min. ${(minBid.toFixed(2))} ${coinSymbolByAddress}`}
                         onChange={handleInputChange}
                         className="w-full p-2 border rounded-2xl px-2 focus:ring-2 focus:ring-primary pl-10"
                         disabled={isAuctionEnded}

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getAllAuction } from '@/actions/get-all-auction';
 import { NFTCardSkeleton } from './NFTCardSkeleton';
@@ -23,32 +24,39 @@ const AuctionsComponent: React.FC = () => {
     const { auctionData, auctionLoading } = getAllAuction();
 
     const filteredAndSortedAuctions = useMemo(() => {
-        if (!auctionData) return [];
-
         const currentDate = new Date();
-        return auctionData
+
+        const dataToFilter = auctionData || [];
+
+        return dataToFilter
             .filter(nft => {
-            const createdAtDate = nft.createdAt ? new Date(nft.createdAt) : new Date();
-            const hoursDifference = (currentDate.getTime() - createdAtDate.getTime()) / (1000 * 3600);
-            return hoursDifference <= 25 &&
-                nft.tokenId.toString().includes(searchText) &&
-                (collection === 'All Collections' || nft.nftSymbol === collection);
+                if (!nft) return false;
+
+                const createdAtDate = nft.createdAt ? new Date(nft.createdAt) : new Date();
+                const hoursDifference = (currentDate.getTime() - createdAtDate.getTime()) / (1000 * 3600);
+
+                return hoursDifference <= 25 &&
+                    nft.tokenId && nft.tokenId.toString().includes(searchText) &&
+                    (collection === 'All Collections' || nft.nftSymbol === collection);
             })
             .sort((a, b) => {
-            switch (sortBy) {
-                case 'profit_desc':
-                return (parseInt(b.debt) - parseInt(b.floorPrice)) -
-                    (parseInt(a.debt) - parseInt(a.floorPrice));
-                case 'profit_asc':
-                return (parseInt(a.debt) - parseInt(a.floorPrice)) -
-                    (parseInt(b.debt) - parseInt(b.floorPrice));
-                case 'floor_desc':
-                return parseInt(b.floorPrice) - parseInt(a.floorPrice);
-                case 'floor_asc':
-                return parseInt(a.floorPrice) - parseInt(b.floorPrice);
-                default:
-                return 0;
-            }
+                const parseOrZero = (value: string | number | undefined) =>
+                    value ? parseInt(String(value)) : 0;
+
+                switch (sortBy) {
+                    case 'profit_desc':
+                        return (parseOrZero(b.debt) - parseOrZero(b.floorPrice)) -
+                            (parseOrZero(a.debt) - parseOrZero(a.floorPrice));
+                    case 'profit_asc':
+                        return (parseOrZero(a.debt) - parseOrZero(a.floorPrice)) -
+                            (parseOrZero(b.debt) - parseOrZero(b.floorPrice));
+                    case 'floor_desc':
+                        return parseOrZero(b.floorPrice) - parseOrZero(a.floorPrice);
+                    case 'floor_asc':
+                        return parseOrZero(a.floorPrice) - parseOrZero(b.floorPrice);
+                    default:
+                        return 0;
+                }
             });
     }, [auctionData, searchText, collection, sortBy]);
 
@@ -79,20 +87,40 @@ const AuctionsComponent: React.FC = () => {
                     </Alert>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {auctionLoading
-                        ? Array(4).fill(0).map((_, index) => (
-                            <NFTCardSkeleton key={index} />
-                        ))
-                        : filteredAndSortedAuctions.map((nft) => (
-                            <NFTCard
-                                key={nft.id}
-                                nft={nft}
-                                isLoading={false}
-                            />
-                        ))
-                    }
-                </div>
+                <AnimatePresence>
+                    <motion.div
+                        layout
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                    >
+                        {auctionLoading
+                            ? Array(4).fill(0).map((_, index) => (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <NFTCardSkeleton />
+                                </motion.div>
+                            ))
+                            : filteredAndSortedAuctions.map((nft) => (
+                                <motion.div
+                                    key={nft.id}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <NFTCard
+                                        nft={nft}
+                                        isLoading={false}
+                                    />
+                                </motion.div>
+                            ))
+                        }
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );
