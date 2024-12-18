@@ -1,22 +1,24 @@
 "use client"
 
-import React, { useState } from 'react';
-import { Wallet } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { CoinImage } from '@/components/coin/CoinImage';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { PoolSchema } from '@/lib/validation/types';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { useAccount } from 'wagmi';
-import { useSupply } from '@/hooks/contract/write/useSupply';
-import { toast } from 'sonner';
-import { useERC20Balance } from '@/hooks/contract/useERC20Balance';
-import { normalize } from '@/lib/helper/bignumber';
+import React, { useState, useEffect } from "react";
+import { Wallet } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { supplySchema } from "@/lib/validation/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CoinImage } from "@/components/coin/CoinImage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { PoolSchema } from "@/lib/validation/types";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import { SuccessDialog } from "@/components/dialog/SuccessDialog";
+import { useAccount } from "wagmi";
+import { useSupply } from "@/hooks/contract/write/useSupply";
+import { toast } from "sonner";
+import { useERC20Balance } from "@/hooks/contract/useERC20Balance";
+import { normalize } from "@/lib/helper/bignumber";
 
 interface SupplyProps {
     filteredData?: PoolSchema;
@@ -31,7 +33,11 @@ export default function Supply({
 }: SupplyProps) {
     const { address } = useAccount();
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const loanTokenAddress = filteredData?.loanToken.loanToken?.startsWith('0x') ? filteredData.loanToken.loanToken as HexAddress : "" as HexAddress;
+
+    const loanTokenAddress = filteredData?.loanToken.loanToken?.startsWith("0x")
+        ? filteredData.loanToken.loanToken as HexAddress
+        : "" as HexAddress;
+
     const { balance } = useERC20Balance(address as HexAddress, loanTokenAddress);
     const normalizeBalance = normalize(balance?.toString() ?? "0", 18);
 
@@ -41,20 +47,34 @@ export default function Supply({
     } = useSupply();
 
     const form = useForm<SupplyValues>({
+        resolver: zodResolver(supplySchema),
         defaultValues: {
-            supplyAmount: ''
+            supplyAmount: ""
         }
     });
 
+    const supplyAmount = form.watch("supplyAmount");
+    const isInsufficientBalance = parseFloat(supplyAmount || "0") > parseFloat(normalizeBalance);
+
     const handleSubmit = async (data: SupplyValues) => {
-        if (!address || !filteredData || !data.supplyAmount) {
+        if (!address) {
+            toast.error("Connect wallet first");
+            return;
+        }
+
+        if (!filteredData) {
+            toast.error("No pool data available");
+            return;
+        }
+
+        if (isInsufficientBalance) {
             return;
         }
 
         mutation.mutate(
             {
                 id: filteredData?.id as string,
-                amount: data.supplyAmount,
+                amount: (Number(data.supplyAmount)*1e6).toString(),
                 onBehalfOf: address as HexAddress
             },
             {
@@ -62,16 +82,22 @@ export default function Supply({
                     setShowSuccessDialog(true);
                     form.reset();
                 },
-                onError: (error) => {
-                    toast.error(`Error borrowing: ${error}`);
-                    console.error("Error borrowing:", error);
+                onError: (error: Error) => {
+                    const errorMessage = error instanceof Error
+                        ? error.message
+                        : 'An unknown error occurred';
+                    toast.error(`Error supplying: ${errorMessage}`);
+                    console.error("Error supplying:", error);
                 },
             }
         );
     };
 
     const handleMaxSupply = () => {
-        form.setValue('supplyAmount', normalizeBalance?.toString() ?? "0");
+        form.setValue("supplyAmount", normalizeBalance ?? "0", {
+            shouldValidate: true,
+            shouldDirty: true
+        });
     };
 
     if (!filteredData) {
@@ -86,7 +112,7 @@ export default function Supply({
 
     return (
         <>
-            {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
+            {mutation.isPending && <LoadingTransaction message="Supplying..." />}
             <SuccessDialog
                 isOpen={showSuccessDialog}
                 onClose={() => setShowSuccessDialog(false)}
@@ -121,26 +147,37 @@ export default function Supply({
                                             <div className="relative">
                                                 <Input
                                                     {...field}
+                                                    aria-label="Supply Amount"
                                                     className="w-full pr-10 py-7 rounded-xl"
                                                     type="number"
                                                     min={0}
-                                                    value={parseFloat(field.value).toFixed(2)}
+                                                    step="0.01"
+                                                    value={field.value}
                                                     placeholder="Enter supply amount"
                                                 />
-                                                <div className='absolute right-3 top-1/2 transform -translate-y-1/2 w-fit'>
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit">
                                                     <CoinImage address={filteredData?.loanToken.loanToken || ""} />
                                                 </div>
                                             </div>
                                         </FormControl>
-                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
+                            {isInsufficientBalance && (
+                                <Label className="text-red-600">
+                                    Insufficient balance. The amount exceeds your available funds.
+                                </Label>
+                            )}
+
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={mutation.isPending || !form.formState.isValid}
+                                disabled={
+                                    mutation.isPending ||
+                                    isInsufficientBalance ||
+                                    form.watch("supplyAmount") === ""
+                                }
                             >
                                 Supply
                             </Button>

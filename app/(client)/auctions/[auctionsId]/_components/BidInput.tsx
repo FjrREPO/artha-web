@@ -73,7 +73,7 @@ export const BidInput = ({
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-                <div className='flex flex-row gap-1 items-center'>
+                <div className="flex flex-row gap-1 items-center">
                     <span>Balance: {balance.toFixed(2)}</span>
                     <CoinSymbol address={auctionDetails?.loanAddress || ""} />
                 </div>

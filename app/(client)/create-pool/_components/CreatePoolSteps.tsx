@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Percent } from 'lucide-react';
-import SelectCoinImage from '@/components/select/SelectCoinImage';
-import { UseFormReturn } from 'react-hook-form';
-import { CoinMarketCapSchema, IRMSchema, LTVSchema } from '@/lib/validation/types';
-import { poolSchema } from '@/lib/validation/schemas';
-import { z } from 'zod';
-import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import ValidationError from '@/components/error/validation-error';
-import { listIRM, listLoanToken, listOracle } from '@/constants/config';
+import { Percent } from "lucide-react";
+import SelectCoinImage from "@/components/select/SelectCoinImage";
+import { UseFormReturn } from "react-hook-form";
+import { CoinMarketCapSchema, IRMSchema, LTVSchema } from "@/lib/validation/types";
+import { poolSchema } from "@/lib/validation/schemas";
+import { z } from "zod";
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import ValidationError from "@/components/error/validation-error";
+import { listIRM, listLoanToken, listOracle } from "@/constants/config";
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -58,15 +58,15 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
     );
 
     const handleCollateralSelection = (value: string) => {
-        form.setValue('collateralAddress', value, { shouldValidate: true });
+        form.setValue("collateralAddress", value, { shouldValidate: true });
     };
 
     const handleLoanSelection = (value: string) => {
-        form.setValue('loanAddress', value, { shouldValidate: true });
+        form.setValue("loanAddress", value, { shouldValidate: true });
     };
 
     return (
-        <div className={`transition-opacity duration-300 h-full ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+        <div className={`transition-opacity duration-300 h-full ${isAnimating ? "opacity-0" : "opacity-100"}`}>
             {activeStep === 0 && (
                 <div className="space-y-5">
                     <FormField
@@ -129,9 +129,9 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                             <SelectValue placeholder="Select rate model" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className='cursor-pointer'>
+                                    <SelectContent className="cursor-pointer">
                                         {listIRM?.map((option, index) => (
-                                            <SelectItem key={index} value={option} className='cursor-pointer'>
+                                            <SelectItem key={index} value={option} className="cursor-pointer">
                                                 {option}
                                             </SelectItem>
                                         ))}
@@ -156,9 +156,9 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                             <SelectValue placeholder="Select rate model" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className='cursor-pointer'>
+                                    <SelectContent className="cursor-pointer">
                                         {listOracle?.map((option, index) => (
-                                            <SelectItem key={index} value={option} className='cursor-pointer'>
+                                            <SelectItem key={index} value={option} className="cursor-pointer">
                                                 {option}
                                             </SelectItem>
                                         ))}
@@ -191,9 +191,9 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                                     <SelectValue placeholder="Select LTV Percentage" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className='cursor-pointer'>
+                                            <SelectContent className="cursor-pointer">
                                                 {ltvData?.map((option, index) => (
-                                                    <SelectItem key={index} value={option.ltv} className={'cursor-pointer'}>
+                                                    <SelectItem key={index} value={option.ltv} className={"cursor-pointer"}>
                                                         {option.ltv}%
                                                     </SelectItem>
                                                 ))}
@@ -221,10 +221,10 @@ export const CreatePoolSteps: React.FC<StepProps> = ({
                                             className="pr-10"
                                             placeholder="Enter LTH percentage (0-100)"
                                             {...field}
-                                            value={field.value || ''}
+                                            value={field.value || ""}
                                             onChange={(e) => {
                                                 const value = e.target.value;
-                                                const sanitizedValue = value.replace(/[^0-9]/g, '');
+                                                const sanitizedValue = value.replace(/[^0-9]/g, "");
                                                 const cappedValue = Math.min(Number(sanitizedValue), 100);
                                                 field.onChange(cappedValue.toString());
                                             }}

@@ -10,7 +10,7 @@ type QueryData = {
 
 export default function useBids() {
     const { data, isLoading: bidsLoading, isRefetching: bidsRefetching } = useQuery<QueryData>({
-        queryKey: ['bids'],
+        queryKey: ["bids"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryBids);
         },

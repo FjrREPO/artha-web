@@ -5,23 +5,29 @@ import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
 
 type QueryData = {
-    pools: PoolSchema[];
+  pools: PoolSchema[];
 };
 
 export default function usePools() {
-    const { data, isLoading: poolLoading, isRefetching: poolRefetching } = useQuery<QueryData>({
-        queryKey: ['pool'],
-        queryFn: async () => {
-            return await request(API_SUBGRAPH, queryPool);
-        },
-        refetchInterval: 600000000,
-    });
+  const {
+    data,
+    isLoading: poolLoading,
+    isRefetching: poolRefetching,
+    ...rest
+  } = useQuery<QueryData>({
+    queryKey: ["pool"],
+    queryFn: async () => {
+      return await request(API_SUBGRAPH, queryPool);
+    },
+    refetchInterval: 600000000,
+  });
 
-    const poolData: PoolSchema[] = data?.pools || [];
+  const poolData: PoolSchema[] = data?.pools || [];
 
-    return {
-        poolData,
-        poolLoading,
-        poolRefetching
-    }
+  return {
+    poolData,
+    poolLoading,
+    poolRefetching,
+    ...rest,
+  };
 }

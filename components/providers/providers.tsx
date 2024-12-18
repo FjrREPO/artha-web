@@ -3,11 +3,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { ReactNode, useState } from "react";
 import { ThemeProvider } from "./theme-provider";
-import { WagmiProvider } from 'wagmi'
-import { config } from '@/lib/wagmi'
+import { WagmiProvider } from "wagmi"
+import { config } from "@/lib/wagmi"
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { baseSepolia } from "viem/chains";
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 import { CustomAvatar } from "../web3/button-connect-wallet";
 
 interface Props {

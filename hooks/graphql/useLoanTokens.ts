@@ -10,7 +10,7 @@ type QueryData = {
 
 export default function useLoanTokens() {
     const { data, isLoading: loanTokensLoading } = useQuery<QueryData>({
-        queryKey: ['loanTokens'],
+        queryKey: ["loanTokens"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryLoanTokens);
         },

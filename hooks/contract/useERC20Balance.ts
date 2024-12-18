@@ -12,7 +12,7 @@ export const useERC20Balance = (
     const { data, isLoading: balanceLoading, error: balanceError } = useReadContract({
         abi: erc20Abi,
         address: findTokenAddress,
-        functionName: 'balanceOf',
+        functionName: "balanceOf",
         args: [
             address as HexAddress
         ],

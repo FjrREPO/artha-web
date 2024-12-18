@@ -16,7 +16,7 @@ export const useERC721Balance = (address: HexAddress, token: HexAddress) => {
                 const result = await readContract(config as Config, {
                     address: token,
                     abi: erc721Abi,
-                    functionName: 'balanceOf',
+                    functionName: "balanceOf",
                     args: [address],
                 });
                 setBalance(result);

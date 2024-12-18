@@ -43,7 +43,7 @@ export const calculateUtilizationRate = (
     totalBorrowAssets?: number,
     totalSupplyAssets?: number
 ): string => {
-    if (!totalBorrowAssets || !totalSupplyAssets) return '0.00';
+    if (!totalBorrowAssets || !totalSupplyAssets) return "0.00";
 
     return ((totalBorrowAssets / totalSupplyAssets) * 100).toFixed(2);
 };

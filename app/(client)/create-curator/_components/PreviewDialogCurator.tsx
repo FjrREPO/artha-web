@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CoinImage } from '@/components/coin/CoinImage';
-import { CoinSymbol } from '@/components/coin/CoinSymbol';
+import { CoinImage } from "@/components/coin/CoinImage";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PoolSchema } from '@/lib/validation/types';
-import { FieldValues } from 'react-hook-form';
-import { formatAddress } from '@/lib/utils';
+import { PoolSchema } from "@/lib/validation/types";
+import { FieldValues } from "react-hook-form";
+import { formatAddress } from "@/lib/utils";
 
 interface PreviewDialogProps {
     isOpen: boolean;

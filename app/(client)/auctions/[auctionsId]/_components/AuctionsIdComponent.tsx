@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useState, useEffect, useMemo } from 'react'
-import Image from 'next/image'
-import { formatAddress } from '@/lib/utils'
-import { AuctionApiSchema } from '@/lib/validation/types'
-import { getAllAuction } from '@/actions/get-all-auction'
+import React, { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
+import { formatAddress } from "@/lib/utils"
+import { AuctionApiSchema } from "@/lib/validation/types"
+import { getAllAuction } from "@/actions/get-all-auction"
 
 import {
     Clock,
@@ -13,39 +13,39 @@ import {
     Coins,
     ArrowUpRight,
     AlertTriangle
-} from 'lucide-react'
+} from "lucide-react"
 
 import {
     Card,
     CardContent
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger
-} from '@/components/ui/tooltip'
-import { Separator } from '@/components/ui/separator'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+} from "@/components/ui/tooltip"
+import { Separator } from "@/components/ui/separator"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-import SkeletonWrapper from '@/components/loader/SkeletonWrapper'
-import { CoinImage } from '@/components/coin/CoinImage'
-import { CoinSymbol } from '@/components/coin/CoinSymbol'
-import { TableAuctionHistory } from './TableAuctionHistory'
-import useBids from '@/hooks/graphql/useBids'
-import { useBid } from '@/hooks/contract/write/useBid'
-import { useERC20Balance } from '@/hooks/contract/useERC20Balance'
-import { useAccount } from 'wagmi'
-import SuccessDialog from '@/components/dialog/SuccessDialog'
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction'
-import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet'
-import { BidInput } from './BidInput'
-import { AuctionTimer } from './AuctionTimer'
-import { toast } from 'sonner'
-import { normalize } from '@/lib/helper/bignumber'
-import { useCryptoToken } from '@/hooks/useCryptoToken'
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper"
+import { CoinImage } from "@/components/coin/CoinImage"
+import { CoinSymbol } from "@/components/coin/CoinSymbol"
+import { TableAuctionHistory } from "./TableAuctionHistory"
+import useBids from "@/hooks/graphql/useBids"
+import { useBid } from "@/hooks/contract/write/useBid"
+import { useERC20Balance } from "@/hooks/contract/useERC20Balance"
+import { useAccount } from "wagmi"
+import SuccessDialog from "@/components/dialog/SuccessDialog"
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction"
+import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet"
+import { BidInput } from "./BidInput"
+import { AuctionTimer } from "./AuctionTimer"
+import { toast } from "sonner"
+import { normalize } from "@/lib/helper/bignumber"
+import { useCryptoToken } from "@/hooks/useCryptoToken"
 
 export default function AuctionDetailComponent({
     auctionsId
@@ -55,7 +55,7 @@ export default function AuctionDetailComponent({
     const { address } = useAccount()
     const { auctionData, auctionLoading } = getAllAuction();
     const { bidsData, bidsLoading } = useBids();
-    const [bidAmount, setBidAmount] = useState('');
+    const [bidAmount, setBidAmount] = useState("");
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
     const [bidError, setBidError] = useState<string | null>(null);
 
@@ -69,8 +69,8 @@ export default function AuctionDetailComponent({
         balanceLoading,
         balanceError
     } = useERC20Balance(
-        address as HexAddress || '',
-        auctionDetails?.loanAddress as HexAddress || ''
+        address as HexAddress || "",
+        auctionDetails?.loanAddress as HexAddress || ""
     );
 
     const filterBids = useMemo(() =>
@@ -81,10 +81,10 @@ export default function AuctionDetailComponent({
     const findHighestBid = useMemo(() => {
         if (!auctionDetails || !filterBids) return null;
         return filterBids.reduce((prev, current) => {
-            const prevAmount = typeof prev.amount === 'string' ? parseFloat(prev.amount) : prev.amount;
-            const currentAmount = typeof current.amount === 'string' ? parseFloat(current.amount) : current.amount || 0;
+            const prevAmount = typeof prev.amount === "string" ? parseFloat(prev.amount) : prev.amount;
+            const currentAmount = typeof current.amount === "string" ? parseFloat(current.amount) : current.amount || 0;
             return (prevAmount ?? 0 > currentAmount) ? prev : current;
-        }, { amount: '0' });
+        }, { amount: "0" });
     }, [filterBids]);
 
     const { mutation, txHash } = useBid();
@@ -92,7 +92,7 @@ export default function AuctionDetailComponent({
     const startTime = auctionDetails && auctionDetails.createdAt
     const endTime = startTime
         ? new Date(new Date(startTime).getTime() + 24 * 60 * 60 * 1000).toISOString()
-        : ''
+        : ""
     const [isAuctionEnded, setIsAuctionEnded] = useState(false);
 
     useEffect(() => {
@@ -114,7 +114,7 @@ export default function AuctionDetailComponent({
 
         if (isNaN(numericValue)) {
             setBidError("Please enter a valid number");
-            setBidAmount('');
+            setBidAmount("");
             return;
         }
 
@@ -221,7 +221,7 @@ export default function AuctionDetailComponent({
                                 <CardContent className="p-2">
                                     <SkeletonWrapper isLoading={auctionLoading || bidsLoading}>
                                         <Image
-                                            src={auctionDetails?.nftImageUrl || '/img/placeholder-nft.jpg'}
+                                            src={auctionDetails?.nftImageUrl || "/img/placeholder-nft.jpg"}
                                             alt="NFT Asset"
                                             width={500}
                                             height={500}
@@ -265,7 +265,7 @@ export default function AuctionDetailComponent({
                                             <span>Auction Details</span>
                                         </h2>
                                     </div>
-                                    <Separator className='my-4' />
+                                    <Separator className="my-4" />
 
                                     <div className="flex flex-row justify-between gap-4">
                                         <SkeletonWrapper isLoading={auctionLoading || bidsLoading}>

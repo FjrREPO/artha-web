@@ -1,17 +1,17 @@
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { useAccount } from 'wagmi';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useWithdrawCollateral } from '@/hooks/contract/write/useWithdrawCollateral';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import SuccessDialog from '@/components/dialog/SuccessDialog';
-import { useState } from 'react';
-import { NftImage } from '@/components/nft/NftImage';
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useAccount } from "wagmi";
+import { AlchemyNftSchema, PoolSchema } from "@/lib/validation/types";
+import { useWithdrawCollateral } from "@/hooks/contract/write/useWithdrawCollateral";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import SuccessDialog from "@/components/dialog/SuccessDialog";
+import { useState } from "react";
+import { NftImage } from "@/components/nft/NftImage";
+import { toast } from "sonner";
 
 interface WithdrawCollateralProps {
     nftData?: AlchemyNftSchema;
@@ -29,7 +29,7 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
 
     const form = useForm<FormData>({
         defaultValues: {
-            tokenId: ''
+            tokenId: ""
         }
     });
 
@@ -106,7 +106,7 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
                                                     value={nftData?.tokenId}
                                                     variant={"ghost"}
                                                     className="w-full h-auto flex justify-start items-center gap-4 py-4"
-                                                    type='button'
+                                                    type="button"
                                                 >
                                                     <NftImage path={nftData?.contract.openSeaMetadata.imageUrl || ""} />
                                                     <div className="flex flex-col items-start justify-center gap-1">
@@ -124,7 +124,7 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={mutation.isPending || !form.formState.isValid}
+                                disabled={mutation.isPending}
                             >
                                 Withdraw Collateral
                             </Button>

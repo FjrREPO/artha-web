@@ -1,11 +1,11 @@
-import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Button } from '../ui/button'
-import { Label } from '../ui/label'
-import { ScrollArea } from '../ui/scroll-area'
-import { AlchemyNftSchema } from '@/lib/validation/types'
-import SkeletonWrapper from '../loader/SkeletonWrapper'
-import { NftImage } from '../nft/NftImage'
+import React from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Button } from "../ui/button"
+import { Label } from "../ui/label"
+import { ScrollArea } from "../ui/scroll-area"
+import { AlchemyNftSchema } from "@/lib/validation/types"
+import SkeletonWrapper from "../loader/SkeletonWrapper"
+import { NftImage } from "../nft/NftImage"
 
 interface DialogSelectNftProps {
     nftData: AlchemyNftSchema[]

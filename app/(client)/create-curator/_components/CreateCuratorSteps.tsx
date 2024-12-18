@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { X } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
-import { CoinImage } from '@/components/coin/CoinImage';
-import { CoinSymbol } from '@/components/coin/CoinSymbol';
-import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { PoolSchema } from '@/lib/validation/types';
-import MultiSelectCoinImage from '@/components/select/MultiSelectCoinImage';
-import ValidationError from '@/components/error/validation-error';
+import { X } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { CoinImage } from "@/components/coin/CoinImage";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { PoolSchema } from "@/lib/validation/types";
+import MultiSelectCoinImage from "@/components/select/MultiSelectCoinImage";
+import ValidationError from "@/components/error/validation-error";
 
 interface StepProps {
     form: UseFormReturn;
@@ -41,7 +41,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
         valueOrUpdater: Array<{ poolId: string; allocation: number; }> |
             ((current: Array<{ poolId: string; allocation: number; }>) => Array<{ poolId: string; allocation: number; }>)
     ) => {
-        const newSelectedPools = typeof valueOrUpdater === 'function'
+        const newSelectedPools = typeof valueOrUpdater === "function"
             ? valueOrUpdater(selectedPools)
             : valueOrUpdater;
 
@@ -50,8 +50,8 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
         const newPoolIds = newSelectedPools.map(pool => pool.poolId);
         const newAllocations = newSelectedPools.map(pool => pool.allocation);
 
-        form.setValue('pools', newPoolIds);
-        form.setValue('allocations', newAllocations);
+        form.setValue("pools", newPoolIds);
+        form.setValue("allocations", newAllocations);
         updateTotalAllocation(newAllocations);
     };
 
@@ -62,8 +62,8 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
         const newPoolIds = newSelectedPools.map(pool => pool.poolId);
         const newAllocations = newSelectedPools.map(pool => pool.allocation);
 
-        form.setValue('pools', newPoolIds);
-        form.setValue('allocations', newAllocations);
+        form.setValue("pools", newPoolIds);
+        form.setValue("allocations", newAllocations);
         updateTotalAllocation(newAllocations);
     };
 
@@ -73,7 +73,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
     };
 
     const handleAllocationChange = (value: number, index: number) => {
-        const currentAllocations = form.getValues('allocations');
+        const currentAllocations = form.getValues("allocations");
         const newAllocations = [...currentAllocations];
 
         const otherAllocationsTotal = currentAllocations.reduce((sum: number, allocation: number, i: number) =>
@@ -93,7 +93,7 @@ export const CreateCuratorSteps: React.FC<StepProps> = ({
     };
 
     return (
-        <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+        <div className={`transition-opacity duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
             {activeStep === 0 && (
                 <div className="space-y-4">
                     <FormField

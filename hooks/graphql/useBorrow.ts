@@ -10,7 +10,7 @@ type QueryData = {
 
 export default function useBorrows() {
     const { data, isLoading: borrowLoading, isRefetching: borrowRefetching } = useQuery<QueryData>({
-        queryKey: ['borrow'],
+        queryKey: ["borrow"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryBorrow);
         },

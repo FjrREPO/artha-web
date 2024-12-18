@@ -8,7 +8,7 @@ export const usePriceOracle = (
     const { data, isLoading: priceOracleLoading } = useReadContract({
         abi: mockOracleABI,
         address: addressOracle as HexAddress,
-        functionName: 'getPrice',
+        functionName: "getPrice",
         args: [
             BigInt(tokenId)
         ],

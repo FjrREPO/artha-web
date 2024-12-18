@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react'
-import AuctionsComponent from './_components/AuctionsComponent'
-import Loading from '@/components/loader/Loading'
+import React, { Suspense } from "react"
+import AuctionsComponent from "./_components/AuctionsComponent"
+import Loading from "@/components/loader/Loading"
 
 export default function page() {
     return (

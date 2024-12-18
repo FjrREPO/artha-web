@@ -1,21 +1,16 @@
-import { mockUSDCABI } from "@/lib/abi/mockUSDCABI";
-import { formatBigNumber } from "@/lib/utils";
+import { erc20Abi } from "viem";
 import { useReadContract } from "wagmi";
 
 export const useDecimal = (addressToken: HexAddress) => {
-    const { data, isLoading: decimalLoading } = useReadContract({
-        abi: mockUSDCABI,
+    const { data: decimal, isLoading: decimalLoading } = useReadContract({
+        abi: erc20Abi,
         address: addressToken,
-        functionName: 'decimals',
+        functionName: "decimals",
         args: [],
     });
 
-    const val = data == 0 ? 6 : data
-    
-    const decimal = formatBigNumber(Number(val));
-
     return {
-        decimal,
+        decimal: decimal as number,
         decimalLoading
     };
 };

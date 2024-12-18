@@ -66,7 +66,7 @@ export function columns(auctionDetails: AuctionApiSchema): ColumnDef<BidsSchema>
                 <CoinImage address={auctionDetails.loanAddress} />
                 <CoinSymbol address={auctionDetails.loanAddress} />
               </div>
-            ) : ''}</span>
+            ) : ""}</span>
           </div>
         )
       },

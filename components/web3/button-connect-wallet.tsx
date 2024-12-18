@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { AvatarComponent, ConnectButton } from '@rainbow-me/rainbowkit';
+import { AvatarComponent, ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "../ui/button";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
@@ -15,13 +15,13 @@ const ChainIcon = ({ iconUrl, name, background, size = 20 }: {
             width: size,
             height: size,
             borderRadius: 999,
-            overflow: 'hidden',
+            overflow: "hidden",
             marginRight: 4,
         }}
     >
         {iconUrl && (
             <Image
-                alt={`${name ?? 'Chain'} icon`}
+                alt={`${name ?? "Chain"} icon`}
                 src={iconUrl}
                 style={{ width: size, height: size }}
                 width={size}
@@ -60,8 +60,8 @@ export const ConnectButtonWalletComponents = () => {
                             aria-hidden="true"
                             style={{
                                 opacity: 0,
-                                pointerEvents: 'none',
-                                userSelect: 'none',
+                                pointerEvents: "none",
+                                userSelect: "none",
                             }}
                         />
                     );

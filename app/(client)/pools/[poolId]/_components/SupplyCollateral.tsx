@@ -1,19 +1,19 @@
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { useAccount } from 'wagmi';
-import { DialogSelectNft } from '@/components/dialog/DialogSelectNft';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { useSupplyCollateral } from '@/hooks/contract/write/useSupplyCollateral';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import SuccessDialog from '@/components/dialog/SuccessDialog';
-import { useEffect, useState } from 'react';
-import { NftImage } from '@/components/nft/NftImage';
-import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useAccount } from "wagmi";
+import { DialogSelectNft } from "@/components/dialog/DialogSelectNft";
+import { AlchemyNftSchema, PoolSchema } from "@/lib/validation/types";
+import { useSupplyCollateral } from "@/hooks/contract/write/useSupplyCollateral";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import SuccessDialog from "@/components/dialog/SuccessDialog";
+import { useEffect, useState } from "react";
+import { NftImage } from "@/components/nft/NftImage";
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { toast } from "sonner";
 
 interface SupplyCollateralProps {
     nftData?: AlchemyNftSchema[];
@@ -34,14 +34,14 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
 
     const form = useForm<FormData>({
         defaultValues: {
-            tokenId: ''
+            tokenId: ""
         }
     });
 
     useEffect(() => {
         if (nftData && nftData.length > 0 && !selectedNft) {
             setSelectedNft(nftData[0]);
-            form.setValue('tokenId', nftData[0].tokenId);
+            form.setValue("tokenId", nftData[0].tokenId);
         }
     }, [nftData, selectedNft, form]);
 
@@ -77,7 +77,7 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
     const handleSelectNft = (nft: AlchemyNftSchema) => {
         setSelectedNft(nft);
         setIsDialogOpen(false);
-        form.setValue('tokenId', nft.tokenId);
+        form.setValue("tokenId", nft.tokenId);
     };
 
     if (!filteredData) {
@@ -151,7 +151,7 @@ export default function SupplyCollateral({ nftData, filteredData, nftLoading }: 
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={mutation.isPending || !form.formState.isValid}
+                                disabled={mutation.isPending}
                             >
                                 Add Collateral
                             </Button>

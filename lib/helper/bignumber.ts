@@ -1,5 +1,5 @@
-import { BigNumber } from 'bignumber.js';
-import { maxUint256 } from 'viem';
+import { BigNumber } from "bignumber.js";
+import { maxUint256 } from "viem";
 
 export type BigNumberValue = string | number | BigNumber;
 

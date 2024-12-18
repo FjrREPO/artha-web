@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     Dialog,
     DialogContent,
@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { z } from 'zod';
-import { poolSchema } from '@/lib/validation/schemas';
-import { CoinMarketCapSchema } from '@/lib/validation/types';
-import { formatAddress } from '@/lib/utils';
-import { CoinSymbol } from '@/components/coin/CoinSymbol';
-import { CoinImage } from '@/components/coin/CoinImage';
+import { z } from "zod";
+import { poolSchema } from "@/lib/validation/schemas";
+import { CoinMarketCapSchema } from "@/lib/validation/types";
+import { formatAddress } from "@/lib/utils";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import { CoinImage } from "@/components/coin/CoinImage";
 
 type FormData = z.infer<typeof poolSchema>;
 

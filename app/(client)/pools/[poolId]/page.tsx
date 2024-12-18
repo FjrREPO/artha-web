@@ -1,6 +1,6 @@
-import React, { Suspense, use } from 'react';
-import PoolIdPage from './_components/PoolIdPage';
-import Loading from '@/components/loader/Loading';
+import React, { Suspense, use } from "react";
+import PoolIdPage from "./_components/PoolIdPage";
+import Loading from "@/components/loader/Loading";
 
 type Params = Promise<{ poolId: string }>
 

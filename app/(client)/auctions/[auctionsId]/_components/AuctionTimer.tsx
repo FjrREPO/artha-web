@@ -59,11 +59,11 @@ export const AuctionTimer = ({
                     <div key={unit} className="flex flex-col items-center">
                         <div className="bg-foreground/50 rounded-md p-1 min-w-[30px] text-center border border-primary/10">
                             <SkeletonWrapper isLoading={isLoading}>
-                                <span className="text-2xl text-white font-bold text-primary">{value.toString().padStart(2, '0')}</span>
+                                <span className="text-2xl text-white font-bold text-primary">{value.toString().padStart(2, "0")}</span>
                             </SkeletonWrapper>
                         </div>
                         <span className="text-xs uppercase text-muted-foreground mt-1">
-                            {unit === 'days' ? 'DAY' : unit === 'hours' ? 'HOUR' : unit === 'minutes' ? 'MIN' : 'SEC'}
+                            {unit === "days" ? "DAY" : unit === "hours" ? "HOUR" : unit === "minutes" ? "MIN" : "SEC"}
                         </span>
                     </div>
                 ))}

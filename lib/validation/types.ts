@@ -1,10 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 import {
     accountSchema,
     alchemyNftSchema,
     auctionActivitySchema,
     auctionHistorySchema,
-    AuctionsDataSchema,
     borrowSchema,
     coinMarketCapSchema,
     collateralTokenSchema,
@@ -22,8 +21,11 @@ import {
     tokensSchema,
     supplyCollateralsSchema,
     auctionApiSchema,
-    bidsSchema
-} from './schemas';
+    bidsSchema,
+    supplySchema
+} from "./schemas";
+
+export type SupplySchema = z.infer<typeof supplySchema>;
 
 export type BidsSchema = z.infer<typeof bidsSchema>;
 
@@ -68,5 +70,3 @@ export type AuctionActivitySchema = z.infer<typeof auctionActivitySchema>;
 export type AlchemyNftSchema = z.infer<typeof alchemyNftSchema>;
 
 export type CoinMarketCapSchema = z.infer<typeof coinMarketCapSchema>;
-
-export type AuctionsDataSchema = z.infer<typeof AuctionsDataSchema>;

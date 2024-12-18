@@ -1,10 +1,10 @@
-import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Button } from '../ui/button'
-import { Label } from '../ui/label'
-import { CoinImage } from '../coin/CoinImage'
-import { ScrollArea } from '../ui/scroll-area'
-import { CoinMarketCapSchema } from '@/lib/validation/types'
+import React from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Button } from "../ui/button"
+import { Label } from "../ui/label"
+import { CoinImage } from "../coin/CoinImage"
+import { ScrollArea } from "../ui/scroll-area"
+import { CoinMarketCapSchema } from "@/lib/validation/types"
 
 interface DialogSelectTokenProps {
     tokenUsed: CoinMarketCapSchema[]

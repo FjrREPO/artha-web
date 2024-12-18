@@ -1,18 +1,18 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { AlchemyNftSchema, PoolSchema } from '@/lib/validation/types';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { useBorrow } from '@/hooks/contract/write/useBorrow';
-import { CoinImage } from '@/components/coin/CoinImage';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { AlchemyNftSchema, PoolSchema } from "@/lib/validation/types";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import { SuccessDialog } from "@/components/dialog/SuccessDialog";
+import { useBorrow } from "@/hooks/contract/write/useBorrow";
+import { CoinImage } from "@/components/coin/CoinImage";
+import { toast } from "sonner";
 
 interface BorrowProps {
     filteredData?: PoolSchema;
@@ -37,7 +37,7 @@ export default function Borrow({
 
     const form = useForm<BorrowValues>({
         defaultValues: {
-            borrowAmount: ''
+            borrowAmount: ""
         }
     });
 
@@ -118,7 +118,7 @@ export default function Borrow({
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={mutation.isPending || !form.formState.isValid}
+                                disabled={mutation.isPending}
                             >
                                 Borrow
                             </Button>

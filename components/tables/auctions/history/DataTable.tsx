@@ -158,7 +158,7 @@ export function DataTable<TData extends BidsSchema, TValue>({
         </Table>
       </div>
       <div className="flex flex-col items-center justify-center py-4 z-10">
-        <div className='flex flex-row items-center justify-center space-x-2 py-2 z-10'>
+        <div className="flex flex-row items-center justify-center space-x-2 py-2 z-10">
           <Button
             variant={"outline"}
             size={"icon"}

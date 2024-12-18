@@ -26,7 +26,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
                 <div className="relative mb-4">
                     <SkeletonWrapper isLoading={isLoading}>
                         <Image
-                            src={nft.nftImageUrl || '/img/placeholder-nft.jpg'}
+                            src={nft.nftImageUrl || "/img/placeholder-nft.jpg"}
                             alt={`NFT ${nft.nftSymbol} #${nft.tokenId}`}
                             width={300}
                             height={300}
@@ -58,7 +58,7 @@ export const NFTCard: React.FC<NFTCardProps> = ({ nft, isLoading }) => {
                         </SkeletonWrapper>
                         <SkeletonWrapper isLoading={isLoading}>
                             <div className="text-xs text-textGraycustom">Potential Profit</div>
-                            <div className={`text-xs font-medium text-right ${parseFloat(potentialProfit) > 0 ? 'text-green-500' : 'text-red-500'
+                            <div className={`text-xs font-medium text-right ${parseFloat(potentialProfit) > 0 ? "text-green-500" : "text-red-500"
                                 }`}>
                                 {potentialProfit}
                             </div>

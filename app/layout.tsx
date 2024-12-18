@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Arte Finance",
   description: "Lending and borrowing.",
   icons: {
-    icon: '/logo_white.ico',
+    icon: "/logo_white.ico",
   }
 };
 

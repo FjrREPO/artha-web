@@ -1,15 +1,15 @@
-import { CoinImageCustom } from '@/components/coin/CoinImageCustom';
-import { motion } from 'framer-motion';
-import { CheckCircle, Plus } from 'lucide-react';
-import { FormControl } from '@/components/ui/form';
-import { CoinMarketCapSchema } from '@/lib/validation/types';
-import SkeletonWrapper from '../loader/SkeletonWrapper';
-import { Label } from '../ui/label';
-import { Dialog, DialogContent, DialogHeader } from '../ui/dialog';
-import { DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
-import { ScrollArea } from '../ui/scroll-area';
-import { useState } from 'react';
-import { Button } from '../ui/button';
+import { CoinImageCustom } from "@/components/coin/CoinImageCustom";
+import { motion } from "framer-motion";
+import { CheckCircle, Plus } from "lucide-react";
+import { FormControl } from "@/components/ui/form";
+import { CoinMarketCapSchema } from "@/lib/validation/types";
+import SkeletonWrapper from "../loader/SkeletonWrapper";
+import { Label } from "../ui/label";
+import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
+import { ScrollArea } from "../ui/scroll-area";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface SelectCoinImageProps {
     data?: CoinMarketCapSchema[];
@@ -20,14 +20,14 @@ interface SelectCoinImageProps {
 
 const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
     data,
-    value = '',
+    value = "",
     onChange,
     isLoading
 }) => {
     const loadingPlaceholders = Array(3).fill(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const excludedSymbols = ['USDC', 'BAYC', 'AZUKI', 'USDT'];
+    const excludedSymbols = ["USDC", "BAYC", "AZUKI", "USDT"];
 
     const mainDisplayCoins = data?.filter(coin =>
         excludedSymbols.includes(coin.symbol.toUpperCase())
@@ -70,7 +70,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                 ) : (
                     <>
                         {mainDisplayCoins?.map((coin: CoinMarketCapSchema) => {
-                            const tokenAddress = coin.contract_address[0]?.contract_address || '';
+                            const tokenAddress = coin.contract_address[0]?.contract_address || "";
 
                             return (
                                 <motion.div
@@ -81,7 +81,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                     onClick={() => onChange?.(tokenAddress)}
                                 >
                                     <div className={`relative rounded-full overflow-hidden transition-all duration-200
-                                        ${value === tokenAddress ? 'ring-4 ring-gray-400 dark:ring-white' : 'ring-1 ring-gray-200 hover:ring-primary/50'}
+                                        ${value === tokenAddress ? "ring-4 ring-gray-400 dark:ring-white" : "ring-1 ring-gray-200 hover:ring-primary/50"}
                                     `}>
                                         <CoinImageCustom
                                             symbol={coin.symbol}
@@ -94,7 +94,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                         )}
                                     </div>
                                     <div className={`mt-2 text-center text-sm font-medium
-                                        ${value === tokenAddress ? 'text-primary' : 'text-gray-600'}
+                                        ${value === tokenAddress ? "text-primary" : "text-gray-600"}
                                     `}>
                                         {coin.symbol}
                                     </div>
@@ -106,9 +106,9 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className='flex flex-col gap-3 items-center justify-center cursor-pointer'
+                                    className="flex flex-col gap-3 items-center justify-center cursor-pointer"
                                 >
-                                    <div className='w-20 h-20 rounded-full flex items-center justify-center outline outline-2 outline-gray-400 transition-all duration-200'>
+                                    <div className="w-20 h-20 rounded-full flex items-center justify-center outline outline-2 outline-gray-400 transition-all duration-200">
                                         {selectedDialogCoin ? (
                                             <div className="relative rounded-full overflow-hidden transition-all duration-200 ring-4 ring-gray-400 dark:ring-white">
                                                 <CoinImageCustom
@@ -120,10 +120,10 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                                 </div>
                                             </div>
                                         ) : (
-                                            <Plus className='w-7 h-7' />
+                                            <Plus className="w-7 h-7" />
                                         )}
                                     </div>
-                                    <Label>{selectedDialogCoin ? selectedDialogCoin.symbol : 'More'}</Label>
+                                    <Label>{selectedDialogCoin ? selectedDialogCoin.symbol : "More"}</Label>
                                 </motion.div>
                             </DialogTrigger>
                             <DialogContent>
@@ -134,7 +134,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                 </DialogHeader>
                                 <ScrollArea className="max-h-80 overflow-auto">
                                     {dialogCoins?.map((token: CoinMarketCapSchema) => {
-                                        const tokenAddress = token.contract_address[0]?.contract_address || '';
+                                        const tokenAddress = token.contract_address[0]?.contract_address || "";
                                         return (
                                             <Button
                                                 key={token.id}
@@ -146,7 +146,7 @@ const SelectCoinImage: React.FC<SelectCoinImageProps> = ({
                                                 className="w-full h-auto flex justify-between items-center"
                                             >
                                                 <div className="flex flex-row items-center cursor-pointer justify-start gap-3">
-                                                    <CoinImageCustom symbol={token?.symbol || ""} className='w-9 h-9'/>
+                                                    <CoinImageCustom symbol={token?.symbol || ""} className="w-9 h-9"/>
                                                     <div className="flex flex-col items-start justify-center gap-3">
                                                         <Label className="cursor-pointer">{token?.symbol}</Label>
                                                         <Label className="cursor-pointer text-gray-500">{token?.name} ({token?.contract_address[0].platform.name})</Label>

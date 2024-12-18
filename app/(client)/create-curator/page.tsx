@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react'
-import CreateCuratorComponent from './_components/CreateCuratorComponent'
-import Loading from '@/components/loader/Loading'
+import React, { Suspense } from "react"
+import CreateCuratorComponent from "./_components/CreateCuratorComponent"
+import Loading from "@/components/loader/Loading"
 
 export default function page() {
     return (

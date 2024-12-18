@@ -1,27 +1,27 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { poolSchema } from '@/lib/validation/schemas';
-import { useCreatePool } from '@/hooks/contract/write/useCreatePool';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import SuccessDialog from '@/components/dialog/SuccessDialog';
-import { Progress } from '@/components/ui/progress';
-import { CreatePoolSteps } from './CreatePoolSteps';
-import { z } from 'zod';
-import { useOracle } from '@/hooks/useOracle';
-import { useCryptoToken } from '@/hooks/useCryptoToken';
-import { useLTV } from '@/hooks/graphql/useLTV';
-import PreviewDialogPool from './PreviewDialogPool';
-import { useIRM } from '@/hooks/graphql/useIRM';
-import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
-import { useAccount } from 'wagmi';
-import { toast } from 'sonner';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { poolSchema } from "@/lib/validation/schemas";
+import { useCreatePool } from "@/hooks/contract/write/useCreatePool";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import SuccessDialog from "@/components/dialog/SuccessDialog";
+import { Progress } from "@/components/ui/progress";
+import { CreatePoolSteps } from "./CreatePoolSteps";
+import { z } from "zod";
+import { useOracle } from "@/hooks/useOracle";
+import { useCryptoToken } from "@/hooks/useCryptoToken";
+import { useLTV } from "@/hooks/graphql/useLTV";
+import PreviewDialogPool from "./PreviewDialogPool";
+import { useIRM } from "@/hooks/graphql/useIRM";
+import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
 
 type FormData = z.infer<typeof poolSchema>;
 
@@ -35,9 +35,9 @@ const CreatePoolComponent = () => {
     const { address } = useAccount()
 
     const steps = [
-        { title: 'Token Selection', fields: ['collateralAddress', 'loanAddress'] },
-        { title: 'Risk Parameters & Oracle', fields: ['irm', 'oracle'] },
-        { title: 'Loan to Value (LTV) & Liquidation Threshold (LTH)', fields: ['ltv', 'lth'] }
+        { title: "Token Selection", fields: ["collateralAddress", "loanAddress"] },
+        { title: "Risk Parameters & Oracle", fields: ["irm", "oracle"] },
+        { title: "Loan to Value (LTV) & Liquidation Threshold (LTH)", fields: ["ltv", "lth"] }
     ];
 
     const { oracleData, oracleLoading } = useOracle()
@@ -112,7 +112,7 @@ const CreatePoolComponent = () => {
             );
 
             if (!findCollateralAddress || !findLoanAddress) {
-                console.error('Missing token data');
+                console.error("Missing token data");
                 return;
             }
 
@@ -188,8 +188,8 @@ const CreatePoolComponent = () => {
                         processName="Create Pool"
                     />
                     <Card className="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-lg border-none shadow-2xl">
-                        <CardHeader className='flex flex-col gap-3'>
-                            <div className='flex flex-col gap-1'>
+                        <CardHeader className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
                                 <CardTitle>Create Pool</CardTitle>
                                 <CardDescription>
                                     Step {activeStep + 1} of {steps.length}: {steps[activeStep].title}
@@ -228,7 +228,7 @@ const CreatePoolComponent = () => {
                                         {activeStep === steps.length - 1 ? (
                                             <Button
                                                 type="submit"
-                                                disabled={mutation.isPending || !form.formState.isValid}
+                                                disabled={mutation.isPending}
                                             >
                                                 Preview Pool
                                             </Button>

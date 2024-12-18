@@ -7,19 +7,19 @@ export const GET = async (request: NextRequest) => {
     const contractAddresses = request.nextUrl.searchParams.getAll("contractAddress"); 
 
     if (!tokenId) {
-        return NextResponse.json({ error: 'tokenId is required' }, { status: 400 });
+        return NextResponse.json({ error: "tokenId is required" }, { status: 400 });
     }
 
     if (contractAddresses.length === 0) {
-        return NextResponse.json({ error: 'At least one contractAddress is required' }, { status: 400 });
+        return NextResponse.json({ error: "At least one contractAddress is required" }, { status: 400 });
     }
 
     const url = `https://base-sepolia.g.alchemy.com/nft/v3/${API_ALCHEMY}/getOwnersForNFT?contractAddress=${contractAddresses}&tokenId=${tokenId}`
 
     const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-            accept: 'application/json'
+            accept: "application/json"
         },
     });
 

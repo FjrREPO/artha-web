@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { usePriceOracle } from "@/hooks/contract/usePriceOracle";
-import SkeletonWrapper from '@/components/loader/SkeletonWrapper';
-import { formatNumberWithDots } from '@/lib/utils';
-import { normalize } from '@/lib/helper/bignumber';
+import SkeletonWrapper from "@/components/loader/SkeletonWrapper";
+import { formatNumberWithDots } from "@/lib/utils";
+import { normalize } from "@/lib/helper/bignumber";
 
 type PriceOracleCellProps = {
     oracleAddress: HexAddress;

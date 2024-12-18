@@ -10,7 +10,7 @@ type QueryData = {
 
 export default function useCollateralTokens() {
     const { data, isLoading: collateralTokensLoading } = useQuery<QueryData>({
-        queryKey: ['collateralTokens'],
+        queryKey: ["collateralTokens"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryCollateralTokens);
         },

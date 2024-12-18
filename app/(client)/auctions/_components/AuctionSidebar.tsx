@@ -42,14 +42,14 @@ export const AuctionSidebar: React.FC<{
                     <X
                         className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
                         size={16}
-                        onClick={() => setSearchText('')}
+                        onClick={() => setSearchText("")}
                     />
                 )}
             </div>
 
             <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="collection">
-                    <AccordionTrigger className='hover:no-underline'>
+                    <AccordionTrigger className="hover:no-underline">
                         Collection
                     </AccordionTrigger>
                     <AccordionContent>
@@ -69,7 +69,7 @@ export const AuctionSidebar: React.FC<{
                 </AccordionItem>
 
                 <AccordionItem value="order-by">
-                    <AccordionTrigger className='hover:no-underline'>
+                    <AccordionTrigger className="hover:no-underline">
                         Sort By
                     </AccordionTrigger>
                     <AccordionContent>

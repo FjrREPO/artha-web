@@ -185,7 +185,7 @@ const CreateDropdownMenu: React.FC = () => {
             "px-3 transition-all duration-300 text-xs font-bold",
             "border-none xl:border hover:shadow-main-2",
             (pathname.startsWith("/create-pool") || pathname.startsWith("/create-curator")) && "shadow-main-2 shadow-[0_0_2px_1.5px_rgba(0,0,0,0.3)]",
-            isDropdownOpen && 'scale-105 shadow-lg'
+            isDropdownOpen && "scale-105 shadow-lg"
           )}
         >
           <PlusCircle width={15} className="mr-1" />

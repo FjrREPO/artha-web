@@ -1,17 +1,17 @@
 "use client"
 
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from "react"
+import { motion } from "framer-motion"
 import {
     Rocket,
     Shield,
     Lock,
     TrendingUp
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 
 const features = [
     {
@@ -54,19 +54,19 @@ const features = [
 
 export default function CardOverview() {
     return (
-        <div className='container mx-auto space-y-8'>
-            <Card className='overflow-hidden rounded-2xl'>
-                <CardContent className='flex flex-col md:flex-row w-full items-center justify-between p-8 space-y-6 md:space-y-0 md:space-x-6'>
-                    <div className='flex flex-col gap-4 max-w-xl'>
+        <div className="container mx-auto space-y-8">
+            <Card className="overflow-hidden rounded-2xl">
+                <CardContent className="flex flex-col md:flex-row w-full items-center justify-between p-8 space-y-6 md:space-y-0 md:space-x-6">
+                    <div className="flex flex-col gap-4 max-w-xl">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <Label className='text-2xl font-bold block'>
+                            <Label className="text-2xl font-bold block">
                                 Arte is a permissionless lending protocol for intellectual property (IP)
                             </Label>
-                            <CardDescription className='mt-2 text-textGrayCustom'>
+                            <CardDescription className="mt-2 text-textGrayCustom">
                                 Built natively on the Story Protocol
                             </CardDescription>
                         </motion.div>
@@ -81,9 +81,9 @@ export default function CardOverview() {
                                 type: "spring",
                                 stiffness: 300
                             }}
-                            className='w-fit'
+                            className="w-fit"
                         >
-                            <Button className='text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 w-fit'>
+                            <Button className="text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 w-fit">
                                 View docs
                             </Button>
                         </motion.div>
@@ -92,16 +92,16 @@ export default function CardOverview() {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className='flex flex-row gap-6 items-center'
+                        className="flex flex-row gap-6 items-center"
                     >
-                        <div className='flex flex-col items-center'>
-                            <Label className='text-sm text-gray-500'>Curator Highest APY</Label>
-                            <Label className='text-3xl font-bold text-blue-600'>24.53%</Label>
+                        <div className="flex flex-col items-center">
+                            <Label className="text-sm text-gray-500">Curator Highest APY</Label>
+                            <Label className="text-3xl font-bold text-blue-600">24.53%</Label>
                         </div>
-                        <Separator orientation='vertical' className='h-16 bg-gray-300' />
-                        <div className='flex flex-col items-center'>
-                            <Label className='text-sm text-gray-500'>Total Value Locked</Label>
-                            <Label className='text-3xl font-bold text-green-600'>$10.79M</Label>
+                        <Separator orientation="vertical" className="h-16 bg-gray-300" />
+                        <div className="flex flex-col items-center">
+                            <Label className="text-sm text-gray-500">Total Value Locked</Label>
+                            <Label className="text-3xl font-bold text-green-600">$10.79M</Label>
                         </div>
                     </motion.div>
                 </CardContent>
@@ -134,13 +134,13 @@ export default function CardOverview() {
                             hover:shadow-xl
                         `}
                     >
-                        <CardContent className='w-full p-6 space-y-4 relative'>
-                            <div className='space-y-3'>
-                                <div className='flex flex-row justify-between items-center'>
+                        <CardContent className="w-full p-6 space-y-4 relative">
+                            <div className="space-y-3">
+                                <div className="flex flex-row justify-between items-center">
                                     <div className={`text-2xl font-bold ${feature.text}`}>
                                         {feature.title}
                                     </div>
-                                    <div className='flex'>
+                                    <div className="flex">
                                         <motion.div
                                             whileHover={{
                                                 scale: 1.2

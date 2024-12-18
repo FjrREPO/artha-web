@@ -1,8 +1,8 @@
-import React from 'react';
-import { CheckCircle } from 'lucide-react';
-import { FormControl } from '@/components/ui/form';
-import { PoolSchema } from '@/lib/validation/types';
-import { CoinImageCustom } from '../coin/CoinImageCustom';
+import React from "react";
+import { CheckCircle } from "lucide-react";
+import { FormControl } from "@/components/ui/form";
+import { PoolSchema } from "@/lib/validation/types";
+import { CoinImageCustom } from "../coin/CoinImageCustom";
 
 interface MultiSelectCoinImageProps {
     data?: PoolSchema[];
@@ -43,7 +43,7 @@ const MultiSelectCoinImage: React.FC<MultiSelectCoinImageProps> = ({
                     >
                         <div className={`
                             relative rounded-full overflow-hidden transition-all duration-200
-                            ${isSelected(pool.id!) ? 'ring-4 ring-gray-400 dark:ring-white' : 'ring-1 ring-gray-200 hover:ring-primary/50'}
+                            ${isSelected(pool.id!) ? "ring-4 ring-gray-400 dark:ring-white" : "ring-1 ring-gray-200 hover:ring-primary/50"}
                         `}>
                             <CoinImageCustom
                                 address={pool.collateralToken.collateralToken || ""}
@@ -59,7 +59,7 @@ const MultiSelectCoinImage: React.FC<MultiSelectCoinImageProps> = ({
 
                         <div className={`
                             mt-2 text-center text-sm font-medium truncate max-w-[80px]
-                            ${isSelected(pool.id!) ? 'text-primary' : 'text-gray-600'}
+                            ${isSelected(pool.id!) ? "text-primary" : "text-gray-600"}
                         `}>
                             Pool {pool.id?.slice(0, 6)}...
                         </div>

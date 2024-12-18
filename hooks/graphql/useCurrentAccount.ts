@@ -13,14 +13,14 @@ export default function useCurrentAccount() {
     const { address } = useAccount();
 
     const { data, isLoading: accountLoading, isRefetching: accountRefetching } = useQuery<QueryData>({
-        queryKey: ['account'],
+        queryKey: ["account"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, queryAccount(address as HexAddress));
         },
         refetchInterval: 600000000,
     });
 
-    const accountData: AccountSchema = data?.account || { id: '', lend: [], positions: [], earn: [] };
+    const accountData: AccountSchema = data?.account || { id: "", lend: [], positions: [], earn: [] };
 
     return {
         accountData,

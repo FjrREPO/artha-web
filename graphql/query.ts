@@ -30,11 +30,11 @@ export const queryPool = gql`{
 
 export const querySupplyCollaterals = gql`{
     supplyCollaterals(orderBy: blockTimestamp, orderDirection: desc) {
-        tokenId
-        poolId
-        onBehalOf
-        sender
         id
+        poolId
+        sender
+        tokenId
+        onBehalOf
     }
 }`
 

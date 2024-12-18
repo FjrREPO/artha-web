@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const poolSchema = z.object({
     id: z.string().optional(),
@@ -36,11 +36,11 @@ export const bidsSchema = z.object({
 });
 
 export const supplyCollateralsSchema = z.object({
-    tokenId: z.string().optional(),
-    poolId: z.string().optional(),
-    onBehalOf: z.string().optional(),
-    sender: z.string().optional(),
     id: z.string().optional(),
+    poolId: z.string().optional(),
+    sender: z.string().optional(),
+    tokenId: z.string().optional(),
+    onBehalOf: z.string().optional(),
 });
 
 export const accountSchema = z.object({
@@ -123,6 +123,12 @@ export const borrowSchema = z.object({
     shares: z.string().optional(),
     tokenId: z.string(),
     amount: z.string(),
+});
+
+export const supplySchema = z.object({
+    supplyAmount: z.string()
+        .refine(val => !isNaN(parseFloat(val)), "Invalid number")
+        .refine(val => parseFloat(val) > 0, "Amount must be positive")
 });
 
 export const positionSchema = z.object({
@@ -238,7 +244,7 @@ export const auctionHistorySchema = z.object({
 
 export const auctionActivitySchema = z.object({
     activityType: z.string().min(1),
-    price: z.union([z.string().min(1), z.literal('--')]),
+    price: z.union([z.string().min(1), z.literal("--")]),
     from: z.string().min(1),
     to: z.string().min(1),
     date: z.string()
@@ -465,32 +471,6 @@ const NFTItemSchema = z.object({
     delegated: z.boolean(),
     availableToBorrow: z.string(),
     healthFactor: z.number(),
-});
-
-export const AuctionsDataSchema = z.object({
-    id: z.string(),
-    loanId: z.string(),
-    tokenId: z.string(),
-    collectionName: z.string(),
-    collectionAddress: z.string().length(42),
-    borrowed: z.string(),
-    bidPrice: z.string(),
-    floorPrice: z.string(),
-    collateralRatio: z.number(),
-    liquidationRatio: z.number(),
-    liquidationPrice: z.string(),
-    healthFactor: z.number(),
-    reserveAsset: ReserveAssetSchema,
-    bidEndTime: z.number(),
-    bidStartTimestamp: z.number(),
-    auctionHistory: z.array(z.any()),
-    contractApproved: z.boolean(),
-    state: z.string(),
-    bidderAddress: z.string().length(42),
-    bidFine: z.string(),
-    order: z.null(),
-    image: z.string().url(),
-    nftAsset: NFTItemSchema,
 });
 
 export const auctionApiSchema = z.object({

@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
-import CardPortfolio from './CardPortfolio'
-import CardRewards from './CardRewards'
-import { BorrowSection } from './BorrowSection'
-import { EarnSection } from './EarnSection';
-import useBorrows from '@/hooks/graphql/useBorrow';
-import usePools from '@/hooks/graphql/usePools';
-import { useOwnerNft } from '@/hooks/useOwnerNft';
-import { useAccount } from 'wagmi';
-import useEarn from '@/hooks/graphql/useEarn';
-import { LendSection } from './LendSection';
-import useAccountLend from '@/hooks/graphql/useAccountLend';
-import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
-import { listIP } from '@/constants/config';
-import useCurrentAccount from '@/hooks/graphql/useCurrentAccount';
+import React, { useEffect, useState } from "react"
+import CardPortfolio from "./CardPortfolio"
+import CardRewards from "./CardRewards"
+import { BorrowSection } from "./BorrowSection"
+import { EarnSection } from "./EarnSection";
+import useBorrows from "@/hooks/graphql/useBorrow";
+import usePools from "@/hooks/graphql/usePools";
+import { useOwnerNft } from "@/hooks/useOwnerNft";
+import { useAccount } from "wagmi";
+import useEarn from "@/hooks/graphql/useEarn";
+import { LendSection } from "./LendSection";
+import useAccountLend from "@/hooks/graphql/useAccountLend";
+import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet";
+import { listIP } from "@/constants/config";
+import useCurrentAccount from "@/hooks/graphql/useCurrentAccount";
 
 export default function DashboardPage() {
     const [hasMounted, setHasMounted] = useState(false);
@@ -38,14 +38,14 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className='w-full h-full container'>
+        <div className="w-full h-full container">
             {address ? (
-                <div className='w-ful h-full flex flex-col gap-5'>
-                    <div className='flex flex-col lg:flex-row w-full justify-between items-center gap-5'>
+                <div className="w-ful h-full flex flex-col gap-5">
+                    <div className="flex flex-col lg:flex-row w-full justify-between items-center gap-5">
                         <CardPortfolio />
                         <CardRewards />
                     </div>
-                    <div className='flex flex-col gap-5'>
+                    <div className="flex flex-col gap-5">
                         <EarnSection
                             earnData={filteredEarnData}
                             earnLoading={earnLoading}

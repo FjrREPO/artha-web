@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
-import { ChevronsUpDown, Check } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { CoinImage } from '@/components/coin/CoinImage';
-import { CoinSymbol } from '@/components/coin/CoinSymbol';
-import { PoolSchema } from '@/lib/validation/types';
+import React, { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { ChevronsUpDown, Check } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CoinImage } from "@/components/coin/CoinImage";
+import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import { PoolSchema } from "@/lib/validation/types";
 
 interface MultiSelectPoolsCoinProps {
     data: PoolSchema[];
@@ -23,17 +23,17 @@ const MultiSelectPoolsCoin: React.FC<MultiSelectPoolsCoinProps> = ({
     const [open, setOpen] = useState(false);
 
     const handleSelect = (pool: PoolSchema) => {
-        const isSelected = value.includes(pool.id || '');
+        const isSelected = value.includes(pool.id || "");
         let newValue: string[];
 
         if (isSelected) {
             newValue = value.filter(id => id !== pool.id);
         } else {
-            newValue = [...value, pool.id || ''];
+            newValue = [...value, pool.id || ""];
         }
 
         // Convert selected IDs back to pool objects
-        const selectedPools = data.filter(pool => newValue.includes(pool.id || ''));
+        const selectedPools = data.filter(pool => newValue.includes(pool.id || ""));
         onChange(selectedPools);
     };
 
@@ -84,7 +84,7 @@ const MultiSelectPoolsCoin: React.FC<MultiSelectPoolsCoinProps> = ({
                                 >
                                     <div className="flex items-center gap-2 w-full">
                                         <Check
-                                            className={`mr-2 h-4 w-4 ${value.includes(pool.id || '') ? "opacity-100" : "opacity-0"
+                                            className={`mr-2 h-4 w-4 ${value.includes(pool.id || "") ? "opacity-100" : "opacity-0"
                                                 }`}
                                         />
                                         <div className="flex items-center gap-2">

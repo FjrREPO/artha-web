@@ -1,6 +1,6 @@
-import React, { Suspense, use } from 'react'
-import AuctionsIdComponent from './_components/AuctionsIdComponent'
-import Loading from '@/components/loader/Loading';
+import React, { Suspense, use } from "react"
+import AuctionsIdComponent from "./_components/AuctionsIdComponent"
+import Loading from "@/components/loader/Loading";
 
 type Params = Promise<{ auctionsId: string }>
 

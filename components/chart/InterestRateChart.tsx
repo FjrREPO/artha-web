@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from "react";
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
     Legend, ResponsiveContainer, ReferenceLine
-} from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Slider } from '@/components/ui/slider';
+} from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
 import {
     TrendingUp,
-} from 'lucide-react';
+} from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -33,7 +33,7 @@ const calculateSupplyRate = (borrowRate: number, utilization: number) => {
 
 const InterestRateChart = () => {
     const [currentUtilization, setCurrentUtilization] = useState(38.09);
-    const [timeframe, setTimeframe] = useState('1d');
+    const [timeframe, setTimeframe] = useState("1d");
     const [isAnimating, setIsAnimating] = useState(true);
 
     const generateChartData = useMemo(() => {
@@ -68,7 +68,7 @@ const InterestRateChart = () => {
                 <div className="p-4 rounded-lg shadow-lg border bg-primary">
                     <p className="font-bold text-secondary">Utilization: {Number(label).toFixed(2)}%</p>
                     {payload.map((entry, index) => (
-                        <p key={index} style={{ color: entry.color }} className='text-xs'>
+                        <p key={index} style={{ color: entry.color }} className="text-xs">
                             {entry.name}: {Number(entry.value).toFixed(2)}%
                         </p>
                     ))}
@@ -146,7 +146,7 @@ const InterestRateChart = () => {
                                 </XAxis>
                                 <YAxis
                                     tickFormatter={(value) => `${value}%`}
-                                    domain={[0, 'auto']}
+                                    domain={[0, "auto"]}
                                     padding={{ top: 20, bottom: 0 }}
                                 >
                                 </YAxis>
@@ -167,7 +167,7 @@ const InterestRateChart = () => {
                                     strokeDasharray="3 3"
                                     label={{
                                         value: `Current: ${currentUtilization.toFixed(2)}%`,
-                                        position: 'top',
+                                        position: "top",
                                     }}
                                 />
 

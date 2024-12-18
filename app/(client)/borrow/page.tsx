@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react'
-import BorrowComponent from './_components/BorrowComponent'
-import Loading from '@/components/loader/Loading'
+import React, { Suspense } from "react"
+import BorrowComponent from "./_components/BorrowComponent"
+import Loading from "@/components/loader/Loading"
 
 export default function page() {
     return (

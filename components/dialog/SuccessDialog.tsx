@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, Copy, ExternalLink } from 'lucide-react';
+import React from "react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -7,9 +7,9 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { decodeEventLog, Log } from 'viem';
-import { curatorABI } from '@/lib/abi/curatorABI';
-import { serializeBigInt } from '@/lib/utils';
+import { decodeEventLog, Log } from "viem";
+import { curatorABI } from "@/lib/abi/curatorABI";
+import { serializeBigInt } from "@/lib/utils";
 
 interface SuccessDialogProps {
     isOpen: boolean;
@@ -43,7 +43,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
     const [decodedLogs, setDecodedLogs] = React.useState<DecodedLogs | null>(null);
     const [decodeError, setDecodeError] = React.useState<string | null>(null);
 
-    const explorerBaseUrl = 'https://sepolia.basescan.org';
+    const explorerBaseUrl = "https://sepolia.basescan.org";
     const explorerUrl = `${explorerBaseUrl}/tx/${txHash}`;
     const explorerUrlCurator = `${explorerBaseUrl}/address/${decodedLogs?.args.curator as string}`;
 
@@ -53,7 +53,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (error) {
-            console.error('Failed to copy to clipboard:', error);
+            console.error("Failed to copy to clipboard:", error);
         }
     };
 
@@ -63,7 +63,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (error) {
-            console.error('Failed to copy to clipboard:', error);
+            console.error("Failed to copy to clipboard:", error);
         }
     };
 
@@ -79,19 +79,19 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
                 setDecodedLogs(serializedLogs as DecodedLogs);
                 setDecodeError(null);
             } catch (error) {
-                console.error('Failed to decode logs:', error);
-                setDecodeError('Failed to decode transaction logs');
+                console.error("Failed to decode logs:", error);
+                setDecodeError("Failed to decode transaction logs");
                 setDecodedLogs(null);
             }
         }
     }, [enabledLogs, logs]);
 
     const openExplorer = () => {
-        window.open(explorerUrl, '_blank', 'noopener noreferrer');
+        window.open(explorerUrl, "_blank", "noopener noreferrer");
     };
 
     const openExplorerCurator = () => {
-        window.open(explorerUrlCurator, '_blank', 'noopener noreferrer');
+        window.open(explorerUrlCurator, "_blank", "noopener noreferrer");
     };
 
     return (
@@ -125,7 +125,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
                                 className="shrink-0 hover:bg-gray-100"
                                 aria-label={copied ? "Copied!" : "Copy transaction hash"}
                             >
-                                <Copy className={`h-4 w-4 ${copied ? 'text-green-500' : 'text-gray-500'}`} />
+                                <Copy className={`h-4 w-4 ${copied ? "text-green-500" : "text-gray-500"}`} />
                             </Button>
                             <Button
                                 variant="ghost"
@@ -148,7 +148,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
                                 ) : (
                                     <>
                                         <code className="flex-1 font-mono text-xs p-2 rounded border overflow-x-auto">
-                                            {decodedLogs ? decodedLogs.args.curator : 'No logs available'}
+                                            {decodedLogs ? decodedLogs.args.curator : "No logs available"}
                                         </code>
                                         <Button
                                             variant="ghost"
@@ -157,7 +157,7 @@ export const SuccessDialog: React.FC<SuccessDialogProps> = ({
                                             className="shrink-0 hover:bg-gray-100"
                                             aria-label={copied ? "Copied!" : "Copy transaction hash"}
                                         >
-                                            <Copy className={`h-4 w-4 ${copied ? 'text-green-500' : 'text-gray-500'}`} />
+                                            <Copy className={`h-4 w-4 ${copied ? "text-green-500" : "text-gray-500"}`} />
                                         </Button>
                                         <Button
                                             variant="ghost"

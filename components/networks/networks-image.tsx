@@ -1,11 +1,11 @@
-import React from 'react';
-import Image from 'next/image';
-import { Network } from 'lucide-react';
+import React from "react";
+import Image from "next/image";
+import { Network } from "lucide-react";
 
 const NetworkImage = ({ chainId }: { chainId: number }) => {
     const networkLogos: { [key: string]: string } = {
-        ethereum: 'https://static.alchemyapi.io/images/emblems/eth-mainnet.svg',
-        linea: 'https://static.alchemyapi.io/images/emblems/linea-mainnet.svg',
+        ethereum: "https://static.alchemyapi.io/images/emblems/eth-mainnet.svg",
+        linea: "https://static.alchemyapi.io/images/emblems/linea-mainnet.svg",
     };
 
     const normalizedChain = chainId;

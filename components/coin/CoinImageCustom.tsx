@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useCryptoToken } from "@/hooks/useCryptoToken";
 
 export const CoinImageCustom = ({ symbol, address, className }: { symbol?: string, address?: string, className?: string }) => {
-    const fallbackImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVYS7KEXYFAwqdRCW81e4DSR_nSLYSFStx1Q&s';
+    const fallbackImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVYS7KEXYFAwqdRCW81e4DSR_nSLYSFStx1Q&s";
 
     const { cryptoTokenData } = useCryptoToken();
 
@@ -20,7 +20,7 @@ export const CoinImageCustom = ({ symbol, address, className }: { symbol?: strin
             {symbol ?
                 <Image
                     src={coinLogoBySymbol ?? fallbackImage}
-                    alt={coinLogoBySymbol ?? 'Default alt text'}
+                    alt={coinLogoBySymbol ?? "Default alt text"}
                     className={cn("rounded-full", className)}
                     width={96}
                     height={96}
@@ -28,7 +28,7 @@ export const CoinImageCustom = ({ symbol, address, className }: { symbol?: strin
                 :
                 <Image
                     src={coinLogoByAddress ?? fallbackImage}
-                    alt={coinLogoByAddress ?? 'Default alt text'}
+                    alt={coinLogoByAddress ?? "Default alt text"}
                     className={cn("rounded-full", className)}
                     width={96}
                     height={96}

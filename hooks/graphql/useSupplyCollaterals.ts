@@ -10,7 +10,7 @@ type QueryData = {
 
 export default function useSupplyCollaterals() {
     const { data, isLoading: supplyCollateralsLoading, isRefetching: supplyCollateralsRefetching } = useQuery<QueryData>({
-        queryKey: ['supplyCollaterals'],
+        queryKey: ["supplyCollaterals"],
         queryFn: async () => {
             return await request(API_SUBGRAPH, querySupplyCollaterals);
         },

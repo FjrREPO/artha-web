@@ -1,24 +1,24 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FieldValues, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { curatorSchema } from '@/lib/validation/schemas';
-import { useCreateCurator } from '@/hooks/contract/write/useCreateCurator';
-import { LoadingTransaction } from '@/components/loader/LoadingTransaction';
-import { SuccessDialog } from '@/components/dialog/SuccessDialog';
-import { Progress } from '@/components/ui/progress';
-import { CreateCuratorSteps } from './CreateCuratorSteps';
-import { PreviewDialogCurator } from './PreviewDialogCurator';
-import { useAccount } from 'wagmi';
-import { WarningConnectWallet } from '@/components/web3/warning-connect-wallet';
-import usePools from '@/hooks/graphql/usePools';
-import { toast } from 'sonner';
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { curatorSchema } from "@/lib/validation/schemas";
+import { useCreateCurator } from "@/hooks/contract/write/useCreateCurator";
+import { LoadingTransaction } from "@/components/loader/LoadingTransaction";
+import { SuccessDialog } from "@/components/dialog/SuccessDialog";
+import { Progress } from "@/components/ui/progress";
+import { CreateCuratorSteps } from "./CreateCuratorSteps";
+import { PreviewDialogCurator } from "./PreviewDialogCurator";
+import { useAccount } from "wagmi";
+import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet";
+import usePools from "@/hooks/graphql/usePools";
+import { toast } from "sonner";
 
 type FormData = z.infer<typeof curatorSchema>;
 
@@ -39,9 +39,9 @@ const CreateCuratorComponent = () => {
     const { address } = useAccount()
 
     const steps = [
-        { title: 'Basic Information', fields: ['_name', '_symbol'] },
-        { title: 'Asset Configuration', fields: ['_asset'] },
-        { title: 'Pool Selection & Allocation', fields: ['allocations'] },
+        { title: "Basic Information", fields: ["_name", "_symbol"] },
+        { title: "Asset Configuration", fields: ["_asset"] },
+        { title: "Pool Selection & Allocation", fields: ["allocations"] },
     ];
 
     const { poolData, poolLoading } = usePools()
@@ -145,7 +145,7 @@ const CreateCuratorComponent = () => {
     return (
         <>
             {address ? (
-                <div className='relative w-full'>
+                <div className="relative w-full">
                     {mutation.isPending && <LoadingTransaction message={"Loading.."} />}
                     <SuccessDialog
                         isOpen={showSuccessDialog}
@@ -195,7 +195,7 @@ const CreateCuratorComponent = () => {
                                         {activeStep === steps.length - 1 ? (
                                             <Button
                                                 type="submit"
-                                                disabled={form.getValues('pools').length === 0 && form.getValues('allocations').length === 0}
+                                                disabled={form.getValues("pools").length === 0 && form.getValues("allocations").length === 0}
                                             >
                                                 Preview Curator
                                             </Button>

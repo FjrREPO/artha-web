@@ -5,6 +5,7 @@ import { PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
 import { formatNumberWithDots } from "@/lib/utils";
 import { normalize } from "@/lib/helper/bignumber";
+import { calculateLendAPR, calculateUtilizationRate } from "@/lib/helper/helper";
 
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
@@ -15,11 +16,12 @@ export function columns(): ColumnDef<PoolSchema>[] {
       ),
       cell: ({ row }) => {
         return (
-        <div className="flex items-center gap-2">
-          <CoinImage address={row.original.collateralToken.collateralToken || ""} />
-          <CoinSymbol address={row.original.collateralAddress || ""} />
-        </div>
-      )},
+          <div className="flex items-center gap-2">
+            <CoinImage address={row.original.collateralToken.collateralToken || ""} />
+            <CoinSymbol address={row.original.collateralAddress || ""} />
+          </div>
+        )
+      },
     },
     {
       accessorKey: "borrow",
@@ -62,10 +64,10 @@ export function columns(): ColumnDef<PoolSchema>[] {
         />
       ),
       cell: ({ row }) => {
-        const lendAPR = (row.original.borrowRate! ?? 0) * (row.original.totalBorrowAssets! ?? 0) / (row.original.totalSupplyAssets! ?? 0)
+        const lendAPR = calculateLendAPR(row.original.borrowRate, row.original.totalBorrowAssets, row.original.totalSupplyAssets);
         return (
           <div className="flex items-center gap-2">
-            <span>{Number(normalize(lendAPR, 16)).toFixed(2)}%</span>
+            <span>{lendAPR.toFixed(3)}%</span>
           </div>
         )
       }
@@ -97,10 +99,10 @@ export function columns(): ColumnDef<PoolSchema>[] {
         />
       ),
       cell: ({ row }) => {
-        const utilizationRate = (row.original.totalBorrowAssets! ?? 0) / (row.original.totalSupplyAssets! ?? 0)
+        const utilizationRate = calculateUtilizationRate(row.original.totalBorrowAssets, row.original.totalSupplyAssets)
         return (
           <div className="flex items-center gap-2 justify-end">
-            <span>{(utilizationRate*100).toFixed(2)}%</span>
+            <span>{utilizationRate}%</span>
           </div>
         )
       }

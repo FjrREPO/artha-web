@@ -95,7 +95,7 @@ export function columns({ poolData, poolLoading, nftData, nftLoading }: Props): 
       cell: ({ row }) => {
         const findPoolById = poolData.find((pool) => pool.id === row.original.poolId)
 
-        const liquidationValue = (parseInt(findPoolById?.lth as string) * (parseInt(row.original.amount || '0'))) / 100
+        const liquidationValue = (parseInt(findPoolById?.lth as string) * (parseInt(row.original.amount || "0"))) / 100
 
         return (
           <div className="flex items-center gap-2">

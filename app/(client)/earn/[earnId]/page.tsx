@@ -1,7 +1,7 @@
-import React, { Suspense } from 'react';
-import EarnIdPage from './_components/EarnIdPage';
-import { use } from 'react';
-import Loading from '@/components/loader/Loading';
+import React, { Suspense } from "react";
+import EarnIdPage from "./_components/EarnIdPage";
+import { use } from "react";
+import Loading from "@/components/loader/Loading";
 
 type Params = Promise<{ earnId: string }>
 
