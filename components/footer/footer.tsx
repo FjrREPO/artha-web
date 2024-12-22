@@ -56,7 +56,7 @@ export const Footer = () => {
                                 <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://github.com/Arte-Finance-Protocol"}>
                                     <FaGithub />
                                 </Link>
-                                <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://kbaji.gitbook.io/Arte-finance"}>
+                                <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://kbaji.gitbook.io/arte-finance"}>
                                     <FaBook />
                                 </Link>
                             </motion.div>
@@ -73,7 +73,7 @@ export const Footer = () => {
                         <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://github.com/Arte-Finance-Protocol"}>
                             <FaGithub />
                         </Link>
-                        <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://kbaji.gitbook.io/Arte-finance"}>
+                        <Link className="hover:text-primary/70 duration-200" target="_blank" href={"https://kbaji.gitbook.io/arte-finance"}>
                             <FaBook />
                         </Link>
                     </div>
