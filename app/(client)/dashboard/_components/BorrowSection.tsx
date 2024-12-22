@@ -5,7 +5,7 @@ import { ArrowUp, ChevronUp } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { formatCurrency } from "@/lib/utils"
+import { formatNumberWithDots } from "@/lib/utils"
 import { AlchemyNftSchema, BorrowSchema, PoolSchema } from "@/lib/validation/types"
 import { normalize } from "@/lib/helper/bignumber"
 
@@ -48,7 +48,7 @@ export const BorrowSection = ({
                         </div>
                     </div>
                     <div className="flex flex-row gap-2 items-center">
-                        <Label className="text-lg">{formatCurrency(Number(normalize(totalBorrowAmount.toString(), 6)))}</Label>
+                        <Label className="text-lg">{formatNumberWithDots(Number(normalize(totalBorrowAmount.toString(), 6)))}</Label>
                         <ChevronUp className="w-5 h-5 cursor-pointer" />
                     </div>
                 </div>

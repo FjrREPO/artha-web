@@ -12,11 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Deposit from "./Deposit";
 import Withdraw from "./Withdraw";
 import useEarn from "@/hooks/graphql/useEarn";
-import { useAccount } from "wagmi";
 
 export default function EarnIdPage({ earnId }: { earnId: string }) {
     const { earnData, earnLoading: isLoading } = useEarn();
-    const { address } = useAccount();
 
     const filteredData = earnData?.find((item) => item.id === earnId);
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FieldValues, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import z from "zod";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { curatorSchema } from "@/lib/validation/schemas";
 import { useCreateCurator } from "@/hooks/contract/write/useCreateCurator";
@@ -19,6 +19,7 @@ import { useAccount } from "wagmi";
 import { WarningConnectWallet } from "@/components/web3/warning-connect-wallet";
 import usePools from "@/hooks/graphql/usePools";
 import { toast } from "sonner";
+import { denormalize, normalize } from "@/lib/helper/bignumber";
 
 type FormData = z.infer<typeof curatorSchema>;
 
@@ -113,13 +114,15 @@ const CreateCuratorComponent = () => {
     };
 
     const handleCreateCuratorSubmit = (data: FieldValues) => {
+        const normalizeAllocations = data.allocations.map((a: string) => denormalize(a, 16).toString());
+
         mutation.mutate(
             {
                 _name: data._name,
                 _symbol: data._symbol,
                 _asset: data._asset,
                 pools: data.pools,
-                allocations: data.allocations
+                allocations: normalizeAllocations
             },
             {
                 onSuccess: () => {
