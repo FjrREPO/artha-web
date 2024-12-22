@@ -3,6 +3,9 @@ import { DataTableColumnHeader } from "./ColumnHeader";
 import { CoinImage } from "@/components/coin/CoinImage";
 import { PoolSchema } from "@/lib/validation/types";
 import { CoinSymbol } from "@/components/coin/CoinSymbol";
+import { useUSDCPrice } from "@/hooks/useUSDCPrice";
+import { useDecimal } from "@/hooks/contract/useDecimal";
+import { normalize } from "@/lib/helper/bignumber";
 
 export function columns(): ColumnDef<PoolSchema>[] {
   return [
@@ -45,6 +48,11 @@ export function columns(): ColumnDef<PoolSchema>[] {
           className="justify-end"
         />
       ),
+      cell: ({ row }) => (
+        <span className="justify-end">
+          {row.original.borrowAPY ? row.original.borrowAPY : "0"}
+        </span>
+      ),
     },
     {
       accessorKey: "TVL",
@@ -55,6 +63,15 @@ export function columns(): ColumnDef<PoolSchema>[] {
           className="justify-end"
         />
       ),
+      cell: ({ row }) => {
+        const { priceData } = useUSDCPrice()
+        const { decimal } = useDecimal(row.original.loanAddress as HexAddress || "")
+        return (
+          <span className="justify-end">
+            {row.original.totalSupplyAssets && priceData && decimal ? (Number(normalize(row.original.totalSupplyAssets ?? 0, 6)) * priceData?.price).toFixed(2) : "0"}
+          </span>
+        )
+      },
     }
   ];
 }

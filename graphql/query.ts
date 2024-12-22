@@ -11,6 +11,8 @@ export const queryPool = gql`{
         lth
         ltv
         oracle
+        supplyAPY
+        borrowAPY
         totalBorrowAssets
         totalBorrowShares
         totalSupplyAssets

@@ -10,6 +10,8 @@ export const poolSchema = z.object({
     lth: z.string().optional(),
     ltv: z.string().optional(),
     oracle: z.string().optional(),
+    supplyAPY: z.number().optional(),
+    borrowAPY: z.number().optional(),
     totalBorrowAssets: z.number().optional(),
     totalBorrowShares: z.number().optional(),
     totalSupplyAssets: z.number().optional(),
