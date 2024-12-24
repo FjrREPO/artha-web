@@ -46,7 +46,7 @@ export default function WithdrawCollateral({ nftData, filteredData }: WithdrawCo
         mutation.mutate(
             {
                 id: filteredData?.id as string,
-                tokenId: data.tokenId,
+                tokenId: nftData.tokenId,
                 onBehalfOf: address as HexAddress,
                 userAddress: address as HexAddress,
             },

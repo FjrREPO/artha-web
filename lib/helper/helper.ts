@@ -1,9 +1,11 @@
+import { normalize } from "./bignumber";
+
 export const calculateMaxBorrowAmount = (
     priceOracle: number, 
     ltv: number, 
     decimal: number
 ): number => {
-    const maxBorrowAmount = ltv * (priceOracle as number) / decimal
+    const maxBorrowAmount = normalize(ltv * (priceOracle as number), decimal ?? 0)
     return Number(maxBorrowAmount);
 }
 

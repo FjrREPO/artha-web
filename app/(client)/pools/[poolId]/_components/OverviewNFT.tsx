@@ -54,10 +54,7 @@ export const OverviewNFT = ({
   const totalBorrowed = normalize(filteredPosition?.borrowShares ?? 0, 6);
   const maxBorrow = useMemo(
     () =>
-      normalize(
-        parseInt(filteredData?.ltv as string) * (priceOracle as number),
-        8
-      ),
+      Number(normalize(Number(filteredData?.ltv) * Number(priceOracle), decimal ?? 0)),
     [filteredData, priceOracle]
   );
   const borrowUtilization = totalBorrowed

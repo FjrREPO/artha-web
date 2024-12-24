@@ -25,20 +25,19 @@ const BorrowDetailsStepper: React.FC<BorrowDetailsStepperProps> = ({
   decimal
 }) => {
   const borrowAmount = form.watch("borrowAmount");
-
   const maxBorrow = useMemo(() =>
-    parseInt(selectedPool?.ltv as string) * (priceOracle as number) / decimal!,
+    Number(normalize(Number(selectedPool?.ltv) * Number(priceOracle), decimal ?? 0)),
     [selectedPool, priceOracle, decimal]
   );
 
   const liquidationValue = useMemo(() =>
-    parseInt(selectedPool?.lth as string) * parseInt(borrowAmount || "0") / 100,
+    Number(selectedPool?.lth) * Number(borrowAmount || "0") / 100,
     [selectedPool, borrowAmount]
   );
 
   const riskLevelCalculation = useMemo(() => {
     if (!borrowAmount || !maxBorrow) return 0;
-    const borrowPercentage = (parseFloat(borrowAmount) / maxBorrow) * 100;
+    const borrowPercentage = (parseFloat(borrowAmount) / Number(maxBorrow)) * 100;
     return Math.min(borrowPercentage, 100);
   }, [borrowAmount, maxBorrow]);
 
